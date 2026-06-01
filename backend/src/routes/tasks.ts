@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { getTasks, createTask, updateTask, deleteTask, logTaskTime } from '../controllers/tasksController';
+import { authenticate } from '../middleware/auth';
+const router = Router();
+router.use(authenticate as any);
+router.get('/', getTasks as any);
+router.post('/', createTask as any);
+router.put('/:id', updateTask as any);
+router.delete('/:id', deleteTask as any);
+router.post('/:id/time-log', logTaskTime as any);
+export default router;

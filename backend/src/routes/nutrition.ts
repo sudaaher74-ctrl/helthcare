@@ -1,0 +1,12 @@
+import { Router } from 'express';
+import { getMeals, createMeal, updateMeal, deleteMeal, logWater, getDietCoach } from '../controllers/nutritionController';
+import { authenticate } from '../middleware/auth';
+const router = Router();
+router.use(authenticate as any);
+router.get('/meals', getMeals as any);
+router.post('/meals', createMeal as any);
+router.put('/meals/:id', updateMeal as any);
+router.delete('/meals/:id', deleteMeal as any);
+router.post('/water', logWater as any);
+router.get('/coach', getDietCoach as any);
+export default router;

@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { getWorkouts, createWorkout, updateWorkout, deleteWorkout, getWorkoutStats } from '../controllers/workoutsController';
+import { authenticate } from '../middleware/auth';
+const router = Router();
+router.use(authenticate as any);
+router.get('/', getWorkouts as any);
+router.get('/stats', getWorkoutStats as any);
+router.post('/', createWorkout as any);
+router.put('/:id', updateWorkout as any);
+router.delete('/:id', deleteWorkout as any);
+export default router;

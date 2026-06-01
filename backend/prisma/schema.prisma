@@ -1,0 +1,632 @@
+// LifeOS — Complete Prisma Database Schema
+// PostgreSQL via Supabase
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// USER & AUTH
+// ─────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  email            String    @unique
+  password         String?
+  name             String
+  avatar           String?
+  googleId         String?   @unique
+
+  // Profile
+  age              Int?
+  gender           Gender?
+  height           Float?    // in cm
+  currentWeight    Float?    // in kg
+  targetWeight     Float?    // in kg
+  activityLevel    ActivityLevel @default(MODERATE)
+  dailyCalorieGoal Int       @default(2800)
+  dailyProteinGoal Int       @default(150)
+  dailyCarbGoal    Int       @default(350)
+  dailyFatGoal     Int       @default(80)
+  dailyWaterGoal   Float     @default(3.0)  // in liters
+  dailyFiberGoal   Int       @default(30)
+
+  // Settings
+  theme            Theme     @default(DARK)
+  timezone         String    @default("Asia/Kolkata")
+  isOnboarded      Boolean   @default(false)
+  notificationsEnabled Boolean @default(true)
+
+  // Timestamps
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  lastLoginAt      DateTime?
+
+  // Relations
+  habits           Habit[]
+  habitLogs        HabitLog[]
+  tasks            Task[]
+  timeLogs         TimeLog[]
+  workoutSessions  WorkoutSession[]
+  meals            Meal[]
+  weightLogs       WeightLog[]
+  sleepLogs        SleepLog[]
+  goals            Goal[]
+  achievements     UserAchievement[]
+  streaks          Streak[]
+  notifications    Notification[]
+  waterLogs        WaterLog[]
+  refreshTokens    RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  userId String @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HABITS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Habit {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  category    HabitCategory
+  icon        String        @default("⭐")
+  color       String        @default("#6366f1")
+  frequency   HabitFrequency @default(DAILY)
+  targetDays  Int[]         // 0=Sun, 1=Mon, ..., 6=Sat (for weekly habits)
+  reminderTime String?      // HH:MM format
+  isActive    Boolean       @default(true)
+  sortOrder   Int           @default(0)
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  logs        HabitLog[]
+
+  @@map("habits")
+}
+
+model HabitLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  habitId String @db.ObjectId
+  habit       Habit     @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date        DateTime  
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  notes       String?
+
+  createdAt   DateTime  @default(now())
+
+  @@unique([habitId, date])
+  @@map("habit_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TASKS / PRODUCTIVITY
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Task {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?
+  category    TaskCategory @default(PERSONAL)
+  priority    Priority     @default(MEDIUM)
+  status      TaskStatus   @default(BACKLOG)
+  dueDate     DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  estimatedMinutes Int?
+  tags        String[]
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  timeLogs    TimeLog[]
+
+  @@map("tasks")
+}
+
+model TimeLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  taskId String @db.ObjectId
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  startTime   DateTime
+  endTime     DateTime?
+  durationMinutes Int?
+  notes       String?
+
+  createdAt   DateTime @default(now())
+
+  @@map("time_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WORKOUTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model WorkoutSession {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name            String
+  category        WorkoutCategory
+  date            DateTime        
+  startTime       DateTime?
+  endTime         DateTime?
+  durationMinutes Int?
+  caloriesBurned  Int?
+  notes           String?
+  mood            Int?            // 1-5 scale
+  isCompleted     Boolean         @default(false)
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  exercises       Exercise[]
+
+  @@map("workout_sessions")
+}
+
+model Exercise {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId String @db.ObjectId
+  session         WorkoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  name            String
+  muscleGroup     MuscleGroup?
+  category        ExerciseCategory @default(STRENGTH)
+  sets            ExerciseSet[]
+  notes           String?
+  sortOrder       Int            @default(0)
+
+  createdAt       DateTime       @default(now())
+
+  @@map("exercises")
+}
+
+model ExerciseSet {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  exerciseId String @db.ObjectId
+  exercise    Exercise  @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  setNumber   Int
+  reps        Int?
+  weight      Float?    // in kg
+  duration    Int?      // seconds (for time-based exercises)
+  distance    Float?    // km (for cardio)
+  restSeconds Int?
+  isWarmup    Boolean   @default(false)
+  isPR        Boolean   @default(false)
+
+  createdAt   DateTime  @default(now())
+
+  @@map("exercise_sets")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NUTRITION
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Meal {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date        DateTime    
+  mealType    MealType
+  name        String?
+  notes       String?
+  imageUrl    String?
+  analyzedByAI Boolean   @default(false)
+
+  // Totals (computed from food entries)
+  totalCalories    Float   @default(0)
+  totalProtein     Float   @default(0)
+  totalCarbs       Float   @default(0)
+  totalFat         Float   @default(0)
+  totalFiber       Float   @default(0)
+  totalSugar       Float   @default(0)
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  foodEntries FoodEntry[]
+
+  @@map("meals")
+}
+
+model FoodEntry {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  mealId String @db.ObjectId
+  meal        Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
+
+  foodName    String
+  brand       String?
+  quantity    Float    @default(1)
+  servingSize Float    @default(100)   // grams
+  servingUnit String   @default("g")
+
+  // Per serving macros
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+  fiber       Float    @default(0)
+  sugar       Float    @default(0)
+  sodium      Float    @default(0)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("food_entries")
+}
+
+model WaterLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date       DateTime 
+  amountML   Int      // milliliters
+  loggedAt   DateTime @default(now())
+
+  @@map("water_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WEIGHT
+// ─────────────────────────────────────────────────────────────────────────────
+
+model WeightLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date        DateTime 
+  weight      Float    // kg
+  bodyFat     Float?   // percentage
+  muscleMass  Float?   // kg
+  notes       String?
+  loggedAt    DateTime @default(now())
+
+  @@unique([userId, date])
+  @@map("weight_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SLEEP
+// ─────────────────────────────────────────────────────────────────────────────
+
+model SleepLog {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date            DateTime   // The date you woke up
+  bedTime         DateTime
+  wakeTime        DateTime
+  durationMinutes Int
+  quality         Int      // 1-5 scale
+  deepSleep       Int?     // minutes
+  remSleep        Int?     // minutes
+  awakenings      Int?
+  notes           String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@map("sleep_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GOALS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Goal {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title        String
+  description  String?
+  category     GoalCategory
+  icon         String       @default("🎯")
+  color        String       @default("#6366f1")
+
+  targetValue  Float?
+  currentValue Float        @default(0)
+  unit         String?
+
+  startDate    DateTime     @default(now())
+  targetDate   DateTime?
+  completedAt  DateTime?
+  status       GoalStatus   @default(IN_PROGRESS)
+
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  milestones   Milestone[]
+
+  @@map("goals")
+}
+
+model Milestone {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  goalId String @db.ObjectId
+  goal        Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  title       String
+  targetValue Float?
+  isCompleted Boolean  @default(false)
+  completedAt DateTime?
+  sortOrder   Int      @default(0)
+
+  createdAt   DateTime @default(now())
+
+  @@map("milestones")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ACHIEVEMENTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Achievement {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  key         String   @unique  // e.g., "FIRST_HABIT", "STREAK_7"
+  name        String
+  description String
+  icon        String
+  category    AchievementCategory
+  xpReward    Int      @default(50)
+  rarity      AchievementRarity @default(COMMON)
+
+  users       UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String @db.ObjectId
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+
+  unlockedAt    DateTime    @default(now())
+  seenAt        DateTime?
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STREAKS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Streak {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type           StreakType
+  currentStreak  Int        @default(0)
+  longestStreak  Int        @default(0)
+  lastLoggedDate DateTime?  
+  startDate      DateTime?  
+
+  updatedAt      DateTime   @updatedAt
+
+  @@unique([userId, type])
+  @@map("streaks")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Notification {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type        NotificationType
+  title       String
+  message     String
+  scheduledAt DateTime?
+  sentAt      DateTime?
+  isRead      Boolean            @default(false)
+  isEnabled   Boolean            @default(true)
+  metadata    Json?
+
+  createdAt   DateTime           @default(now())
+
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHT
+  MODERATE
+  ACTIVE
+  VERY_ACTIVE
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum HabitCategory {
+  MORNING
+  PRODUCTIVITY
+  HEALTH
+  NIGHT
+  CUSTOM
+}
+
+enum HabitFrequency {
+  DAILY
+  WEEKLY
+  CUSTOM
+}
+
+enum TaskCategory {
+  BUSINESS
+  LEARNING
+  PERSONAL
+  HEALTH
+  FINANCE
+  OTHER
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  BACKLOG
+  IN_PROGRESS
+  REVIEW
+  DONE
+  CANCELLED
+}
+
+enum WorkoutCategory {
+  CHEST
+  BACK
+  LEGS
+  SHOULDERS
+  ARMS
+  CARDIO
+  FULL_BODY
+  CORE
+  FLEXIBILITY
+}
+
+enum MuscleGroup {
+  CHEST
+  BACK
+  LEGS
+  SHOULDERS
+  BICEPS
+  TRICEPS
+  CORE
+  GLUTES
+  CALVES
+  FOREARMS
+}
+
+enum ExerciseCategory {
+  STRENGTH
+  CARDIO
+  FLEXIBILITY
+  BODYWEIGHT
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACKS
+  PRE_WORKOUT
+  POST_WORKOUT
+}
+
+enum GoalCategory {
+  FITNESS
+  BUSINESS
+  LEARNING
+  PERSONAL
+  HEALTH
+  FINANCE
+}
+
+enum GoalStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+enum StreakType {
+  HABIT
+  WORKOUT
+  DIET
+  SLEEP
+  PRODUCTIVITY
+}
+
+enum AchievementCategory {
+  HABIT
+  WORKOUT
+  NUTRITION
+  SLEEP
+  PRODUCTIVITY
+  GENERAL
+}
+
+enum AchievementRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum NotificationType {
+  MORNING_REMINDER
+  WORKOUT_REMINDER
+  MEAL_REMINDER
+  SLEEP_REMINDER
+  HABIT_REMINDER
+  ACHIEVEMENT_UNLOCK
+  STREAK_WARNING
+  GOAL_DEADLINE
+  SYSTEM
+}

@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { getGoals, createGoal, updateGoal, deleteGoal, updateMilestone } from '../controllers/goalsController';
+import { authenticate } from '../middleware/auth';
+const router = Router();
+router.use(authenticate as any);
+router.get('/', getGoals as any);
+router.post('/', createGoal as any);
+router.put('/:id', updateGoal as any);
+router.delete('/:id', deleteGoal as any);
+router.put('/:id/milestones/:milestoneId', updateMilestone as any);
+export default router;

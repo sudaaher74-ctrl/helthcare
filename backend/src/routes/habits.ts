@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import { getHabits, getTodayHabits, createHabit, updateHabit, deleteHabit, completeHabit, getHabitStats } from '../controllers/habitsController';
+import { authenticate } from '../middleware/auth';
+const router = Router();
+router.use(authenticate as any);
+router.get('/', getHabits as any);
+router.get('/today', getTodayHabits as any);
+router.get('/stats', getHabitStats as any);
+router.post('/', createHabit as any);
+router.put('/:id', updateHabit as any);
+router.delete('/:id', deleteHabit as any);
+router.post('/:id/complete', completeHabit as any);
+export default router;

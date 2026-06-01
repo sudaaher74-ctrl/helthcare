@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { getSleepLogs, createSleepLog, updateSleepLog, deleteSleepLog } from '../controllers/sleepController';
+import { authenticate } from '../middleware/auth';
+const router = Router();
+router.use(authenticate as any);
+router.get('/', getSleepLogs as any);
+router.post('/', createSleepLog as any);
+router.put('/:id', updateSleepLog as any);
+router.delete('/:id', deleteSleepLog as any);
+export default router;

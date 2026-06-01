@@ -1,0 +1,10 @@
+import { Router } from 'express';
+import { getWeightLogs, createWeightLog, updateWeightLog, deleteWeightLog } from '../controllers/weightController';
+import { authenticate } from '../middleware/auth';
+const router = Router();
+router.use(authenticate as any);
+router.get('/', getWeightLogs as any);
+router.post('/', createWeightLog as any);
+router.put('/:id', updateWeightLog as any);
+router.delete('/:id', deleteWeightLog as any);
+export default router;

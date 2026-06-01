@@ -1,0 +1,69 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  avatar?: string;
+  height?: number;
+  currentWeight?: number;
+  targetWeight?: number;
+  dailyCalorieGoal: number;
+  dailyProteinGoal: number;
+  dailyWaterGoal: number;
+  theme: string;
+  isOnboarded: boolean;
+}
+
+interface AuthState {
+  user: User | null;
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  setAuth: (user: User, accessToken: string, refreshToken: string) => void;
+  setTokens: (accessToken: string, refreshToken: string) => void;
+  updateUser: (user: Partial<User>) => void;
+  logout: () => void;
+}
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: {
+        id: 'local-personal-user',
+        email: 'personal@lifeos.local',
+        name: 'Personal User',
+        dailyCalorieGoal: 2500,
+        dailyProteinGoal: 150,
+        dailyWaterGoal: 3000,
+        theme: 'DARK',
+        isOnboarded: true,
+      },
+      accessToken: 'mock-token',
+      refreshToken: 'mock-refresh',
+      isAuthenticated: true,
+
+      setAuth: (user, accessToken, refreshToken) =>
+        set({ user, accessToken, refreshToken, isAuthenticated: true }),
+
+      setTokens: (accessToken, refreshToken) =>
+        set({ accessToken, refreshToken }),
+
+      updateUser: (updates) =>
+        set((state) => ({ user: state.user ? { ...state.user, ...updates } : null })),
+
+      logout: () =>
+        set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false }),
+    }),
+    {
+      name: 'lifeos-auth',
+      partialize: (state) => ({
+        user: state.user,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    }
+  )
+);
