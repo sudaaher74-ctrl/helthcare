@@ -75,7 +75,7 @@ export default function WorkoutTracker() {
         </div>
       ) : (
         <div className="space-y-3">
-          {workouts.map((w: any) => (
+          {workouts?.map((w: any) => (
             <motion.div key={w.id} layout className="glass-card p-4 glass-card-hover">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">

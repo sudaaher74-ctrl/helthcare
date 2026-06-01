@@ -304,7 +304,7 @@ export default function Dashboard() {
           </div>
           {upcomingTasks?.length > 0 ? (
             <div className="space-y-2">
-              {upcomingTasks.map((task: any) => (
+              {upcomingTasks?.map((task: any) => (
                 <div key={task.id} className="flex items-center gap-3 py-1.5">
                   <div className={`w-2 h-2 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)}`} />
                   <span className="text-sm text-slate-300 truncate flex-1">{task.title}</span>
@@ -336,7 +336,7 @@ export default function Dashboard() {
             </Link>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2">
-            {recentAchievements.map((ua: any) => (
+            {recentAchievements?.map((ua: any) => (
               <div key={ua.id} className="flex-shrink-0 flex flex-col items-center gap-1 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 min-w-[80px]">
                 <span className="text-2xl">{ua.achievement.icon}</span>
                 <p className="text-[10px] text-amber-300 font-semibold text-center leading-tight">
