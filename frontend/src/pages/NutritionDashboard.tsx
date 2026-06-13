@@ -56,15 +56,44 @@ export default function NutritionDashboard() {
     setShowAI(true)
     try {
       const reader = new FileReader()
-      reader.onload = async (e) => {
-        const base64 = (e.target?.result as string).split(',')[1]
-        const res = await api.post('/ai/analyze-food', { imageBase64: base64, mimeType: file.type })
-        setAiResult(res.data.data)
-        setAiLoading(false)
+      reader.onload = (e) => {
+        const img = new Image()
+        img.onload = async () => {
+          const canvas = document.createElement('canvas')
+          const MAX_SIZE = 800
+          let { width, height } = img
+          
+          if (width > height && width > MAX_SIZE) {
+            height *= MAX_SIZE / width
+            width = MAX_SIZE
+          } else if (height > MAX_SIZE) {
+            width *= MAX_SIZE / height
+            height = MAX_SIZE
+          }
+          
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx?.drawImage(img, 0, 0, width, height)
+          
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7)
+          const base64 = dataUrl.split(',')[1]
+          
+          try {
+            const res = await api.post('/ai/analyze-food', { imageBase64: base64, mimeType: 'image/jpeg' })
+            setAiResult(res.data.data)
+            setAiLoading(false)
+          } catch (err: any) {
+            console.error('AI error:', err)
+            toast.error(err.response?.data?.message || 'AI analysis failed')
+            setAiLoading(false)
+          }
+        }
+        img.src = e.target?.result as string
       }
       reader.readAsDataURL(file)
     } catch {
-      toast.error('AI analysis failed')
+      toast.error('Could not process image')
       setAiLoading(false)
     }
   }
