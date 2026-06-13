@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import {
   LayoutDashboard, Target, Apple, Dumbbell, Moon, Scale,
   Trophy, CheckSquare, Calendar, BarChart2, Award, Settings,
-  Zap, Menu, X
+  Zap, Menu, X, PlusCircle, User
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useState } from 'react'
@@ -26,10 +26,10 @@ const navItems = [
 
 const mobileNav = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Home' },
-  { to: '/habits', icon: Target, label: 'Habits' },
-  { to: '/nutrition', icon: Apple, label: 'Nutrition' },
-  { to: '/workout', icon: Dumbbell, label: 'Workout' },
-  { to: '/analytics', icon: BarChart2, label: 'More' },
+  { to: '/goals', icon: Trophy, label: 'Goals' },
+  { to: '#', icon: PlusCircle, label: 'Log', action: 'log' },
+  { to: '/analytics', icon: BarChart2, label: 'Insights' },
+  { to: '/settings', icon: User, label: 'Profile' },
 ]
 
 export default function AppLayout() {
@@ -180,20 +180,36 @@ export default function AppLayout() {
       {/* Bottom Navigation (Mobile) */}
       <nav className="bottom-nav">
         {mobileNav.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              `bottom-nav-item ${isActive ? 'active' : ''}`
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <item.icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
-                <span>{item.label}</span>
-              </>
-            )}
-          </NavLink>
+          item.action ? (
+            <button
+              key={item.label}
+              onClick={() => {
+                // To be implemented: Open global log modal
+                console.log('Open log modal');
+              }}
+              className="bottom-nav-item flex items-center justify-center -mt-6"
+            >
+              <div className="bg-violet-600 rounded-full p-3 shadow-lg shadow-violet-500/30">
+                <item.icon size={28} className="text-white" />
+              </div>
+              <span className="mt-1">{item.label}</span>
+            </button>
+          ) : (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `bottom-nav-item ${isActive ? 'active' : ''}`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <item.icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
+                  <span>{item.label}</span>
+                </>
+              )}
+            </NavLink>
+          )
         ))}
       </nav>
     </div>

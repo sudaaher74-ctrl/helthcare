@@ -27,10 +27,9 @@ export default function Dashboard() {
 
   if (isLoading) return <DashboardSkeleton />
 
-  const { scores, todayStats, habits, weightHistory, streaks, recentAchievements, motivationalQuote, upcomingTasks, user } = data || {}
+  const { scores, todayStats, habits, weightHistory, streaks, recentAchievements, upcomingTasks, user, gamification, todaysMission, aiCoach } = data || {}
 
   const scoreItems = [
-    { label: 'Life Score', value: scores?.lifeScore || 0, color: '#7c3aed', gradient: 'gradient-violet', icon: '⚡' },
     { label: 'Health', value: scores?.healthScore || 0, color: '#10b981', gradient: 'gradient-health', icon: '❤️' },
     { label: 'Nutrition', value: scores?.nutritionScore || 0, color: '#06b6d4', gradient: 'gradient-nutrition', icon: '🥗' },
     { label: 'Discipline', value: scores?.disciplineScore || 0, color: '#f59e0b', gradient: 'gradient-discipline', icon: '🎯' },
@@ -45,32 +44,143 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold text-white">
             Good {getGreeting()}, {user?.name?.split(' ')[0]} 👋
           </h1>
-          <p className="text-slate-400 text-sm mt-0.5">
+          <p className="text-slate-400 text-sm mt-0.5 mb-2">
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </p>
         </div>
-        <Link to="/nutrition" className="btn btn-primary btn-sm hidden sm:flex">
-          <Plus size={15} />
-          Log Meal
-        </Link>
+        
+        {/* Gamification Widget */}
+        <div className="flex flex-col items-end hidden sm:flex">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="bg-amber-500/20 border border-amber-500/50 text-amber-400 font-black text-xs px-2 py-0.5 rounded">
+              LVL {gamification?.level || 1}
+            </div>
+            <span className="text-xs font-bold text-violet-400">{gamification?.xp || 0} / {gamification?.nextLevelXp || 1000} XP</span>
+          </div>
+          <div className="w-40 h-2 bg-white/10 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all duration-1000"
+              style={{ width: `${gamification?.progressPercent || 0}%` }}
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Motivational Quote */}
-      {motivationalQuote && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="glass-card px-5 py-4 border-l-2 border-violet-500"
+      {/* TOP SECTION: Life Score, AI Coach, Mission */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Large Life Score */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass-card p-6 flex flex-col items-center justify-center relative overflow-hidden"
         >
-          <p className="text-sm text-slate-300 italic">"{motivationalQuote.quote}"</p>
-          <p className="text-xs text-slate-500 mt-1">— {motivationalQuote.author}</p>
+          <div className="absolute inset-0 bg-violet-500/5 blur-3xl rounded-full scale-150" />
+          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6 z-10">Life Score</h2>
+          <div className="relative w-48 h-48 flex items-center justify-center z-10">
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+              <motion.circle
+                cx="50" cy="50" r="45" fill="none"
+                stroke="url(#lifeScoreGradient)" strokeWidth="8" strokeLinecap="round"
+                initial={{ strokeDasharray: "0 283" }}
+                animate={{ strokeDasharray: `${(scores?.lifeScore || 0) * 2.83} 283` }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                style={{ filter: 'drop-shadow(0 0 10px rgba(124,58,237,0.5))' }}
+              />
+              <defs>
+                <linearGradient id="lifeScoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#a78bfa" />
+                  <stop offset="100%" stopColor="#7c3aed" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+              <span className="text-5xl font-black text-white tracking-tighter shadow-violet-500/50 drop-shadow-lg">
+                {scores?.lifeScore || 0}
+              </span>
+              <span className="text-xs text-violet-400 font-bold mt-1">/ 100</span>
+            </div>
+          </div>
+          <div className="mt-6 flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 z-10">
+            <span className="text-lg">🔥</span>
+            <span className="text-sm font-semibold text-amber-400">Excellent Momentum</span>
+          </div>
         </motion.div>
-      )}
 
-      {/* Score Rings */}
-      <div>
-        <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Life Scores</h2>
-        <div className="grid grid-cols-5 gap-3 stagger-children">
+        {/* AI Coach Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="glass-card p-6 flex flex-col lg:col-span-1 border-t-2 border-t-blue-500/50 relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10">
+            <Zap size={100} />
+          </div>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+              <span className="text-lg">🧠</span>
+            </div>
+            <h2 className="font-bold text-white">AI Coach</h2>
+          </div>
+          <div className="flex-1 text-slate-300 text-sm leading-relaxed whitespace-pre-wrap relative z-10">
+            {aiCoach?.message || "Analyzing your day..."}
+          </div>
+          <div className="mt-4 pt-4 border-t border-white/5 text-xs text-slate-500 flex justify-between items-center relative z-10">
+            <span>Powered by LifeOS</span>
+            <button className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">Ask Coach</button>
+          </div>
+        </motion.div>
+
+        {/* Today's Mission */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="glass-card p-6 lg:col-span-1"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-white flex items-center gap-2">
+              <Target className="text-rose-400" size={18} />
+              Today's Mission
+            </h2>
+            <span className="text-xs font-bold text-rose-400 bg-rose-400/10 px-2 py-1 rounded-md">
+              {todaysMission?.progress || 0}/{todaysMission?.total || 4}
+            </span>
+          </div>
+          
+          <div className="progress-bar mb-5">
+            <div 
+              className="progress-bar-fill bg-gradient-to-r from-rose-500 to-pink-500" 
+              style={{ width: `${((todaysMission?.progress || 0) / (todaysMission?.total || 4)) * 100}%` }}
+            />
+          </div>
+
+          <div className="space-y-3">
+            {todaysMission?.items?.map((item: any) => (
+              <div key={item.id} className="flex items-center gap-3">
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${item.completed ? 'bg-rose-500 border-rose-500' : 'border-white/20 bg-white/5'}`}>
+                  {item.completed && <CheckCircle2 size={12} className="text-white" />}
+                </div>
+                <span className={`text-sm ${item.completed ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+          
+          {todaysMission?.progress === todaysMission?.total && (
+            <div className="mt-4 bg-rose-500/10 border border-rose-500/20 rounded-lg p-3 text-center">
+              <p className="text-xs font-bold text-rose-400">Mission Accomplished! 🎉 +100 XP</p>
+            </div>
+          )}
+        </motion.div>
+      </div>
+
+      {/* Secondary Score Rings */}
+      <div className="mt-8">
+        <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Sub-Scores</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
           {scoreItems.map((item) => (
             <ScoreRing key={item.label} {...item} />
           ))}

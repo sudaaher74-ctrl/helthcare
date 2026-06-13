@@ -13,7 +13,8 @@ export const getDashboard = async (req: AuthRequest, res: Response, next: NextFu
            tasks, streaks, workoutSessions, userAchievements] = await Promise.all([
       prisma.user.findUnique({ where: { id: userId },
         select: { name: true, currentWeight: true, targetWeight: true, dailyCalorieGoal: true,
-                  dailyProteinGoal: true, dailyWaterGoal: true, avatar: true } }),
+                  dailyProteinGoal: true, dailyWaterGoal: true, avatar: true,
+                  xp: true, level: true, lifePoints: true } }),
       prisma.habit.findMany({ where: { userId, isActive: true },
         include: { logs: { where: { date: today } } } }),
       prisma.habitLog.findMany({ where: { userId, date: { gte: sevenDaysAgo }, completed: true } }),
@@ -73,6 +74,40 @@ export const getDashboard = async (req: AuthRequest, res: Response, next: NextFu
     ];
     const todayQuote = MOTIVATIONAL_QUOTES[new Date().getDay() % MOTIVATIONAL_QUOTES.length];
 
+    // Gamification - calculate next level XP
+    const nextLevelXp = Math.floor(1000 * Math.pow(1.5, (user?.level || 1) - 1));
+
+    // Today's Mission (Non-negotiables)
+    const missionItems = [
+      { id: 'water', label: `Drink ${user?.dailyWaterGoal || 3}L Water`, completed: todayWater >= (user?.dailyWaterGoal || 3) },
+      { id: 'protein', label: `Eat ${user?.dailyProteinGoal || 150}g Protein`, completed: todayProtein >= (user?.dailyProteinGoal || 150) },
+      { id: 'workout', label: 'Complete Workout', completed: workoutSessions.length > 0 },
+      { id: 'habits', label: 'Complete Daily Habits', completed: habitRate >= 80 }
+    ];
+    const missionProgress = missionItems.filter(m => m.completed).length;
+
+    // AI Coach Message Generation
+    let aiCoachMessage = `Good ${getGreeting()} ${user?.name?.split(' ')[0] || ''} 👋\n\nToday you still need:\n`;
+    let needsAdded = false;
+    if (todayWater < (user?.dailyWaterGoal || 3)) {
+      aiCoachMessage += `💧 ${parseFloat(((user?.dailyWaterGoal || 3) - todayWater).toFixed(1))}L Water\n`;
+      needsAdded = true;
+    }
+    if (todayProtein < (user?.dailyProteinGoal || 150)) {
+      aiCoachMessage += `🥩 ${Math.round((user?.dailyProteinGoal || 150) - todayProtein)}g Protein\n`;
+      needsAdded = true;
+    }
+    if (workoutSessions.length === 0) {
+      aiCoachMessage += `🏋️ Workout Session\n`;
+      needsAdded = true;
+    }
+    
+    if (!needsAdded) {
+      aiCoachMessage = `Amazing work ${user?.name?.split(' ')[0] || ''}! 🔥\nYou have completed all your core daily goals. Keep this momentum going!`;
+    } else {
+      aiCoachMessage += `\nCompleting these tasks will increase your Life Score and earn you +50 XP.`;
+    }
+
     res.json({
       success: true,
       data: {
@@ -110,7 +145,29 @@ export const getDashboard = async (req: AuthRequest, res: Response, next: NextFu
         recentAchievements: userAchievements,
         motivationalQuote: todayQuote,
         upcomingTasks: tasks.slice(0, 5),
+        gamification: {
+          xp: user?.xp || 0,
+          level: user?.level || 1,
+          lifePoints: user?.lifePoints || 0,
+          nextLevelXp,
+          progressPercent: Math.min(100, ((user?.xp || 0) / nextLevelXp) * 100)
+        },
+        todaysMission: {
+          items: missionItems,
+          progress: missionProgress,
+          total: missionItems.length
+        },
+        aiCoach: {
+          message: aiCoachMessage
+        }
       },
     });
   } catch (e) { next(e); }
 };
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'morning';
+  if (h < 17) return 'afternoon';
+  return 'evening';
+}

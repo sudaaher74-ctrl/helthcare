@@ -47,6 +47,11 @@ model User {
   updatedAt        DateTime  @updatedAt
   lastLoginAt      DateTime?
 
+  // Gamification
+  xp               Int       @default(0)
+  level            Int       @default(1)
+  lifePoints       Int       @default(0)
+
   // Relations
   habits           Habit[]
   habitLogs        HabitLog[]
@@ -62,6 +67,7 @@ model User {
   notifications    Notification[]
   waterLogs        WaterLog[]
   refreshTokens    RefreshToken[]
+  dailyCheckIns    DailyCheckIn[]
 
   @@map("users")
 }
@@ -75,6 +81,27 @@ model RefreshToken {
   createdAt DateTime @default(now())
 
   @@map("refresh_tokens")
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DAILY CHECK-IN (MOOD & LOG)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model DailyCheckIn {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date        DateTime
+  mood        Int      // 1-4 scale (1=Bad, 2=Okay, 3=Good, 4=Amazing)
+  notes       String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@map("daily_checkins")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

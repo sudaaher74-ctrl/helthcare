@@ -31,6 +31,8 @@ import aiRoutes from './routes/ai';
 import notificationRoutes from './routes/notifications';
 import settingsRoutes from './routes/settings';
 import dashboardRoutes from './routes/dashboard';
+import gamificationRoutes from './routes/gamification';
+import dailyCheckinRoutes from './routes/dailyCheckin';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -93,6 +95,8 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/gamification', gamificationRoutes);
+app.use('/api/daily-checkin', dailyCheckinRoutes);
 
 // ─── Error Handling ──────────────────────────────────────────────────────────
 app.use(notFound);
