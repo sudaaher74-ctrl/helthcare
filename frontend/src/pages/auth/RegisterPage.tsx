@@ -73,7 +73,7 @@ export default function RegisterPage() {
                 <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input {...register('name')} placeholder="Your name" className="input-field pl-10" />
               </div>
-              {errors.name && <p className="text-rose-400 text-xs mt-1">{errors.name.message}</p>}
+              {errors.name && <p className="text-[var(--color-text-muted)] text-xs mt-1">{errors.name.message}</p>}
             </div>
 
             <div>
@@ -82,7 +82,7 @@ export default function RegisterPage() {
                 <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input {...register('email')} type="email" placeholder="you@example.com" className="input-field pl-10" />
               </div>
-              {errors.email && <p className="text-rose-400 text-xs mt-1">{errors.email.message}</p>}
+              {errors.email && <p className="text-[var(--color-text-muted)] text-xs mt-1">{errors.email.message}</p>}
             </div>
 
             <div>
@@ -100,7 +100,7 @@ export default function RegisterPage() {
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              {errors.password && <p className="text-rose-400 text-xs mt-1">{errors.password.message}</p>}
+              {errors.password && <p className="text-[var(--color-text-muted)] text-xs mt-1">{errors.password.message}</p>}
             </div>
 
             <div>
@@ -109,7 +109,7 @@ export default function RegisterPage() {
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input {...register('confirmPassword')} type={showPass ? 'text' : 'password'} placeholder="••••••••" className="input-field pl-10" />
               </div>
-              {errors.confirmPassword && <p className="text-rose-400 text-xs mt-1">{errors.confirmPassword.message}</p>}
+              {errors.confirmPassword && <p className="text-[var(--color-text-muted)] text-xs mt-1">{errors.confirmPassword.message}</p>}
             </div>
 
             <button type="submit" disabled={isSubmitting} className="btn btn-primary w-full btn-lg">
@@ -138,7 +138,7 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-[var(--color-text-muted)] mt-6">
             Already have an account?{' '}
-            <Link to="/login" className="text-violet-400 hover:text-violet-300 font-semibold">Sign in</Link>
+            <Link to="/login" className="text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)] font-semibold">Sign in</Link>
           </p>
         </div>
       </motion.div>

@@ -21,7 +21,7 @@ export default function AnalyticsPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-[var(--color-text-base)] bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500">
+          <h1 className="text-3xl font-black text-[var(--color-text-base)] bg-clip-text text-transparent bg-gradient-to-r from-[var(--color-text-base)] to-[var(--color-text-muted)]">
             Insights
           </h1>
           <p className="text-[var(--color-text-muted)] text-sm mt-1">Track your progress and discover trends</p>
@@ -30,7 +30,7 @@ export default function AnalyticsPage() {
           {PERIODS.map(p => (
             <button key={p} onClick={() => setPeriod(p)}
               className={`px-5 py-1.5 rounded-lg text-sm font-bold transition-all capitalize ${
-                period === p ? 'bg-violet-600 text-[var(--color-text-base)] shadow-lg shadow-violet-500/20' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-base)]'
+                period === p ? 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)] text-[var(--color-text-base)] shadow-lg shadow-md' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-base)]'
               }`}>
               {p}
             </button>
@@ -47,9 +47,9 @@ export default function AnalyticsPage() {
           {/* Weight Progress */}
           {data?.weight?.data?.length > 1 && (
             <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-surface)] rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
               <h2 className="font-bold text-[var(--color-text-base)] mb-6 flex items-center gap-2 relative z-10">
-                <TrendingUp size={18} className="text-emerald-400" /> Weight Progress
+                <TrendingUp size={18} className="text-[var(--color-text-muted)]" /> Weight Progress
               </h2>
               <div className="h-64 relative z-10">
                 <ResponsiveContainer width="100%" height="100%">
@@ -68,9 +68,9 @@ export default function AnalyticsPage() {
           {/* Habit Completion */}
           {data?.habits?.data?.length > 0 && (
             <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-surface)] rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
               <h2 className="font-bold text-[var(--color-text-base)] mb-6 flex items-center gap-2 relative z-10">
-                <Activity size={18} className="text-amber-400" /> Habit Completion Rate
+                <Activity size={18} className="text-[var(--color-text-muted)]" /> Habit Completion Rate
               </h2>
               <div className="h-64 relative z-10">
                 <ResponsiveContainer width="100%" height="100%">
@@ -89,7 +89,7 @@ export default function AnalyticsPage() {
           {/* Nutrition Calories */}
           {data?.nutrition?.data?.length > 0 && (
             <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-surface)] rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
               <h2 className="font-bold text-[var(--color-text-base)] mb-6 flex items-center gap-2 relative z-10">
                 <span>🔥</span> Daily Calories
               </h2>
@@ -110,10 +110,10 @@ export default function AnalyticsPage() {
           {/* Sleep */}
           {data?.sleep?.data?.length > 0 && (
             <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-surface)] rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
               <h2 className="font-bold text-[var(--color-text-base)] mb-6 flex items-center gap-2 relative z-10">
                 <span>😴</span> Sleep Hours
-                <span className="badge badge-cyan ml-2 border border-cyan-400/20 bg-cyan-400/10">Avg: {data.sleep.avgHours}h</span>
+                <span className="badge badge-cyan ml-2 border border-[var(--color-border-subtle)] bg-[var(--color-surface)]">Avg: {data.sleep.avgHours}h</span>
               </h2>
               <div className="h-64 relative z-10">
                 <ResponsiveContainer width="100%" height="100%">
@@ -133,9 +133,9 @@ export default function AnalyticsPage() {
           {data?.workouts && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                { label: 'Total Sessions', value: data.workouts.totalSessions, icon: '🏋️', color: 'text-violet-400', shadow: 'shadow-violet-500/20' },
-                { label: 'Total Hours', value: `${Math.round(data.workouts.totalMinutes/60)}h`, icon: '⏱️', color: 'text-amber-400', shadow: 'shadow-amber-500/20' },
-                { label: 'Avg Duration', value: data.workouts.totalSessions ? `${Math.round(data.workouts.totalMinutes/data.workouts.totalSessions)}min` : '--', icon: '📊', color: 'text-emerald-400', shadow: 'shadow-emerald-500/20' },
+                { label: 'Total Sessions', value: data.workouts.totalSessions, icon: '🏋️', color: 'text-[var(--color-text-muted)]', shadow: 'shadow-md' },
+                { label: 'Total Hours', value: `${Math.round(data.workouts.totalMinutes/60)}h`, icon: '⏱️', color: 'text-[var(--color-text-muted)]', shadow: 'shadow-md' },
+                { label: 'Avg Duration', value: data.workouts.totalSessions ? `${Math.round(data.workouts.totalMinutes/data.workouts.totalSessions)}min` : '--', icon: '📊', color: 'text-[var(--color-text-muted)]', shadow: 'shadow-md' },
               ].map(s => (
                 <div key={s.label} className={`glass-card p-6 flex flex-col items-center justify-center text-center transition-all hover:scale-105 hover:bg-[var(--color-surface)]`}>
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-[var(--color-surface)] border border-[var(--color-border-subtle)] mb-4 shadow-lg ${s.shadow}`}>

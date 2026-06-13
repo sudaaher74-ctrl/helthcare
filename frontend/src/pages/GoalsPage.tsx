@@ -72,10 +72,10 @@ export default function GoalsPage() {
                   </div>
                   <div className="flex items-center gap-1">
                     <button onClick={() => updateGoal.mutate({ id: goal.id, data: { status: 'COMPLETED', completedAt: new Date() } })}
-                      className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-emerald-400">
+                      className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
                       <CheckCircle size={16} />
                     </button>
-                    <button onClick={() => deleteGoal.mutate(goal.id)} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-rose-400">
+                    <button onClick={() => deleteGoal.mutate(goal.id)} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
                       <Trash2 size={14} />
                     </button>
                   </div>
@@ -105,7 +105,7 @@ export default function GoalsPage() {
                       <div key={m.id} className="flex items-center gap-2 text-xs">
                         <button onClick={() => api.put(`/goals/${goal.id}/milestones/${m.id}`, { isCompleted: !m.isCompleted })
                           .then(() => qc.invalidateQueries({ queryKey: ['goals'] }))}
-                          className={`w-4 h-4 rounded flex-shrink-0 border transition-all flex items-center justify-center ${m.isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-[var(--color-border-subtle)]'}`}>
+                          className={`w-4 h-4 rounded flex-shrink-0 border transition-all flex items-center justify-center ${m.isCompleted ? 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)] border-[var(--color-border-subtle)]' : 'border-[var(--color-border-subtle)]'}`}>
                           {m.isCompleted && <CheckCircle size={10} className="text-[var(--color-text-base)]" />}
                         </button>
                         <span className={m.isCompleted ? 'line-through text-slate-600' : 'text-slate-300'}>{m.title}</span>
@@ -197,7 +197,7 @@ function GoalForm({ onClose, onSave }: any) {
               <input key={i} value={m.title} onChange={e => setMilestones(p => p.map((x,xi) => xi===i ? {...x,title:e.target.value} : x))}
                 placeholder={`Milestone ${i+1}`} className="input-field mb-2 text-sm" />
             ))}
-            <button type="button" onClick={() => setMilestones(p => [...p, { title: '' }])} className="text-xs text-violet-400 hover:text-violet-300">
+            <button type="button" onClick={() => setMilestones(p => [...p, { title: '' }])} className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
               + Add Milestone
             </button>
           </div>

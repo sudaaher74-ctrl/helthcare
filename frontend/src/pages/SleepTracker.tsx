@@ -67,7 +67,7 @@ export default function SleepTracker() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
         <div className="stat-card">
-          <Moon size={20} className="text-indigo-400 mb-2" />
+          <Moon size={20} className="text-[var(--color-text-muted)] mb-2" />
           <p className="text-2xl font-extrabold text-[var(--color-text-base)]">{avgHours}h</p>
           <p className="text-xs text-[var(--color-text-muted)]">Avg Sleep</p>
         </div>
@@ -106,7 +106,7 @@ export default function SleepTracker() {
             <div className="flex gap-3">
               {QUALITIES.map((q, i) => (
                 <button key={i} type="button" onClick={() => setForm(p=>({...p, quality: i+1}))}
-                  className={`flex-1 py-2 rounded-xl border text-lg transition-all ${form.quality === i+1 ? 'border-indigo-500 bg-indigo-500/10' : 'border-[var(--color-border-subtle)]'}`}>
+                  className={`flex-1 py-2 rounded-xl border text-lg transition-all ${form.quality === i+1 ? 'border-[var(--color-border-subtle)] bg-[var(--color-surface)]' : 'border-[var(--color-border-subtle)]'}`}>
                   {q}
                 </button>
               ))}
@@ -154,8 +154,8 @@ export default function SleepTracker() {
             {logs.map((log: any) => (
               <div key={log.id} className="flex items-center justify-between p-3.5 glass-card glass-card-hover">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                    <Moon size={16} className="text-indigo-400" />
+                  <div className="w-9 h-9 rounded-lg bg-[var(--color-surface)] flex items-center justify-center">
+                    <Moon size={16} className="text-[var(--color-text-muted)]" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-[var(--color-text-base)]">
@@ -166,7 +166,7 @@ export default function SleepTracker() {
                     </p>
                   </div>
                 </div>
-                <button onClick={() => deleteLog.mutate(log.id)} className="btn btn-ghost btn-icon text-slate-600 hover:text-rose-400">
+                <button onClick={() => deleteLog.mutate(log.id)} className="btn btn-ghost btn-icon text-slate-600 hover:text-[var(--color-text-muted)]">
                   <Trash2 size={14} />
                 </button>
               </div>

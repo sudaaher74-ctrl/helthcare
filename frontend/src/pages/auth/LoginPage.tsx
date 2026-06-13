@@ -79,7 +79,7 @@ export default function LoginPage() {
                   autoComplete="email"
                 />
               </div>
-              {errors.email && <p className="text-rose-400 text-xs mt-1">{errors.email.message}</p>}
+              {errors.email && <p className="text-[var(--color-text-muted)] text-xs mt-1">{errors.email.message}</p>}
             </div>
 
             <div>
@@ -101,7 +101,7 @@ export default function LoginPage() {
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              {errors.password && <p className="text-rose-400 text-xs mt-1">{errors.password.message}</p>}
+              {errors.password && <p className="text-[var(--color-text-muted)] text-xs mt-1">{errors.password.message}</p>}
             </div>
 
             <button
@@ -137,7 +137,7 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-[var(--color-text-muted)] mt-6">
             Don't have an account?{' '}
-            <Link to="/register" className="text-violet-400 hover:text-violet-300 font-semibold">
+            <Link to="/register" className="text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)] font-semibold">
               Create one
             </Link>
           </p>

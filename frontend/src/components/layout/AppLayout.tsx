@@ -101,7 +101,7 @@ export default function AppLayout() {
             <div className="glass-card p-3">
               <div className="flex justify-between text-xs text-[var(--color-text-muted)] mb-2">
                 <span>Weight Goal</span>
-                <span className="text-violet-400 font-semibold">
+                <span className="text-[var(--color-text-muted)] font-semibold">
                   {Math.max(0, user.targetWeight - user.currentWeight).toFixed(1)}kg left
                 </span>
               </div>
@@ -199,7 +199,7 @@ export default function AppLayout() {
               }}
               className="bottom-nav-item flex items-center justify-center -mt-6"
             >
-              <div className="bg-violet-600 rounded-full p-3 shadow-lg shadow-violet-500/30">
+              <div className="bg-[var(--color-text-base)] text-[var(--color-bg-primary)] rounded-full p-3 shadow-lg shadow-md">
                 <item.icon size={28} className="text-[var(--color-text-base)]" />
               </div>
               <span className="mt-1">{item.label}</span>

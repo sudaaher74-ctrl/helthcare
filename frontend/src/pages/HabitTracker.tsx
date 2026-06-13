@@ -94,7 +94,7 @@ export default function HabitTracker() {
               />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-lg font-bold text-violet-400">{rate}%</span>
+              <span className="text-lg font-bold text-[var(--color-text-muted)]">{rate}%</span>
             </div>
           </div>
         </div>
@@ -108,15 +108,15 @@ export default function HabitTracker() {
         </div>
         <div className="grid grid-cols-3 gap-3 mt-4">
           <div className="text-center">
-            <p className="text-xl font-bold text-amber-400">{stats?.completionRate || 0}%</p>
+            <p className="text-xl font-bold text-[var(--color-text-muted)]">{stats?.completionRate || 0}%</p>
             <p className="text-xs text-[var(--color-text-muted)]">7-Day Rate</p>
           </div>
           <div className="text-center">
-            <p className="text-xl font-bold text-emerald-400">{stats?.totalCompleted || 0}</p>
+            <p className="text-xl font-bold text-[var(--color-text-muted)]">{stats?.totalCompleted || 0}</p>
             <p className="text-xs text-[var(--color-text-muted)]">Total Completed</p>
           </div>
           <div className="text-center">
-            <p className="text-xl font-bold text-violet-400">{total}</p>
+            <p className="text-xl font-bold text-[var(--color-text-muted)]">{total}</p>
             <p className="text-xs text-[var(--color-text-muted)]">Active Habits</p>
           </div>
         </div>
@@ -128,7 +128,7 @@ export default function HabitTracker() {
           <button key={cat} onClick={() => setFilter(cat)}
             className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all border ${
               filter === cat
-                ? 'bg-violet-500/20 border-violet-500/50 text-violet-300'
+                ? 'bg-[var(--color-surface)] border-[var(--color-border-subtle)] text-[var(--color-text-muted)]'
                 : 'border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:border-[var(--color-border-subtle)]'
             }`}>
             {cat === 'ALL' ? '🎯 All' : `${CATEGORY_ICONS[cat]} ${cat.charAt(0) + cat.slice(1).toLowerCase()}`}
@@ -227,7 +227,7 @@ function HabitCard({ habit, onToggle, onEdit, onDelete }: any) {
         <button onClick={onEdit} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-slate-300">
           <Edit2 size={14} />
         </button>
-        <button onClick={onDelete} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-rose-400">
+        <button onClick={onDelete} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
           <Trash2 size={14} />
         </button>
       </div>

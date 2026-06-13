@@ -91,18 +91,18 @@ export default function WeightTracker() {
       {/* Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="stat-card">
-          <Scale size={20} className="text-violet-400 mb-2" />
+          <Scale size={20} className="text-[var(--color-text-muted)] mb-2" />
           <p className="text-2xl font-extrabold text-[var(--color-text-base)]">{current || '--'}</p>
           <p className="text-xs text-[var(--color-text-muted)]">Current (kg)</p>
         </div>
         <div className="stat-card">
-          <Target size={20} className="text-emerald-400 mb-2" />
+          <Target size={20} className="text-[var(--color-text-muted)] mb-2" />
           <p className="text-2xl font-extrabold text-[var(--color-text-base)]">{target}</p>
           <p className="text-xs text-[var(--color-text-muted)]">Target (kg)</p>
         </div>
         <div className="stat-card">
-          <TrendingUp size={20} className="text-amber-400 mb-2" />
-          <p className={`text-2xl font-extrabold ${remaining > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+          <TrendingUp size={20} className="text-[var(--color-text-muted)] mb-2" />
+          <p className={`text-2xl font-extrabold ${remaining > 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-muted)]'}`}>
             {remaining > 0 ? `+${remaining.toFixed(1)}` : '✓'}
           </p>
           <p className="text-xs text-[var(--color-text-muted)]">kg to goal</p>
@@ -116,15 +116,15 @@ export default function WeightTracker() {
 
       {/* Forecast Banner */}
       {forecast && (
-        <div className="glass-card p-4 border-l-2 border-emerald-500">
+        <div className="glass-card p-4 border-l-2 border-[var(--color-border-subtle)]">
           <div className="flex items-center gap-3">
             <span className="text-2xl">🎯</span>
             <div>
               <p className="text-sm font-semibold text-[var(--color-text-base)]">Goal Forecast</p>
               <p className="text-xs text-[var(--color-text-muted)]">
-                At your current rate of <span className="text-emerald-400 font-bold">+{forecast.weeklyGain}kg/week</span>,
+                At your current rate of <span className="text-[var(--color-text-muted)] font-bold">+{forecast.weeklyGain}kg/week</span>,
                 you'll reach {target}kg in approximately{' '}
-                <span className="text-emerald-400 font-bold">{forecast.weeksRemaining} weeks</span>
+                <span className="text-[var(--color-text-muted)] font-bold">{forecast.weeksRemaining} weeks</span>
                 {' '}({format(new Date(forecast.estimatedDate), 'MMMM yyyy')})
               </p>
             </div>
@@ -137,7 +137,7 @@ export default function WeightTracker() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <TrendingUp className="text-emerald-400" size={18} />
+              <TrendingUp className="text-[var(--color-text-muted)]" size={18} />
               Weight Progress
             </h2>
           </div>
@@ -190,11 +190,11 @@ export default function WeightTracker() {
                   </div>
                   <div className="flex items-center gap-3">
                     {diff !== null && (
-                      <span className={`text-sm font-semibold ${diff > 0 ? 'text-emerald-400' : diff < 0 ? 'text-rose-400' : 'text-[var(--color-text-muted)]'}`}>
+                      <span className={`text-sm font-semibold ${diff > 0 ? 'text-[var(--color-text-muted)]' : diff < 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-muted)]'}`}>
                         {diff > 0 ? '+' : ''}{diff.toFixed(1)} kg
                       </span>
                     )}
-                    <button onClick={() => deleteLog.mutate(log.id)} className="btn btn-ghost btn-icon text-slate-600 hover:text-rose-400">
+                    <button onClick={() => deleteLog.mutate(log.id)} className="btn btn-ghost btn-icon text-slate-600 hover:text-[var(--color-text-muted)]">
                       <Trash2 size={14} />
                     </button>
                   </div>

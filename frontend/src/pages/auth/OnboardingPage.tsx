@@ -78,7 +78,7 @@ export default function OnboardingPage() {
               onClick={() => update('gender', g)}
               className={`py-2.5 rounded-lg border text-sm font-medium transition-all ${
                 formData.gender === g
-                  ? 'border-violet-500 bg-violet-500/10 text-violet-400'
+                  ? 'border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-muted)]'
                   : 'border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:border-[var(--color-border-subtle)]'
               }`}>
               {g.charAt(0) + g.slice(1).toLowerCase()}
@@ -105,8 +105,8 @@ export default function OnboardingPage() {
         <input value={formData.currentWeight} onChange={(e) => update('currentWeight', e.target.value)}
           type="number" step="0.1" className="input-field" />
       </div>
-      <div className="p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
-        <p className="text-violet-300 text-sm">
+      <div className="p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border-subtle)]">
+        <p className="text-[var(--color-text-muted)] text-sm">
           💪 Your starting weight: <strong>{formData.currentWeight} kg</strong>
         </p>
       </div>
@@ -136,8 +136,8 @@ export default function OnboardingPage() {
           type="number" className="input-field" />
         <p className="text-xs text-[var(--color-text-muted)] mt-1">Recommended for muscle gain: 130-160g</p>
       </div>
-      <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-        <p className="text-emerald-300 text-sm">
+      <div className="p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border-subtle)]">
+        <p className="text-[var(--color-text-muted)] text-sm">
           📈 Goal: <strong>{formData.currentWeight}kg → {formData.targetWeight}kg</strong>
           {' '}({parseFloat(formData.targetWeight) > parseFloat(formData.currentWeight)
             ? `+${(parseFloat(formData.targetWeight) - parseFloat(formData.currentWeight)).toFixed(1)}kg to gain`
@@ -163,18 +163,18 @@ export default function OnboardingPage() {
         <button key={a.value} type="button" onClick={() => update('activityLevel', a.value)}
           className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all text-left ${
             formData.activityLevel === a.value
-              ? 'border-violet-500 bg-violet-500/10'
+              ? 'border-[var(--color-border-subtle)] bg-[var(--color-surface)]'
               : 'border-white/8 hover:border-white/16 bg-white/3'
           }`}>
           <span className="text-2xl">{a.icon}</span>
           <div>
-            <p className={`font-semibold text-sm ${formData.activityLevel === a.value ? 'text-violet-300' : 'text-slate-200'}`}>
+            <p className={`font-semibold text-sm ${formData.activityLevel === a.value ? 'text-[var(--color-text-muted)]' : 'text-slate-200'}`}>
               {a.label}
             </p>
             <p className="text-xs text-[var(--color-text-muted)]">{a.desc}</p>
           </div>
           {formData.activityLevel === a.value && (
-            <Check size={16} className="ml-auto text-violet-400 flex-shrink-0" />
+            <Check size={16} className="ml-auto text-[var(--color-text-muted)] flex-shrink-0" />
           )}
         </button>
       ))}

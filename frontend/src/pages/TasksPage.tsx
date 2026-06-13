@@ -25,7 +25,7 @@ export default function TasksPage() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['tasks'] }),
   })
 
-  const PRIORITY_COLORS: Record<string, string> = { URGENT: 'text-rose-400 border-rose-400/30', HIGH: 'text-orange-400 border-orange-400/30', MEDIUM: 'text-amber-400 border-amber-400/30', LOW: 'text-[var(--color-text-muted)] border-slate-400/30' }
+  const PRIORITY_COLORS: Record<string, string> = { URGENT: 'text-[var(--color-text-muted)] border-[var(--color-border-subtle)]', HIGH: 'text-[var(--color-text-muted)] border-[var(--color-border-subtle)]', MEDIUM: 'text-[var(--color-text-muted)] border-[var(--color-border-subtle)]', LOW: 'text-[var(--color-text-muted)] border-slate-400/30' }
 
   const backlog = (tasks || []).filter((t: any) => t.status === 'BACKLOG')
   const inProgress = (tasks || []).filter((t: any) => t.status === 'IN_PROGRESS' || t.status === 'REVIEW')
@@ -48,14 +48,14 @@ export default function TasksPage() {
       {/* Focus Score */}
       <div className="glass-card p-5 border-l-4 border-l-violet-500 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-full bg-violet-500/20 flex items-center justify-center border border-violet-500/30">
+          <div className="w-14 h-14 rounded-full bg-[var(--color-surface)] flex items-center justify-center border border-[var(--color-border-subtle)]">
             <span className="text-2xl">🎯</span>
           </div>
           <div>
             <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Daily Focus Score</h2>
             <div className="flex items-end gap-2">
               <span className="text-3xl font-black text-[var(--color-text-base)]">{focusScore}</span>
-              <span className="text-violet-400 font-bold mb-1">/ 100</span>
+              <span className="text-[var(--color-text-muted)] font-bold mb-1">/ 100</span>
             </div>
           </div>
         </div>
@@ -90,8 +90,8 @@ function Column({ title, tasks, color, onComplete, onDelete, pColors, isDone }: 
             <div className="flex items-start justify-between">
               <p className={`text-sm font-semibold text-[var(--color-text-base)] ${isDone ? 'line-through text-[var(--color-text-muted)]' : ''}`}>{t.title}</p>
               <div className="flex gap-1">
-                <button onClick={() => onComplete(t.id)} className={`btn-icon btn-ghost ${isDone ? 'text-emerald-400' : 'text-[var(--color-text-muted)] hover:text-emerald-400'}`}><CheckCircle size={14}/></button>
-                <button onClick={() => onDelete(t.id)} className="btn-icon btn-ghost text-[var(--color-text-muted)] hover:text-rose-400"><Trash2 size={14}/></button>
+                <button onClick={() => onComplete(t.id)} className={`btn-icon btn-ghost ${isDone ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]'}`}><CheckCircle size={14}/></button>
+                <button onClick={() => onDelete(t.id)} className="btn-icon btn-ghost text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]"><Trash2 size={14}/></button>
               </div>
             </div>
             {t.description && <p className="text-xs text-[var(--color-text-muted)] mt-1 line-clamp-2">{t.description}</p>}

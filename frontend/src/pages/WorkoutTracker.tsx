@@ -46,10 +46,10 @@ export default function WorkoutTracker() {
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: 'This Month', value: stats.totalSessions, unit: 'sessions', icon: '🏋️', color: 'text-violet-400' },
-            { label: 'Total Time', value: Math.round(stats.totalMinutes / 60), unit: 'hours', icon: '⏱️', color: 'text-amber-400' },
-            { label: 'Calories', value: stats.totalCalories, unit: 'kcal', icon: '🔥', color: 'text-orange-400' },
-            { label: 'Fav Category', value: Object.entries(stats.byCategory||{}).sort((a:any,b:any) => b[1]-a[1])[0]?.[0]?.toLowerCase() || '--', unit: '', icon: '⭐', color: 'text-emerald-400' },
+            { label: 'This Month', value: stats.totalSessions, unit: 'sessions', icon: '🏋️', color: 'text-[var(--color-text-muted)]' },
+            { label: 'Total Time', value: Math.round(stats.totalMinutes / 60), unit: 'hours', icon: '⏱️', color: 'text-[var(--color-text-muted)]' },
+            { label: 'Calories', value: stats.totalCalories, unit: 'kcal', icon: '🔥', color: 'text-[var(--color-text-muted)]' },
+            { label: 'Fav Category', value: Object.entries(stats.byCategory||{}).sort((a:any,b:any) => b[1]-a[1])[0]?.[0]?.toLowerCase() || '--', unit: '', icon: '⭐', color: 'text-[var(--color-text-muted)]' },
           ].map(s => (
             <div key={s.label} className="stat-card">
               <span className="text-2xl">{s.icon}</span>
@@ -95,7 +95,7 @@ export default function WorkoutTracker() {
                   <span className={`badge badge-violet text-xs`}>
                     {w.category.replace('_',' ').toLowerCase()}
                   </span>
-                  <button onClick={() => deleteWorkout.mutate(w.id)} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-rose-400">
+                  <button onClick={() => deleteWorkout.mutate(w.id)} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -208,7 +208,7 @@ function LogWorkoutModal({ onClose, onSave }: any) {
                       placeholder="kg" className="input-field text-sm" step="0.5" />
                   </div>
                 ))}
-                <button type="button" onClick={() => addSet(ei)} className="text-xs text-violet-400 hover:text-violet-300">
+                <button type="button" onClick={() => addSet(ei)} className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
                   + Add set
                 </button>
               </div>

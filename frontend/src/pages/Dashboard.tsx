@@ -52,14 +52,14 @@ export default function Dashboard() {
         {/* Gamification Widget */}
         <div className="flex flex-col items-end hidden sm:flex">
           <div className="flex items-center gap-2 mb-1">
-            <div className="bg-amber-500/20 border border-amber-500/50 text-amber-400 font-black text-xs px-2 py-0.5 rounded">
+            <div className="bg-[var(--color-surface)] border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] font-black text-xs px-2 py-0.5 rounded">
               LVL {gamification?.level || 1}
             </div>
-            <span className="text-xs font-bold text-violet-400">{gamification?.xp || 0} / {gamification?.nextLevelXp || 1000} XP</span>
+            <span className="text-xs font-bold text-[var(--color-text-muted)]">{gamification?.xp || 0} / {gamification?.nextLevelXp || 1000} XP</span>
           </div>
           <div className="w-40 h-2 bg-[var(--color-surface-hover)] rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all duration-1000"
+              className="h-full bg-gradient-to-r from-[var(--color-text-base)] to-[var(--color-text-muted)] rounded-full transition-all duration-1000"
               style={{ width: `${gamification?.progressPercent || 0}%` }}
             />
           </div>
@@ -74,7 +74,7 @@ export default function Dashboard() {
           animate={{ opacity: 1, scale: 1 }}
           className="glass-card p-6 flex flex-col items-center justify-center relative overflow-hidden"
         >
-          <div className="absolute inset-0 bg-violet-500/5 blur-3xl rounded-full scale-150" />
+          <div className="absolute inset-0 bg-[var(--color-surface)] blur-3xl rounded-full scale-150" />
           <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-6 z-10">Life Score</h2>
           <div className="relative w-48 h-48 flex items-center justify-center z-10">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
@@ -95,15 +95,15 @@ export default function Dashboard() {
               </defs>
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-5xl font-black text-[var(--color-text-base)] tracking-tighter shadow-violet-500/50 drop-shadow-lg">
+              <span className="text-5xl font-black text-[var(--color-text-base)] tracking-tighter shadow-md drop-shadow-lg">
                 {scores?.lifeScore || 0}
               </span>
-              <span className="text-xs text-violet-400 font-bold mt-1">/ 100</span>
+              <span className="text-xs text-[var(--color-text-muted)] font-bold mt-1">/ 100</span>
             </div>
           </div>
           <div className="mt-6 flex items-center gap-2 bg-[var(--color-surface)] px-4 py-2 rounded-full border border-[var(--color-border-subtle)] z-10">
             <span className="text-lg">🔥</span>
-            <span className="text-sm font-semibold text-amber-400">Excellent Momentum</span>
+            <span className="text-sm font-semibold text-[var(--color-text-muted)]">Excellent Momentum</span>
           </div>
         </motion.div>
 
@@ -118,7 +118,7 @@ export default function Dashboard() {
             <Zap size={100} />
           </div>
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[var(--color-surface)] flex items-center justify-center">
               <span className="text-lg">🧠</span>
             </div>
             <h2 className="font-bold text-[var(--color-text-base)]">AI Coach</h2>
@@ -128,7 +128,7 @@ export default function Dashboard() {
           </div>
           <div className="mt-4 pt-4 border-t border-[var(--color-border-subtle)] text-xs text-[var(--color-text-muted)] flex justify-between items-center relative z-10">
             <span>Powered by LifeOS</span>
-            <button className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">Ask Coach</button>
+            <button className="text-[var(--color-text-muted)] font-semibold hover:text-[var(--color-text-muted)] transition-colors">Ask Coach</button>
           </div>
         </motion.div>
 
@@ -141,17 +141,17 @@ export default function Dashboard() {
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Target className="text-rose-400" size={18} />
+              <Target className="text-[var(--color-text-muted)]" size={18} />
               Today's Mission
             </h2>
-            <span className="text-xs font-bold text-rose-400 bg-rose-400/10 px-2 py-1 rounded-md">
+            <span className="text-xs font-bold text-[var(--color-text-muted)] bg-[var(--color-surface)] px-2 py-1 rounded-md">
               {todaysMission?.progress || 0}/{todaysMission?.total || 4}
             </span>
           </div>
           
           <div className="progress-bar mb-5">
             <div 
-              className="progress-bar-fill bg-gradient-to-r from-rose-500 to-pink-500" 
+              className="progress-bar-fill bg-gradient-to-r from-[var(--color-text-base)] to-[var(--color-text-muted)]" 
               style={{ width: `${((todaysMission?.progress || 0) / (todaysMission?.total || 4)) * 100}%` }}
             />
           </div>
@@ -159,7 +159,7 @@ export default function Dashboard() {
           <div className="space-y-3">
             {todaysMission?.items?.map((item: any) => (
               <div key={item.id} className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${item.completed ? 'bg-rose-500 border-rose-500' : 'border-[var(--color-border-subtle)] bg-[var(--color-surface)]'}`}>
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${item.completed ? 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)] border-[var(--color-border-subtle)]' : 'border-[var(--color-border-subtle)] bg-[var(--color-surface)]'}`}>
                   {item.completed && <CheckCircle2 size={12} className="text-[var(--color-text-base)]" />}
                 </div>
                 <span className={`text-sm ${item.completed ? 'text-[var(--color-text-muted)] line-through' : 'text-slate-200'}`}>
@@ -170,8 +170,8 @@ export default function Dashboard() {
           </div>
           
           {todaysMission?.progress === todaysMission?.total && (
-            <div className="mt-4 bg-rose-500/10 border border-rose-500/20 rounded-lg p-3 text-center">
-              <p className="text-xs font-bold text-rose-400">Mission Accomplished! 🎉 +100 XP</p>
+            <div className="mt-4 bg-[var(--color-surface)] border border-[var(--color-border-subtle)] rounded-lg p-3 text-center">
+              <p className="text-xs font-bold text-[var(--color-text-muted)]">Mission Accomplished! 🎉 +100 XP</p>
             </div>
           )}
         </motion.div>
@@ -192,18 +192,18 @@ export default function Dashboard() {
         <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">Today's Stats</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
           <StatCard
-            icon={<Scale size={18} className="text-violet-400" />}
+            icon={<Scale size={18} className="text-[var(--color-text-muted)]" />}
             label="Current Weight"
             value={`${todayStats?.currentWeight || '--'} kg`}
             sub={todayStats?.weightRemaining ? `${todayStats.weightRemaining}kg to goal` : 'Goal not set'}
-            color="text-violet-400"
+            color="text-[var(--color-text-muted)]"
           />
           <StatCard
-            icon={<Flame size={18} className="text-orange-400" />}
+            icon={<Flame size={18} className="text-[var(--color-text-muted)]" />}
             label="Calories"
             value={`${todayStats?.calories || 0}`}
             sub={`of ${todayStats?.calorieGoal || 2800} kcal`}
-            color="text-orange-400"
+            color="text-[var(--color-text-muted)]"
             percent={todayStats?.calories && todayStats?.calorieGoal
               ? Math.min(100, (todayStats.calories / todayStats.calorieGoal) * 100) : 0}
           />
@@ -212,49 +212,49 @@ export default function Dashboard() {
             label="Protein"
             value={`${todayStats?.protein || 0}g`}
             sub={`of ${todayStats?.proteinGoal || 150}g`}
-            color="text-cyan-400"
+            color="text-[var(--color-text-muted)]"
             percent={todayStats?.protein && todayStats?.proteinGoal
               ? Math.min(100, (todayStats.protein / todayStats.proteinGoal) * 100) : 0}
           />
           <StatCard
-            icon={<Droplets size={18} className="text-blue-400" />}
+            icon={<Droplets size={18} className="text-[var(--color-text-muted)]" />}
             label="Water"
             value={`${todayStats?.water || 0}L`}
             sub={`of ${todayStats?.waterGoal || 3}L`}
-            color="text-blue-400"
+            color="text-[var(--color-text-muted)]"
             percent={todayStats?.water && todayStats?.waterGoal
               ? Math.min(100, (todayStats.water / todayStats.waterGoal) * 100) : 0}
           />
           <StatCard
-            icon={<Target size={18} className="text-amber-400" />}
+            icon={<Target size={18} className="text-[var(--color-text-muted)]" />}
             label="Habits"
             value={`${todayStats?.habitsCompleted || 0}/${todayStats?.habitsTotal || 0}`}
             sub={`${todayStats?.habitRate || 0}% complete`}
-            color="text-amber-400"
+            color="text-[var(--color-text-muted)]"
             percent={todayStats?.habitRate || 0}
           />
           <StatCard
-            icon={<Dumbbell size={18} className="text-emerald-400" />}
+            icon={<Dumbbell size={18} className="text-[var(--color-text-muted)]" />}
             label="Workout"
             value={todayStats?.hasWorkedOut ? 'Done ✓' : 'Not yet'}
             sub={todayStats?.hasWorkedOut ? 'Great work!' : 'Time to train!'}
-            color={todayStats?.hasWorkedOut ? 'text-emerald-400' : 'text-[var(--color-text-muted)]'}
+            color={todayStats?.hasWorkedOut ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-muted)]'}
           />
           <StatCard
-            icon={<Moon size={18} className="text-indigo-400" />}
+            icon={<Moon size={18} className="text-[var(--color-text-muted)]" />}
             label="Sleep"
             value={todayStats?.sleepHours ? `${todayStats.sleepHours}h` : '--'}
             sub={todayStats?.sleepHours ? getSleepLabel(todayStats.sleepHours) : 'Not logged'}
-            color="text-indigo-400"
+            color="text-[var(--color-text-muted)]"
           />
           <StatCard
-            icon={<TrendingUp size={18} className="text-rose-400" />}
+            icon={<TrendingUp size={18} className="text-[var(--color-text-muted)]" />}
             label="Weight Goal"
             value={todayStats?.targetWeight ? `${todayStats.targetWeight} kg` : '--'}
             sub={todayStats?.weightRemaining
               ? `${todayStats.weightRemaining}kg remaining`
               : 'Set your goal'}
-            color="text-rose-400"
+            color="text-[var(--color-text-muted)]"
           />
         </div>
       </div>
@@ -265,10 +265,10 @@ export default function Dashboard() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Target size={18} className="text-amber-400" />
+              <Target size={18} className="text-[var(--color-text-muted)]" />
               Today's Habits
             </h2>
-            <Link to="/habits" className="text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1">
+            <Link to="/habits" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)] flex items-center gap-1">
               View all <ArrowRight size={12} />
             </Link>
           </div>
@@ -289,7 +289,7 @@ export default function Dashboard() {
               <div className="flex gap-1">
                 {Array.from({ length: todayStats?.habitsTotal || 0 }).map((_, i) => (
                   <div key={i} className={`w-2 h-2 rounded-full ${
-                    i < (todayStats?.habitsCompleted || 0) ? 'bg-violet-500' : 'bg-[var(--color-surface-hover)]'
+                    i < (todayStats?.habitsCompleted || 0) ? 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)]' : 'bg-[var(--color-surface-hover)]'
                   }`} />
                 ))}
               </div>
@@ -301,10 +301,10 @@ export default function Dashboard() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Flame size={18} className="text-orange-400" />
+              <Flame size={18} className="text-[var(--color-text-muted)]" />
               Nutrition Today
             </h2>
-            <Link to="/nutrition" className="text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1">
+            <Link to="/nutrition" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)] flex items-center gap-1">
               Log food <ArrowRight size={12} />
             </Link>
           </div>
@@ -315,7 +315,7 @@ export default function Dashboard() {
               goal={todayStats?.calorieGoal || 2800}
               unit="kcal"
               color="#f97316"
-              gradient="from-orange-500 to-amber-500"
+              gradient="from-[var(--color-text-base)] to-[var(--color-text-muted)]"
             />
             <MacroBar
               label="Protein"
@@ -323,7 +323,7 @@ export default function Dashboard() {
               goal={todayStats?.proteinGoal || 150}
               unit="g"
               color="#06b6d4"
-              gradient="from-cyan-500 to-blue-500"
+              gradient="from-[var(--color-text-base)] to-[var(--color-text-muted)]"
             />
             <MacroBar
               label="Water"
@@ -331,7 +331,7 @@ export default function Dashboard() {
               goal={todayStats?.waterGoal || 3}
               unit="L"
               color="#3b82f6"
-              gradient="from-blue-500 to-indigo-500"
+              gradient="from-[var(--color-text-base)] to-[var(--color-text-muted)]"
             />
           </div>
 
@@ -357,10 +357,10 @@ export default function Dashboard() {
         <div className="glass-card p-5 lg:col-span-1">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Scale size={16} className="text-violet-400" />
+              <Scale size={16} className="text-[var(--color-text-muted)]" />
               Weight Trend
             </h2>
-            <Link to="/weight" className="text-xs text-violet-400 hover:text-violet-300">
+            <Link to="/weight" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
               <ArrowRight size={14} />
             </Link>
           </div>
@@ -370,7 +370,7 @@ export default function Dashboard() {
             <div className="flex flex-col items-center justify-center h-24 text-[var(--color-text-muted)]">
               <Scale size={24} className="mb-2 opacity-50" />
               <p className="text-xs">No weight logged yet</p>
-              <Link to="/weight" className="text-xs text-violet-400 mt-1">Log your weight →</Link>
+              <Link to="/weight" className="text-xs text-[var(--color-text-muted)] mt-1">Log your weight →</Link>
             </div>
           )}
         </div>
@@ -391,7 +391,7 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`text-sm font-bold ${s.currentStreak > 0 ? 'text-amber-400' : 'text-slate-600'}`}>
+                  <span className={`text-sm font-bold ${s.currentStreak > 0 ? 'text-[var(--color-text-muted)]' : 'text-slate-600'}`}>
                     {s.currentStreak}
                   </span>
                   <span className="text-xs text-slate-600">/ {s.longestStreak} best</span>
@@ -405,10 +405,10 @@ export default function Dashboard() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-emerald-400" />
+              <CheckCircle2 size={16} className="text-[var(--color-text-muted)]" />
               Upcoming Tasks
             </h2>
-            <Link to="/tasks" className="text-xs text-violet-400 hover:text-violet-300">
+            <Link to="/tasks" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
               <ArrowRight size={14} />
             </Link>
           </div>
@@ -438,18 +438,18 @@ export default function Dashboard() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Award size={16} className="text-amber-400" />
+              <Award size={16} className="text-[var(--color-text-muted)]" />
               Recent Achievements
             </h2>
-            <Link to="/achievements" className="text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1">
+            <Link to="/achievements" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)] flex items-center gap-1">
               View all <ArrowRight size={12} />
             </Link>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2">
             {recentAchievements?.map((ua: any) => (
-              <div key={ua.id} className="flex-shrink-0 flex flex-col items-center gap-1 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 min-w-[80px]">
+              <div key={ua.id} className="flex-shrink-0 flex flex-col items-center gap-1 p-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border-subtle)] min-w-[80px]">
                 <span className="text-2xl">{ua.achievement.icon}</span>
-                <p className="text-[10px] text-amber-300 font-semibold text-center leading-tight">
+                <p className="text-[10px] text-[var(--color-text-muted)] font-semibold text-center leading-tight">
                   {ua.achievement.name}
                 </p>
               </div>
@@ -542,7 +542,7 @@ function MiniWeightChart({ data, target }: { data: any[]; target?: number }) {
       </svg>
       <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[10px] text-slate-600 mt-1">
         <span>{data[0]?.weight}kg</span>
-        <span className="text-emerald-400 font-bold">{data[data.length - 1]?.weight}kg</span>
+        <span className="text-[var(--color-text-muted)] font-bold">{data[data.length - 1]?.weight}kg</span>
       </div>
     </div>
   )
@@ -595,7 +595,7 @@ function getStreakIcon(type: string) {
 
 function getPriorityColor(priority: string) {
   const colors: Record<string, string> = {
-    URGENT: 'bg-rose-500', HIGH: 'bg-orange-500', MEDIUM: 'bg-amber-500', LOW: 'bg-slate-500'
+    URGENT: 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)]', HIGH: 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)]', MEDIUM: 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)]', LOW: 'bg-slate-500'
   }
   return colors[priority] || 'bg-slate-500'
 }

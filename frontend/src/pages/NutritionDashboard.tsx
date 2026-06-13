@@ -46,9 +46,9 @@ export default function NutritionDashboard() {
   const calorieGoal = 2800
 
   const macros = [
-    { label: 'Protein', current: Math.round(totals?.protein||0), goal: 150, unit: 'g', color: '#06b6d4', bg: 'from-cyan-500 to-blue-500' },
-    { label: 'Carbs', current: Math.round(totals?.carbs||0), goal: 350, unit: 'g', color: '#10b981', bg: 'from-emerald-500 to-green-500' },
-    { label: 'Fat', current: Math.round(totals?.fat||0), goal: 80, unit: 'g', color: '#a78bfa', bg: 'from-violet-500 to-purple-500' },
+    { label: 'Protein', current: Math.round(totals?.protein||0), goal: 150, unit: 'g', color: '#06b6d4', bg: 'from-[var(--color-text-base)] to-[var(--color-text-muted)]' },
+    { label: 'Carbs', current: Math.round(totals?.carbs||0), goal: 350, unit: 'g', color: '#10b981', bg: 'from-[var(--color-text-base)] to-green-500' },
+    { label: 'Fat', current: Math.round(totals?.fat||0), goal: 80, unit: 'g', color: '#a78bfa', bg: 'from-[var(--color-text-base)] to-purple-500' },
   ]
 
   const handleImageAnalyze = async (file: File) => {
@@ -106,7 +106,7 @@ export default function NutritionDashboard() {
       {/* Main Calorie Ring & Macros */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="glass-card p-6 flex flex-col items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-orange-500/5 blur-3xl rounded-full scale-150" />
+          <div className="absolute inset-0 bg-[var(--color-surface)] blur-3xl rounded-full scale-150" />
           <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-6 z-10">Calories Today</h2>
           <div className="relative w-48 h-48 flex items-center justify-center z-10">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
@@ -128,7 +128,7 @@ export default function NutritionDashboard() {
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
               <span className="text-4xl font-black text-[var(--color-text-base)] drop-shadow-lg">{dailyCalories}</span>
-              <span className="text-xs text-orange-400 font-bold mt-1">/ {calorieGoal} kcal</span>
+              <span className="text-xs text-[var(--color-text-muted)] font-bold mt-1">/ {calorieGoal} kcal</span>
             </div>
           </div>
           <div className="mt-6 w-full max-w-xs space-y-4 relative z-10">
@@ -155,15 +155,15 @@ export default function NutritionDashboard() {
         {/* Water */}
         <div className="glass-card p-5">
           <h3 className="font-semibold text-[var(--color-text-base)] flex items-center gap-2 mb-3">
-            <Droplets size={16} className="text-blue-400" /> Water Intake
+            <Droplets size={16} className="text-[var(--color-text-muted)]" /> Water Intake
           </h3>
           <div className="flex items-center gap-4 mb-3">
-            <div className="text-3xl font-extrabold text-blue-400">
+            <div className="text-3xl font-extrabold text-[var(--color-text-muted)]">
               {((waterML || 0) / 1000).toFixed(1)}L
             </div>
             <div className="flex-1">
               <div className="progress-bar h-2">
-                <motion.div className="progress-bar-fill from-blue-500 to-cyan-500 bg-gradient-to-r"
+                <motion.div className="progress-bar-fill from-[var(--color-text-base)] to-[var(--color-text-muted)] bg-gradient-to-r"
                   animate={{ width: `${Math.min(100, (waterML / 1000 / 3) * 100)}%` }}
                   transition={{ duration: 1 }}
                 />
@@ -184,7 +184,7 @@ export default function NutritionDashboard() {
         {coach && (
           <div className="glass-card p-5">
             <h3 className="font-semibold text-[var(--color-text-base)] flex items-center gap-2 mb-3">
-              <Bot size={16} className="text-violet-400" /> AI Diet Coach
+              <Bot size={16} className="text-[var(--color-text-muted)]" /> AI Diet Coach
               <span className="badge badge-violet ml-auto">Score: {coach.nutritionScore}</span>
             </h3>
             <div className="space-y-2 max-h-36 overflow-y-auto">
@@ -228,11 +228,11 @@ export default function NutritionDashboard() {
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="text-right text-xs">
-                      <span className="text-cyan-400 font-semibold">{Math.round(meal.totalProtein)}g P</span>
+                      <span className="text-[var(--color-text-muted)] font-semibold">{Math.round(meal.totalProtein)}g P</span>
                       <span className="text-[var(--color-text-muted)] mx-1">·</span>
-                      <span className="text-emerald-400 font-semibold">{Math.round(meal.totalCarbs)}g C</span>
+                      <span className="text-[var(--color-text-muted)] font-semibold">{Math.round(meal.totalCarbs)}g C</span>
                     </div>
-                    <button onClick={() => deleteMeal.mutate(meal.id)} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-rose-400">
+                    <button onClick={() => deleteMeal.mutate(meal.id)} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
                       <Trash2 size={14} />
                     </button>
                   </div>
@@ -261,7 +261,7 @@ export default function NutritionDashboard() {
                 >
                   {aiLoading ? (
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-10 h-10 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-10 h-10 border-2 border-[var(--color-border-subtle)] border-t-transparent rounded-full animate-spin" />
                       <p className="text-[var(--color-text-muted)] text-sm">Analyzing your food...</p>
                       <p className="text-slate-600 text-xs">AI is estimating nutrition</p>
                     </div>
@@ -281,8 +281,8 @@ export default function NutritionDashboard() {
 
               {aiResult && (
                 <div className="space-y-4">
-                  <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/20">
-                    <p className="text-xs text-violet-300 mb-2">🤖 AI detected {aiResult.foods?.length} food item(s)</p>
+                  <div className="p-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border-subtle)]">
+                    <p className="text-xs text-[var(--color-text-muted)] mb-2">🤖 AI detected {aiResult.foods?.length} food item(s)</p>
                     <p className="text-xs text-[var(--color-text-muted)]">{aiResult.analysisNotes}</p>
                   </div>
                   {aiResult.foods?.map((f: any, i: number) => (
@@ -292,13 +292,13 @@ export default function NutritionDashboard() {
                         <p className="text-xs text-[var(--color-text-muted)]">{f.portionSize}</p>
                       </div>
                       <div className="text-right text-xs space-y-0.5">
-                        <p className="text-orange-400 font-bold">{f.calories} kcal</p>
-                        <p className="text-cyan-400">{f.protein}g protein</p>
+                        <p className="text-[var(--color-text-muted)] font-bold">{f.calories} kcal</p>
+                        <p className="text-[var(--color-text-muted)]">{f.protein}g protein</p>
                       </div>
                     </div>
                   ))}
                   <div className="grid grid-cols-4 gap-2 p-3 bg-white/3 rounded-xl">
-                    {[['Calories','totalCalories','kcal','text-orange-400'],['Protein','totalProtein','g','text-cyan-400'],['Carbs','totalCarbs','g','text-emerald-400'],['Fat','totalFat','g','text-violet-400']].map(([l,k,u,c]) => (
+                    {[['Calories','totalCalories','kcal','text-[var(--color-text-muted)]'],['Protein','totalProtein','g','text-[var(--color-text-muted)]'],['Carbs','totalCarbs','g','text-[var(--color-text-muted)]'],['Fat','totalFat','g','text-[var(--color-text-muted)]']].map(([l,k,u,c]) => (
                       <div key={l} className="text-center">
                         <p className={`text-sm font-bold ${c}`}>{Math.round(aiResult[k as string])}{u}</p>
                         <p className="text-[10px] text-[var(--color-text-muted)]">{l}</p>
@@ -361,7 +361,7 @@ function AddMealModal({ date, onClose, onSave }: any) {
             <div className="grid grid-cols-3 gap-2">
               {MEAL_TYPES.map(t => (
                 <button key={t} type="button" onClick={() => setMealType(t)}
-                  className={`py-2 rounded-lg border text-xs font-medium transition-all ${mealType === t ? 'border-violet-500 bg-violet-500/10 text-violet-300' : 'border-[var(--color-border-subtle)] text-[var(--color-text-muted)]'}`}>
+                  className={`py-2 rounded-lg border text-xs font-medium transition-all ${mealType === t ? 'border-[var(--color-border-subtle)] bg-[var(--color-surface)] text-[var(--color-text-muted)]' : 'border-[var(--color-border-subtle)] text-[var(--color-text-muted)]'}`}>
                   {MEAL_ICONS[t]} {t.replace('_',' ').toLowerCase()}
                 </button>
               ))}
