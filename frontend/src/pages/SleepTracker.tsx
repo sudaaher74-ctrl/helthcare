@@ -56,8 +56,8 @@ export default function SleepTracker() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Sleep Tracker</h1>
-          <p className="text-slate-400 text-sm">Monitor your rest and recovery</p>
+          <h1 className="text-2xl font-bold text-[var(--color-text-base)]">Sleep Tracker</h1>
+          <p className="text-[var(--color-text-muted)] text-sm">Monitor your rest and recovery</p>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="btn btn-primary">
           <Plus size={16} /> Log Sleep
@@ -68,45 +68,45 @@ export default function SleepTracker() {
       <div className="grid grid-cols-3 gap-3">
         <div className="stat-card">
           <Moon size={20} className="text-indigo-400 mb-2" />
-          <p className="text-2xl font-extrabold text-white">{avgHours}h</p>
-          <p className="text-xs text-slate-500">Avg Sleep</p>
+          <p className="text-2xl font-extrabold text-[var(--color-text-base)]">{avgHours}h</p>
+          <p className="text-xs text-[var(--color-text-muted)]">Avg Sleep</p>
         </div>
         <div className="stat-card">
           <span className="text-2xl mb-2 block">⭐</span>
-          <p className="text-2xl font-extrabold text-white">{avgQuality}<span className="text-sm text-slate-500">/5</span></p>
-          <p className="text-xs text-slate-500">Avg Quality</p>
+          <p className="text-2xl font-extrabold text-[var(--color-text-base)]">{avgQuality}<span className="text-sm text-[var(--color-text-muted)]">/5</span></p>
+          <p className="text-xs text-[var(--color-text-muted)]">Avg Quality</p>
         </div>
         <div className="stat-card">
           <span className="text-2xl mb-2 block">📊</span>
-          <p className="text-2xl font-extrabold text-white">{logs.length}</p>
-          <p className="text-xs text-slate-500">Days Logged</p>
+          <p className="text-2xl font-extrabold text-[var(--color-text-base)]">{logs.length}</p>
+          <p className="text-xs text-[var(--color-text-muted)]">Days Logged</p>
         </div>
       </div>
 
       {/* Quick Log Form */}
       {showForm && (
         <motion.form initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} onSubmit={handleSubmit} className="glass-card p-5 space-y-4">
-          <h3 className="font-semibold text-white">Log Sleep</h3>
+          <h3 className="font-semibold text-[var(--color-text-base)]">Log Sleep</h3>
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Bed Time</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Bed Time</label>
               <input type="time" value={form.bedTime} onChange={e => setForm(p=>({...p, bedTime: e.target.value}))} className="input-field" />
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Wake Time</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Wake Time</label>
               <input type="time" value={form.wakeTime} onChange={e => setForm(p=>({...p, wakeTime: e.target.value}))} className="input-field" />
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Date</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Date</label>
               <input type="date" value={form.date} onChange={e => setForm(p=>({...p, date: e.target.value}))} className="input-field" />
             </div>
           </div>
           <div>
-            <label className="text-xs text-slate-500 mb-2 block">Sleep Quality</label>
+            <label className="text-xs text-[var(--color-text-muted)] mb-2 block">Sleep Quality</label>
             <div className="flex gap-3">
               {QUALITIES.map((q, i) => (
                 <button key={i} type="button" onClick={() => setForm(p=>({...p, quality: i+1}))}
-                  className={`flex-1 py-2 rounded-xl border text-lg transition-all ${form.quality === i+1 ? 'border-indigo-500 bg-indigo-500/10' : 'border-white/10'}`}>
+                  className={`flex-1 py-2 rounded-xl border text-lg transition-all ${form.quality === i+1 ? 'border-indigo-500 bg-indigo-500/10' : 'border-[var(--color-border-subtle)]'}`}>
                   {q}
                 </button>
               ))}
@@ -124,7 +124,7 @@ export default function SleepTracker() {
       {/* Chart */}
       {chartData.length > 1 && (
         <div className="glass-card p-5">
-          <h2 className="font-bold text-white mb-4">Sleep Hours (Last 14 days)</h2>
+          <h2 className="font-bold text-[var(--color-text-base)] mb-4">Sleep Hours (Last 14 days)</h2>
           <div className="h-40">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
@@ -141,13 +141,13 @@ export default function SleepTracker() {
 
       {/* History */}
       <div>
-        <h2 className="font-bold text-white mb-3">Sleep History</h2>
+        <h2 className="font-bold text-[var(--color-text-base)] mb-3">Sleep History</h2>
         {isLoading ? (
           <div className="space-y-2">{Array(5).fill(0).map((_,i) => <div key={i} className="skeleton h-16 rounded-xl" />)}</div>
         ) : logs.length === 0 ? (
           <div className="glass-card p-10 text-center">
             <Moon size={32} className="mx-auto mb-2 text-slate-600" />
-            <p className="text-slate-400">No sleep logged yet. Track your rest for better recovery!</p>
+            <p className="text-[var(--color-text-muted)]">No sleep logged yet. Track your rest for better recovery!</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -158,10 +158,10 @@ export default function SleepTracker() {
                     <Moon size={16} className="text-indigo-400" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">
+                    <p className="text-sm font-medium text-[var(--color-text-base)]">
                       {(log.durationMinutes / 60).toFixed(1)}h · Quality: {'⭐'.repeat(log.quality)}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-[var(--color-text-muted)]">
                       {format(new Date(log.bedTime), 'h:mm a')} → {format(new Date(log.wakeTime), 'h:mm a')} · {format(new Date(log.date), 'MMM d')}
                     </p>
                   </div>

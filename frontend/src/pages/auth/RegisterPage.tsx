@@ -56,21 +56,21 @@ export default function RegisterPage() {
       >
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-violet mb-4">
-            <Zap size={28} className="text-white" />
+            <Zap size={28} className="text-[var(--color-text-base)]" />
           </div>
           <h1 className="text-3xl font-extrabold gradient-text-violet">LifeOS</h1>
-          <p className="text-slate-400 mt-1">Start your transformation today</p>
+          <p className="text-[var(--color-text-muted)] mt-1">Start your transformation today</p>
         </div>
 
         <div className="glass-card p-8">
-          <h2 className="text-xl font-bold text-white mb-1">Create account</h2>
-          <p className="text-sm text-slate-400 mb-6">Join thousands building better habits</p>
+          <h2 className="text-xl font-bold text-[var(--color-text-base)] mb-1">Create account</h2>
+          <p className="text-sm text-[var(--color-text-muted)] mb-6">Join thousands building better habits</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Full Name</label>
               <div className="relative">
-                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input {...register('name')} placeholder="Your name" className="input-field pl-10" />
               </div>
               {errors.name && <p className="text-rose-400 text-xs mt-1">{errors.name.message}</p>}
@@ -79,7 +79,7 @@ export default function RegisterPage() {
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
               <div className="relative">
-                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input {...register('email')} type="email" placeholder="you@example.com" className="input-field pl-10" />
               </div>
               {errors.email && <p className="text-rose-400 text-xs mt-1">{errors.email.message}</p>}
@@ -88,7 +88,7 @@ export default function RegisterPage() {
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input
                   {...register('password')}
                   type={showPass ? 'text' : 'password'}
@@ -96,7 +96,7 @@ export default function RegisterPage() {
                   className="input-field pl-10 pr-10"
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-slate-300">
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
@@ -106,7 +106,7 @@ export default function RegisterPage() {
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Confirm Password</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input {...register('confirmPassword')} type={showPass ? 'text' : 'password'} placeholder="••••••••" className="input-field pl-10" />
               </div>
               {errors.confirmPassword && <p className="text-rose-400 text-xs mt-1">{errors.confirmPassword.message}</p>}
@@ -124,10 +124,10 @@ export default function RegisterPage() {
 
           <div className="relative my-5">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/5" />
+              <div className="w-full border-t border-[var(--color-border-subtle)]" />
             </div>
             <div className="relative flex justify-center">
-              <span className="px-3 text-xs text-slate-500 bg-[#16162a]">or</span>
+              <span className="px-3 text-xs text-[var(--color-text-muted)] bg-[#16162a]">or</span>
             </div>
           </div>
 
@@ -136,7 +136,7 @@ export default function RegisterPage() {
             <span>Continue with Google</span>
           </a>
 
-          <p className="text-center text-sm text-slate-500 mt-6">
+          <p className="text-center text-sm text-[var(--color-text-muted)] mt-6">
             Already have an account?{' '}
             <Link to="/login" className="text-violet-400 hover:text-violet-300 font-semibold">Sign in</Link>
           </p>

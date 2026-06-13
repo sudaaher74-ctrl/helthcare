@@ -1,48 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --color-surface: var(--color-surface-value);
+  --color-surface-hover: var(--color-surface-hover-value);
+  --color-text-base: var(--color-text-base-value);
+  --color-text-muted: var(--color-text-muted-value);
+  --color-border-subtle: var(--color-border-subtle-value);
+  --color-bg-primary: var(--color-bg-primary-value);
+}
+
 /* ─── LifeOS Design System ──────────────────────────────────────────────── */
 
 :root {
-  /* Base Colors */
-  --color-bg-primary: #000000;
-  --color-bg-secondary: #0a0a0a;
-  --color-bg-tertiary: #121212;
-  --color-bg-card: #141414;
-  --color-bg-elevated: #1a1a1a;
-
-  /* Brand Colors */
-  --color-violet: #7c3aed;
-  --color-violet-light: #a78bfa;
-  --color-indigo: #4f46e5;
-  --color-cyan: #06b6d4;
-  --color-emerald: #10b981;
-  --color-amber: #f59e0b;
-  --color-rose: #f43f5e;
-  --color-orange: #f97316;
-  --color-pink: #ec4899;
-
-  /* Text */
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #475569;
-
-  /* Borders */
-  --color-border: rgba(148, 163, 184, 0.08);
-  --color-border-hover: rgba(148, 163, 184, 0.16);
+  /* Default to Dark Theme */
+  --color-bg-primary-value: #000000;
+  --color-text-base-value: #ffffff;
+  --color-text-muted-value: #94a3b8;
+  --color-surface-value: rgba(255, 255, 255, 0.05);
+  --color-surface-hover-value: rgba(255, 255, 255, 0.1);
+  --color-border-subtle-value: rgba(255, 255, 255, 0.08);
 
   /* Glass */
   --glass-bg: rgba(20, 20, 20, 0.7);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-backdrop: blur(24px);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
 
-  /* Score Colors */
-  --color-life: #7c3aed;
-  --color-health: #10b981;
-  --color-nutrition: #06b6d4;
-  --color-discipline: #f59e0b;
-  --color-productivity: #f97316;
+:root[data-theme="light"] {
+  /* Light Theme Overrides */
+  --color-bg-primary-value: #f8fafc;
+  --color-text-base-value: #0f172a;
+  --color-text-muted-value: #64748b;
+  --color-surface-value: rgba(0, 0, 0, 0.04);
+  --color-surface-hover-value: rgba(0, 0, 0, 0.08);
+  --color-border-subtle-value: rgba(0, 0, 0, 0.08);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-backdrop: blur(24px);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
 }
 
 /* ─── Global Resets ─────────────────────────────────────────────────────── */
@@ -58,8 +57,8 @@ html {
 body {
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary-value);
+  color: var(--color-text-base-value);
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -122,6 +121,15 @@ h1, h2, h3, h4, h5, h6 {
     radial-gradient(ellipse 60% 40% at 80% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 60%),
     radial-gradient(ellipse 50% 50% at 50% 50%, rgba(79, 70, 229, 0.08) 0%, transparent 70%),
     #000000;
+  transition: background 0.5s ease;
+}
+
+:root[data-theme="light"] .mesh-bg {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(124, 58, 237, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(79, 70, 229, 0.03) 0%, transparent 70%),
+    #f8fafc;
 }
 
 /* ─── Score Rings ────────────────────────────────────────────────────────── */
@@ -196,9 +204,9 @@ h1, h2, h3, h4, h5, h6 {
   position: fixed;
   left: 0;
   top: 0;
-  background: rgba(10, 10, 20, 0.95);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
-  border-right: 1px solid var(--color-border);
+  border-right: 1px solid var(--glass-border);
   z-index: 50;
   display: flex;
   flex-direction: column;
@@ -213,7 +221,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted-value);
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
@@ -221,8 +229,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .sidebar-nav-item:hover {
-  background: rgba(124, 58, 237, 0.1);
-  color: var(--color-text-primary);
+  background: var(--color-surface-hover-value);
+  color: var(--color-text-base-value);
 }
 
 .sidebar-nav-item.active {
@@ -241,10 +249,10 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   right: 0;
   height: 80px;
-  background: rgba(10, 10, 10, 0.85);
+  background: var(--glass-bg);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--glass-border);
   display: none;
   align-items: center;
   justify-content: space-around;
@@ -268,7 +276,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted-value);
   text-decoration: none;
   flex: 1;
 }
@@ -377,11 +385,11 @@ h1, h2, h3, h4, h5, h6 {
 /* ─── Inputs ─────────────────────────────────────────────────────────────── */
 .input-field {
   width: 100%;
-  background: rgba(22, 22, 42, 0.8);
-  border: 1px solid var(--color-border);
+  background: var(--color-surface-value);
+  border: 1px solid var(--color-border-subtle-value);
   border-radius: 10px;
   padding: 10px 14px;
-  color: var(--color-text-primary);
+  color: var(--color-text-base-value);
   font-size: 14px;
   font-family: 'Inter', sans-serif;
   outline: none;
@@ -393,7 +401,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
-.input-field::placeholder { color: var(--color-text-muted); }
+.input-field::placeholder { color: var(--color-text-muted-value); }
 
 /* ─── Buttons ────────────────────────────────────────────────────────────── */
 .btn {
@@ -427,9 +435,9 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary:active { transform: translateY(0); }
 
 .btn-secondary {
-  background: rgba(148, 163, 184, 0.08);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  background: var(--color-surface-value);
+  color: var(--color-text-base-value);
+  border: 1px solid var(--color-border-subtle-value);
 }
 
 .btn-secondary:hover {
@@ -439,12 +447,12 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-ghost {
   background: transparent;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted-value);
 }
 
 .btn-ghost:hover {
-  background: rgba(148, 163, 184, 0.08);
-  color: var(--color-text-primary);
+  background: var(--color-surface-value);
+  color: var(--color-text-base-value);
 }
 
 .btn-danger {
@@ -576,7 +584,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .modal-content {
-  background: #13131f;
+  background: var(--color-bg-primary-value);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
   padding: 24px;
@@ -641,9 +649,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─── Toast overrides ────────────────────────────────────────────────────── */
 [data-sonner-toaster] [data-sonner-toast] {
-  background: #1a1a2e !important;
-  border: 1px solid rgba(148, 163, 184, 0.12) !important;
-  color: #f1f5f9 !important;
+  background: var(--color-bg-primary-value) !important;
+  border: 1px solid var(--color-border-subtle-value) !important;
+  color: var(--color-text-base-value) !important;
   border-radius: 12px !important;
 }
 

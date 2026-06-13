@@ -57,8 +57,8 @@ export default function OnboardingPage() {
     <div key="0" className="space-y-4">
       <div className="text-center mb-6">
         <div className="text-4xl mb-2">👤</div>
-        <h2 className="text-2xl font-bold text-white">Tell us about yourself</h2>
-        <p className="text-slate-400 text-sm mt-1">We'll personalize your experience</p>
+        <h2 className="text-2xl font-bold text-[var(--color-text-base)]">Tell us about yourself</h2>
+        <p className="text-[var(--color-text-muted)] text-sm mt-1">We'll personalize your experience</p>
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-1.5">Your Name</label>
@@ -79,7 +79,7 @@ export default function OnboardingPage() {
               className={`py-2.5 rounded-lg border text-sm font-medium transition-all ${
                 formData.gender === g
                   ? 'border-violet-500 bg-violet-500/10 text-violet-400'
-                  : 'border-white/10 text-slate-400 hover:border-white/20'
+                  : 'border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:border-[var(--color-border-subtle)]'
               }`}>
               {g.charAt(0) + g.slice(1).toLowerCase()}
             </button>
@@ -92,8 +92,8 @@ export default function OnboardingPage() {
     <div key="1" className="space-y-4">
       <div className="text-center mb-6">
         <div className="text-4xl mb-2">⚖️</div>
-        <h2 className="text-2xl font-bold text-white">Body Stats</h2>
-        <p className="text-slate-400 text-sm mt-1">Help us calculate your needs</p>
+        <h2 className="text-2xl font-bold text-[var(--color-text-base)]">Body Stats</h2>
+        <p className="text-[var(--color-text-muted)] text-sm mt-1">Help us calculate your needs</p>
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-1.5">Height (cm)</label>
@@ -116,8 +116,8 @@ export default function OnboardingPage() {
     <div key="2" className="space-y-4">
       <div className="text-center mb-6">
         <div className="text-4xl mb-2">🎯</div>
-        <h2 className="text-2xl font-bold text-white">Your Goals</h2>
-        <p className="text-slate-400 text-sm mt-1">What do you want to achieve?</p>
+        <h2 className="text-2xl font-bold text-[var(--color-text-base)]">Your Goals</h2>
+        <p className="text-[var(--color-text-muted)] text-sm mt-1">What do you want to achieve?</p>
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-1.5">Target Weight (kg)</label>
@@ -128,13 +128,13 @@ export default function OnboardingPage() {
         <label className="block text-sm font-medium text-slate-300 mb-1.5">Daily Calorie Goal (kcal)</label>
         <input value={formData.dailyCalorieGoal} onChange={(e) => update('dailyCalorieGoal', e.target.value)}
           type="number" className="input-field" />
-        <p className="text-xs text-slate-500 mt-1">Recommended for weight gain: 2800-3200 kcal</p>
+        <p className="text-xs text-[var(--color-text-muted)] mt-1">Recommended for weight gain: 2800-3200 kcal</p>
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-300 mb-1.5">Daily Protein Goal (g)</label>
         <input value={formData.dailyProteinGoal} onChange={(e) => update('dailyProteinGoal', e.target.value)}
           type="number" className="input-field" />
-        <p className="text-xs text-slate-500 mt-1">Recommended for muscle gain: 130-160g</p>
+        <p className="text-xs text-[var(--color-text-muted)] mt-1">Recommended for muscle gain: 130-160g</p>
       </div>
       <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
         <p className="text-emerald-300 text-sm">
@@ -150,8 +150,8 @@ export default function OnboardingPage() {
     <div key="3" className="space-y-4">
       <div className="text-center mb-6">
         <div className="text-4xl mb-2">🏃</div>
-        <h2 className="text-2xl font-bold text-white">Activity Level</h2>
-        <p className="text-slate-400 text-sm mt-1">How active are you currently?</p>
+        <h2 className="text-2xl font-bold text-[var(--color-text-base)]">Activity Level</h2>
+        <p className="text-[var(--color-text-muted)] text-sm mt-1">How active are you currently?</p>
       </div>
       {[
         { value: 'SEDENTARY', label: 'Sedentary', desc: 'Little or no exercise', icon: '🛋️' },
@@ -171,7 +171,7 @@ export default function OnboardingPage() {
             <p className={`font-semibold text-sm ${formData.activityLevel === a.value ? 'text-violet-300' : 'text-slate-200'}`}>
               {a.label}
             </p>
-            <p className="text-xs text-slate-500">{a.desc}</p>
+            <p className="text-xs text-[var(--color-text-muted)]">{a.desc}</p>
           </div>
           {formData.activityLevel === a.value && (
             <Check size={16} className="ml-auto text-violet-400 flex-shrink-0" />
@@ -188,11 +188,11 @@ export default function OnboardingPage() {
         transition={{ type: 'spring', stiffness: 200 }}
         className="inline-flex items-center justify-center w-20 h-20 rounded-full gradient-violet mx-auto"
       >
-        <Zap size={40} className="text-white" />
+        <Zap size={40} className="text-[var(--color-text-base)]" />
       </motion.div>
       <div>
-        <h2 className="text-2xl font-bold text-white">You're all set!</h2>
-        <p className="text-slate-400 mt-2">Your personalized Life OS is ready</p>
+        <h2 className="text-2xl font-bold text-[var(--color-text-base)]">You're all set!</h2>
+        <p className="text-[var(--color-text-muted)] mt-2">Your personalized Life OS is ready</p>
       </div>
       <div className="grid grid-cols-2 gap-3 text-left">
         {[
@@ -203,8 +203,8 @@ export default function OnboardingPage() {
         ].map((item) => (
           <div key={item.label} className="glass-card p-3">
             <span className="text-lg">{item.icon}</span>
-            <p className="text-xs text-slate-400 mt-1">{item.label}</p>
-            <p className="text-sm font-bold text-white">{item.value}</p>
+            <p className="text-xs text-[var(--color-text-muted)] mt-1">{item.label}</p>
+            <p className="text-sm font-bold text-[var(--color-text-base)]">{item.value}</p>
           </div>
         ))}
       </div>
@@ -217,7 +217,7 @@ export default function OnboardingPage() {
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <div className="w-8 h-8 rounded-lg gradient-violet flex items-center justify-center">
-            <Zap size={16} className="text-white" />
+            <Zap size={16} className="text-[var(--color-text-base)]" />
           </div>
           <span className="font-bold gradient-text-violet">LifeOS Setup</span>
         </div>
@@ -227,11 +227,11 @@ export default function OnboardingPage() {
           <div className="flex gap-1.5">
             {STEPS.map((_, i) => (
               <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${
-                i <= step ? 'gradient-violet' : 'bg-white/10'
+                i <= step ? 'gradient-violet' : 'bg-[var(--color-surface-hover)]'
               }`} />
             ))}
           </div>
-          <p className="text-xs text-slate-500 mt-2">Step {step + 1} of {STEPS.length} — {STEPS[step]}</p>
+          <p className="text-xs text-[var(--color-text-muted)] mt-2">Step {step + 1} of {STEPS.length} — {STEPS[step]}</p>
         </div>
 
         {/* Step Content */}

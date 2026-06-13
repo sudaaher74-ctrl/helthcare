@@ -20,7 +20,7 @@ export default function MacroBar({ label, current, goal, unit, color, gradient }
         <span className="text-sm font-medium text-slate-300">{label}</span>
         <span className="text-sm font-bold" style={{ color: over ? '#f43f5e' : color }}>
           {typeof current === 'number' ? current.toFixed(current % 1 === 0 ? 0 : 1) : current}
-          <span className="text-slate-500 font-normal text-xs ml-1">/ {goal}{unit}</span>
+          <span className="text-[var(--color-text-muted)] font-normal text-xs ml-1">/ {goal}{unit}</span>
         </span>
       </div>
       <div className="progress-bar">

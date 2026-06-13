@@ -5,10 +5,10 @@ export default function AchievementsPage() {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-black text-white bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">
+        <h1 className="text-3xl font-black text-[var(--color-text-base)] bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500">
           Achievements
         </h1>
-        <p className="text-slate-400 text-sm mt-2">Unlock milestones and earn XP</p>
+        <p className="text-[var(--color-text-muted)] text-sm mt-2">Unlock milestones and earn XP</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -20,15 +20,15 @@ export default function AchievementsPage() {
         ].map((a, i) => (
           <div key={i} className={`glass-card p-5 flex flex-col items-center text-center transition-all duration-300 ${a.unlocked ? 'glass-card-hover scale-100 hover:scale-105' : 'opacity-40 grayscale scale-95'}`}>
             <div className={`relative w-20 h-20 flex items-center justify-center rounded-full mb-4 bg-gradient-to-br ${a.bg} ${a.unlocked ? `shadow-lg ${a.shadow}` : ''}`}>
-              <div className="absolute inset-1 bg-black/20 rounded-full" />
-              <div className="relative text-white drop-shadow-md">
+              <div className="absolute inset-1 bg-[var(--color-bg-primary)]/20 rounded-full" />
+              <div className="relative text-[var(--color-text-base)] drop-shadow-md">
                 {React.cloneElement(a.icon as React.ReactElement<any>, { size: 36, strokeWidth: 1.5 })}
               </div>
             </div>
-            <h3 className="font-bold text-white text-sm">{a.title}</h3>
-            <p className="text-[10px] text-slate-400 mt-1 leading-tight">{a.desc}</p>
+            <h3 className="font-bold text-[var(--color-text-base)] text-sm">{a.title}</h3>
+            <p className="text-[10px] text-[var(--color-text-muted)] mt-1 leading-tight">{a.desc}</p>
             {a.unlocked && <span className="mt-3 text-[10px] font-black tracking-wider uppercase text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">Unlocked</span>}
-            {!a.unlocked && <span className="mt-3 text-[10px] font-bold text-slate-500">Locked</span>}
+            {!a.unlocked && <span className="mt-3 text-[10px] font-bold text-[var(--color-text-muted)]">Locked</span>}
           </div>
         ))}
       </div>

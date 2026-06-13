@@ -90,8 +90,8 @@ export default function NutritionDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Nutrition</h1>
-          <p className="text-slate-400 text-sm">{format(new Date(), 'EEEE, MMMM d')}</p>
+          <h1 className="text-2xl font-bold text-[var(--color-text-base)]">Nutrition</h1>
+          <p className="text-[var(--color-text-muted)] text-sm">{format(new Date(), 'EEEE, MMMM d')}</p>
         </div>
         <div className="flex gap-2">
           <button onClick={() => setShowAI(true)} className="btn btn-secondary btn-sm">
@@ -107,7 +107,7 @@ export default function NutritionDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="glass-card p-6 flex flex-col items-center justify-center relative overflow-hidden">
           <div className="absolute inset-0 bg-orange-500/5 blur-3xl rounded-full scale-150" />
-          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6 z-10">Calories Today</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-6 z-10">Calories Today</h2>
           <div className="relative w-48 h-48 flex items-center justify-center z-10">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
@@ -127,7 +127,7 @@ export default function NutritionDashboard() {
               </defs>
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-4xl font-black text-white drop-shadow-lg">{dailyCalories}</span>
+              <span className="text-4xl font-black text-[var(--color-text-base)] drop-shadow-lg">{dailyCalories}</span>
               <span className="text-xs text-orange-400 font-bold mt-1">/ {calorieGoal} kcal</span>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function NutritionDashboard() {
             {macros.map((m) => (
               <div key={m.label}>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-400 font-semibold">{m.label}</span>
+                  <span className="text-[var(--color-text-muted)] font-semibold">{m.label}</span>
                   <span className="text-slate-300">{m.current} / {m.goal}{m.unit}</span>
                 </div>
                 <div className="progress-bar h-2">
@@ -154,7 +154,7 @@ export default function NutritionDashboard() {
         <div className="flex flex-col gap-6">
         {/* Water */}
         <div className="glass-card p-5">
-          <h3 className="font-semibold text-white flex items-center gap-2 mb-3">
+          <h3 className="font-semibold text-[var(--color-text-base)] flex items-center gap-2 mb-3">
             <Droplets size={16} className="text-blue-400" /> Water Intake
           </h3>
           <div className="flex items-center gap-4 mb-3">
@@ -168,7 +168,7 @@ export default function NutritionDashboard() {
                   transition={{ duration: 1 }}
                 />
               </div>
-              <p className="text-xs text-slate-500 mt-1">of 3L goal</p>
+              <p className="text-xs text-[var(--color-text-muted)] mt-1">of 3L goal</p>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-2">
@@ -183,7 +183,7 @@ export default function NutritionDashboard() {
         {/* AI Diet Coach */}
         {coach && (
           <div className="glass-card p-5">
-            <h3 className="font-semibold text-white flex items-center gap-2 mb-3">
+            <h3 className="font-semibold text-[var(--color-text-base)] flex items-center gap-2 mb-3">
               <Bot size={16} className="text-violet-400" /> AI Diet Coach
               <span className="badge badge-violet ml-auto">Score: {coach.nutritionScore}</span>
             </h3>
@@ -199,13 +199,13 @@ export default function NutritionDashboard() {
 
       {/* Meal Log */}
       <div>
-        <h2 className="font-bold text-white mb-3">Meal Log</h2>
+        <h2 className="font-bold text-[var(--color-text-base)] mb-3">Meal Log</h2>
         {isLoading ? (
           <div className="space-y-3">{Array(3).fill(0).map((_,i) => <div key={i} className="skeleton h-20 rounded-xl" />)}</div>
         ) : meals?.length === 0 ? (
           <div className="glass-card p-10 text-center">
             <Apple size={32} className="mx-auto mb-3 text-slate-600" />
-            <p className="text-slate-400">No meals logged today</p>
+            <p className="text-[var(--color-text-muted)]">No meals logged today</p>
             <button onClick={() => setShowAddMeal(true)} className="btn btn-primary btn-sm mt-3">
               <Plus size={14} /> Log First Meal
             </button>
@@ -218,10 +218,10 @@ export default function NutritionDashboard() {
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{MEAL_ICONS[meal.mealType] || '🍽️'}</span>
                     <div>
-                      <p className="font-medium text-white text-sm">
+                      <p className="font-medium text-[var(--color-text-base)] text-sm">
                         {meal.name || meal.mealType.replace('_', ' ')}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-[var(--color-text-muted)]">
                         {meal.foodEntries?.length || 0} items · {Math.round(meal.totalCalories)} kcal
                       </p>
                     </div>
@@ -229,10 +229,10 @@ export default function NutritionDashboard() {
                   <div className="flex items-center gap-2">
                     <div className="text-right text-xs">
                       <span className="text-cyan-400 font-semibold">{Math.round(meal.totalProtein)}g P</span>
-                      <span className="text-slate-500 mx-1">·</span>
+                      <span className="text-[var(--color-text-muted)] mx-1">·</span>
                       <span className="text-emerald-400 font-semibold">{Math.round(meal.totalCarbs)}g C</span>
                     </div>
-                    <button onClick={() => deleteMeal.mutate(meal.id)} className="btn btn-ghost btn-icon text-slate-500 hover:text-rose-400">
+                    <button onClick={() => deleteMeal.mutate(meal.id)} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-rose-400">
                       <Trash2 size={14} />
                     </button>
                   </div>
@@ -248,8 +248,8 @@ export default function NutritionDashboard() {
         {showAI && (
           <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setShowAI(false)}>
             <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} exit={{opacity:0,scale:0.95}} className="modal-content">
-              <h3 className="text-lg font-bold text-white mb-2">🤖 AI Food Analyzer</h3>
-              <p className="text-sm text-slate-400 mb-4">Upload a photo of your meal and AI will estimate the nutrition</p>
+              <h3 className="text-lg font-bold text-[var(--color-text-base)] mb-2">🤖 AI Food Analyzer</h3>
+              <p className="text-sm text-[var(--color-text-muted)] mb-4">Upload a photo of your meal and AI will estimate the nutrition</p>
 
               {!aiResult && (
                 <div
@@ -262,14 +262,14 @@ export default function NutritionDashboard() {
                   {aiLoading ? (
                     <div className="flex flex-col items-center gap-3">
                       <div className="w-10 h-10 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
-                      <p className="text-slate-400 text-sm">Analyzing your food...</p>
+                      <p className="text-[var(--color-text-muted)] text-sm">Analyzing your food...</p>
                       <p className="text-slate-600 text-xs">AI is estimating nutrition</p>
                     </div>
                   ) : (
                     <>
-                      <Camera size={32} className="text-slate-500 mx-auto mb-3" />
+                      <Camera size={32} className="text-[var(--color-text-muted)] mx-auto mb-3" />
                       <p className="text-slate-300 font-medium">Drop food photo here</p>
-                      <p className="text-slate-500 text-sm mt-1">or click to upload</p>
+                      <p className="text-[var(--color-text-muted)] text-sm mt-1">or click to upload</p>
                     </>
                   )}
                 </div>
@@ -283,13 +283,13 @@ export default function NutritionDashboard() {
                 <div className="space-y-4">
                   <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/20">
                     <p className="text-xs text-violet-300 mb-2">🤖 AI detected {aiResult.foods?.length} food item(s)</p>
-                    <p className="text-xs text-slate-500">{aiResult.analysisNotes}</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">{aiResult.analysisNotes}</p>
                   </div>
                   {aiResult.foods?.map((f: any, i: number) => (
                     <div key={i} className="flex items-center justify-between p-3 bg-white/3 rounded-xl">
                       <div>
-                        <p className="text-sm font-medium text-white">{f.name}</p>
-                        <p className="text-xs text-slate-500">{f.portionSize}</p>
+                        <p className="text-sm font-medium text-[var(--color-text-base)]">{f.name}</p>
+                        <p className="text-xs text-[var(--color-text-muted)]">{f.portionSize}</p>
                       </div>
                       <div className="text-right text-xs space-y-0.5">
                         <p className="text-orange-400 font-bold">{f.calories} kcal</p>
@@ -301,7 +301,7 @@ export default function NutritionDashboard() {
                     {[['Calories','totalCalories','kcal','text-orange-400'],['Protein','totalProtein','g','text-cyan-400'],['Carbs','totalCarbs','g','text-emerald-400'],['Fat','totalFat','g','text-violet-400']].map(([l,k,u,c]) => (
                       <div key={l} className="text-center">
                         <p className={`text-sm font-bold ${c}`}>{Math.round(aiResult[k as string])}{u}</p>
-                        <p className="text-[10px] text-slate-500">{l}</p>
+                        <p className="text-[10px] text-[var(--color-text-muted)]">{l}</p>
                       </div>
                     ))}
                   </div>
@@ -354,14 +354,14 @@ function AddMealModal({ date, onClose, onSave }: any) {
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} exit={{opacity:0,scale:0.95}} className="modal-content max-h-[90vh] overflow-y-auto">
-        <h3 className="text-lg font-bold text-white mb-4">Log Meal</h3>
+        <h3 className="text-lg font-bold text-[var(--color-text-base)] mb-4">Log Meal</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1.5">Meal Type</label>
             <div className="grid grid-cols-3 gap-2">
               {MEAL_TYPES.map(t => (
                 <button key={t} type="button" onClick={() => setMealType(t)}
-                  className={`py-2 rounded-lg border text-xs font-medium transition-all ${mealType === t ? 'border-violet-500 bg-violet-500/10 text-violet-300' : 'border-white/10 text-slate-400'}`}>
+                  className={`py-2 rounded-lg border text-xs font-medium transition-all ${mealType === t ? 'border-violet-500 bg-violet-500/10 text-violet-300' : 'border-[var(--color-border-subtle)] text-[var(--color-text-muted)]'}`}>
                   {MEAL_ICONS[t]} {t.replace('_',' ').toLowerCase()}
                 </button>
               ))}
@@ -375,19 +375,19 @@ function AddMealModal({ date, onClose, onSave }: any) {
                   placeholder="Food name (e.g. Chicken Breast)" className="input-field text-sm" required />
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="text-xs text-slate-500">Calories (kcal)</label>
+                    <label className="text-xs text-[var(--color-text-muted)]">Calories (kcal)</label>
                     <input type="number" value={f.calories} onChange={e => updateFood(i, 'calories', +e.target.value)} className="input-field text-sm" />
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500">Protein (g)</label>
+                    <label className="text-xs text-[var(--color-text-muted)]">Protein (g)</label>
                     <input type="number" value={f.protein} onChange={e => updateFood(i, 'protein', +e.target.value)} className="input-field text-sm" />
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500">Carbs (g)</label>
+                    <label className="text-xs text-[var(--color-text-muted)]">Carbs (g)</label>
                     <input type="number" value={f.carbs} onChange={e => updateFood(i, 'carbs', +e.target.value)} className="input-field text-sm" />
                   </div>
                   <div>
-                    <label className="text-xs text-slate-500">Fat (g)</label>
+                    <label className="text-xs text-[var(--color-text-muted)]">Fat (g)</label>
                     <input type="number" value={f.fat} onChange={e => updateFood(i, 'fat', +e.target.value)} className="input-field text-sm" />
                   </div>
                 </div>

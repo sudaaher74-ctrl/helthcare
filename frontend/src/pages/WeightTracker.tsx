@@ -59,8 +59,8 @@ export default function WeightTracker() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Weight Tracker</h1>
-          <p className="text-slate-400 text-sm">Track your weight gain journey</p>
+          <h1 className="text-2xl font-bold text-[var(--color-text-base)]">Weight Tracker</h1>
+          <p className="text-[var(--color-text-muted)] text-sm">Track your weight gain journey</p>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="btn btn-primary">
           <Plus size={16} /> Log Weight
@@ -70,15 +70,15 @@ export default function WeightTracker() {
       {/* Quick Log Form */}
       {showForm && (
         <motion.form initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} onSubmit={handleSubmit} className="glass-card p-5">
-          <h3 className="font-semibold text-white mb-3">Log Today's Weight</h3>
+          <h3 className="font-semibold text-[var(--color-text-base)] mb-3">Log Today's Weight</h3>
           <div className="flex gap-3 items-end">
             <div className="flex-1">
-              <label className="text-xs text-slate-500 mb-1 block">Weight (kg)</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Weight (kg)</label>
               <input type="number" step="0.1" value={weight} onChange={e => setWeight(e.target.value)}
                 placeholder="e.g. 46.5" className="input-field text-lg font-bold" autoFocus />
             </div>
             <div className="flex-1">
-              <label className="text-xs text-slate-500 mb-1 block">Date</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Date</label>
               <input type="date" value={date} onChange={e => setDate(e.target.value)} className="input-field" />
             </div>
             <button type="submit" disabled={saving || !weight} className="btn btn-primary">
@@ -92,25 +92,25 @@ export default function WeightTracker() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="stat-card">
           <Scale size={20} className="text-violet-400 mb-2" />
-          <p className="text-2xl font-extrabold text-white">{current || '--'}</p>
-          <p className="text-xs text-slate-500">Current (kg)</p>
+          <p className="text-2xl font-extrabold text-[var(--color-text-base)]">{current || '--'}</p>
+          <p className="text-xs text-[var(--color-text-muted)]">Current (kg)</p>
         </div>
         <div className="stat-card">
           <Target size={20} className="text-emerald-400 mb-2" />
-          <p className="text-2xl font-extrabold text-white">{target}</p>
-          <p className="text-xs text-slate-500">Target (kg)</p>
+          <p className="text-2xl font-extrabold text-[var(--color-text-base)]">{target}</p>
+          <p className="text-xs text-[var(--color-text-muted)]">Target (kg)</p>
         </div>
         <div className="stat-card">
           <TrendingUp size={20} className="text-amber-400 mb-2" />
           <p className={`text-2xl font-extrabold ${remaining > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
             {remaining > 0 ? `+${remaining.toFixed(1)}` : '✓'}
           </p>
-          <p className="text-xs text-slate-500">kg to goal</p>
+          <p className="text-xs text-[var(--color-text-muted)]">kg to goal</p>
         </div>
         <div className="stat-card">
           <span className="text-xl mb-2 block">📊</span>
-          <p className="text-2xl font-extrabold text-white">{bmi}</p>
-          <p className="text-xs text-slate-500">BMI</p>
+          <p className="text-2xl font-extrabold text-[var(--color-text-base)]">{bmi}</p>
+          <p className="text-xs text-[var(--color-text-muted)]">BMI</p>
         </div>
       </div>
 
@@ -120,8 +120,8 @@ export default function WeightTracker() {
           <div className="flex items-center gap-3">
             <span className="text-2xl">🎯</span>
             <div>
-              <p className="text-sm font-semibold text-white">Goal Forecast</p>
-              <p className="text-xs text-slate-400">
+              <p className="text-sm font-semibold text-[var(--color-text-base)]">Goal Forecast</p>
+              <p className="text-xs text-[var(--color-text-muted)]">
                 At your current rate of <span className="text-emerald-400 font-bold">+{forecast.weeklyGain}kg/week</span>,
                 you'll reach {target}kg in approximately{' '}
                 <span className="text-emerald-400 font-bold">{forecast.weeksRemaining} weeks</span>
@@ -136,7 +136,7 @@ export default function WeightTracker() {
       {chartData.length > 1 && (
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-bold text-white flex items-center gap-2">
+            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
               <TrendingUp className="text-emerald-400" size={18} />
               Weight Progress
             </h2>
@@ -169,13 +169,13 @@ export default function WeightTracker() {
 
       {/* History */}
       <div>
-        <h2 className="font-bold text-white mb-3">Weight History</h2>
+        <h2 className="font-bold text-[var(--color-text-base)] mb-3">Weight History</h2>
         {isLoading ? (
           <div className="space-y-2">{Array(5).fill(0).map((_,i) => <div key={i} className="skeleton h-12 rounded-xl" />)}</div>
         ) : logs.length === 0 ? (
           <div className="glass-card p-10 text-center">
             <Scale size={32} className="mx-auto mb-2 text-slate-600" />
-            <p className="text-slate-400">No weight logged yet. Start tracking today!</p>
+            <p className="text-[var(--color-text-muted)]">No weight logged yet. Start tracking today!</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -185,12 +185,12 @@ export default function WeightTracker() {
               return (
                 <div key={log.id} className="flex items-center justify-between p-3 glass-card glass-card-hover">
                   <div>
-                    <p className="text-sm font-medium text-white">{log.weight} kg</p>
-                    <p className="text-xs text-slate-500">{format(new Date(log.date), 'EEEE, MMM d')}</p>
+                    <p className="text-sm font-medium text-[var(--color-text-base)]">{log.weight} kg</p>
+                    <p className="text-xs text-[var(--color-text-muted)]">{format(new Date(log.date), 'EEEE, MMM d')}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     {diff !== null && (
-                      <span className={`text-sm font-semibold ${diff > 0 ? 'text-emerald-400' : diff < 0 ? 'text-rose-400' : 'text-slate-500'}`}>
+                      <span className={`text-sm font-semibold ${diff > 0 ? 'text-emerald-400' : diff < 0 ? 'text-rose-400' : 'text-[var(--color-text-muted)]'}`}>
                         {diff > 0 ? '+' : ''}{diff.toFixed(1)} kg
                       </span>
                     )}

@@ -41,10 +41,10 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="text-2xl font-bold text-[var(--color-text-base)]">
             Good {getGreeting()}, {user?.name?.split(' ')[0]} 👋
           </h1>
-          <p className="text-slate-400 text-sm mt-0.5 mb-2">
+          <p className="text-[var(--color-text-muted)] text-sm mt-0.5 mb-2">
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </p>
         </div>
@@ -57,7 +57,7 @@ export default function Dashboard() {
             </div>
             <span className="text-xs font-bold text-violet-400">{gamification?.xp || 0} / {gamification?.nextLevelXp || 1000} XP</span>
           </div>
-          <div className="w-40 h-2 bg-white/10 rounded-full overflow-hidden">
+          <div className="w-40 h-2 bg-[var(--color-surface-hover)] rounded-full overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all duration-1000"
               style={{ width: `${gamification?.progressPercent || 0}%` }}
@@ -75,7 +75,7 @@ export default function Dashboard() {
           className="glass-card p-6 flex flex-col items-center justify-center relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-violet-500/5 blur-3xl rounded-full scale-150" />
-          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6 z-10">Life Score</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-6 z-10">Life Score</h2>
           <div className="relative w-48 h-48 flex items-center justify-center z-10">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
@@ -95,13 +95,13 @@ export default function Dashboard() {
               </defs>
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-5xl font-black text-white tracking-tighter shadow-violet-500/50 drop-shadow-lg">
+              <span className="text-5xl font-black text-[var(--color-text-base)] tracking-tighter shadow-violet-500/50 drop-shadow-lg">
                 {scores?.lifeScore || 0}
               </span>
               <span className="text-xs text-violet-400 font-bold mt-1">/ 100</span>
             </div>
           </div>
-          <div className="mt-6 flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 z-10">
+          <div className="mt-6 flex items-center gap-2 bg-[var(--color-surface)] px-4 py-2 rounded-full border border-[var(--color-border-subtle)] z-10">
             <span className="text-lg">🔥</span>
             <span className="text-sm font-semibold text-amber-400">Excellent Momentum</span>
           </div>
@@ -121,12 +121,12 @@ export default function Dashboard() {
             <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
               <span className="text-lg">🧠</span>
             </div>
-            <h2 className="font-bold text-white">AI Coach</h2>
+            <h2 className="font-bold text-[var(--color-text-base)]">AI Coach</h2>
           </div>
           <div className="flex-1 text-slate-300 text-sm leading-relaxed whitespace-pre-wrap relative z-10">
             {aiCoach?.message || "Analyzing your day..."}
           </div>
-          <div className="mt-4 pt-4 border-t border-white/5 text-xs text-slate-500 flex justify-between items-center relative z-10">
+          <div className="mt-4 pt-4 border-t border-[var(--color-border-subtle)] text-xs text-[var(--color-text-muted)] flex justify-between items-center relative z-10">
             <span>Powered by LifeOS</span>
             <button className="text-blue-400 font-semibold hover:text-blue-300 transition-colors">Ask Coach</button>
           </div>
@@ -140,7 +140,7 @@ export default function Dashboard() {
           className="glass-card p-6 lg:col-span-1"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-white flex items-center gap-2">
+            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
               <Target className="text-rose-400" size={18} />
               Today's Mission
             </h2>
@@ -159,10 +159,10 @@ export default function Dashboard() {
           <div className="space-y-3">
             {todaysMission?.items?.map((item: any) => (
               <div key={item.id} className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${item.completed ? 'bg-rose-500 border-rose-500' : 'border-white/20 bg-white/5'}`}>
-                  {item.completed && <CheckCircle2 size={12} className="text-white" />}
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${item.completed ? 'bg-rose-500 border-rose-500' : 'border-[var(--color-border-subtle)] bg-[var(--color-surface)]'}`}>
+                  {item.completed && <CheckCircle2 size={12} className="text-[var(--color-text-base)]" />}
                 </div>
-                <span className={`text-sm ${item.completed ? 'text-slate-500 line-through' : 'text-slate-200'}`}>
+                <span className={`text-sm ${item.completed ? 'text-[var(--color-text-muted)] line-through' : 'text-slate-200'}`}>
                   {item.label}
                 </span>
               </div>
@@ -179,7 +179,7 @@ export default function Dashboard() {
 
       {/* Secondary Score Rings */}
       <div className="mt-8">
-        <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Sub-Scores</h2>
+        <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">Sub-Scores</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
           {scoreItems.map((item) => (
             <ScoreRing key={item.label} {...item} />
@@ -189,7 +189,7 @@ export default function Dashboard() {
 
       {/* Quick Stats Grid */}
       <div>
-        <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Today's Stats</h2>
+        <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">Today's Stats</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
           <StatCard
             icon={<Scale size={18} className="text-violet-400" />}
@@ -238,7 +238,7 @@ export default function Dashboard() {
             label="Workout"
             value={todayStats?.hasWorkedOut ? 'Done ✓' : 'Not yet'}
             sub={todayStats?.hasWorkedOut ? 'Great work!' : 'Time to train!'}
-            color={todayStats?.hasWorkedOut ? 'text-emerald-400' : 'text-slate-500'}
+            color={todayStats?.hasWorkedOut ? 'text-emerald-400' : 'text-[var(--color-text-muted)]'}
           />
           <StatCard
             icon={<Moon size={18} className="text-indigo-400" />}
@@ -264,7 +264,7 @@ export default function Dashboard() {
         {/* Today's Habits */}
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-white flex items-center gap-2">
+            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
               <Target size={18} className="text-amber-400" />
               Today's Habits
             </h2>
@@ -281,15 +281,15 @@ export default function Dashboard() {
               />
             ))}
           </div>
-          <div className="mt-3 pt-3 border-t border-white/5">
+          <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-400">
+              <span className="text-[var(--color-text-muted)]">
                 {todayStats?.habitsCompleted}/{todayStats?.habitsTotal} completed
               </span>
               <div className="flex gap-1">
                 {Array.from({ length: todayStats?.habitsTotal || 0 }).map((_, i) => (
                   <div key={i} className={`w-2 h-2 rounded-full ${
-                    i < (todayStats?.habitsCompleted || 0) ? 'bg-violet-500' : 'bg-white/10'
+                    i < (todayStats?.habitsCompleted || 0) ? 'bg-violet-500' : 'bg-[var(--color-surface-hover)]'
                   }`} />
                 ))}
               </div>
@@ -300,7 +300,7 @@ export default function Dashboard() {
         {/* Nutrition Summary */}
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-white flex items-center gap-2">
+            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
               <Flame size={18} className="text-orange-400" />
               Nutrition Today
             </h2>
@@ -336,8 +336,8 @@ export default function Dashboard() {
           </div>
 
           {/* Quick add water */}
-          <div className="mt-4 pt-3 border-t border-white/5">
-            <p className="text-xs text-slate-500 mb-2">Quick add water:</p>
+          <div className="mt-4 pt-3 border-t border-[var(--color-border-subtle)]">
+            <p className="text-xs text-[var(--color-text-muted)] mb-2">Quick add water:</p>
             <div className="flex gap-2">
               {[250, 500, 750].map((ml) => (
                 <button key={ml}
@@ -356,7 +356,7 @@ export default function Dashboard() {
         {/* Weight Trend */}
         <div className="glass-card p-5 lg:col-span-1">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-white flex items-center gap-2">
+            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
               <Scale size={16} className="text-violet-400" />
               Weight Trend
             </h2>
@@ -367,7 +367,7 @@ export default function Dashboard() {
           {weightHistory && weightHistory.length > 0 ? (
             <MiniWeightChart data={weightHistory} target={todayStats?.targetWeight} />
           ) : (
-            <div className="flex flex-col items-center justify-center h-24 text-slate-500">
+            <div className="flex flex-col items-center justify-center h-24 text-[var(--color-text-muted)]">
               <Scale size={24} className="mb-2 opacity-50" />
               <p className="text-xs">No weight logged yet</p>
               <Link to="/weight" className="text-xs text-violet-400 mt-1">Log your weight →</Link>
@@ -377,7 +377,7 @@ export default function Dashboard() {
 
         {/* Streaks */}
         <div className="glass-card p-5">
-          <h2 className="font-bold text-white flex items-center gap-2 mb-3">
+          <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2 mb-3">
             <span className="streak-fire">🔥</span>
             Active Streaks
           </h2>
@@ -404,7 +404,7 @@ export default function Dashboard() {
         {/* Upcoming Tasks */}
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-white flex items-center gap-2">
+            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
               <CheckCircle2 size={16} className="text-emerald-400" />
               Upcoming Tasks
             </h2>
@@ -425,7 +425,7 @@ export default function Dashboard() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-20 text-slate-500">
+            <div className="flex flex-col items-center justify-center h-20 text-[var(--color-text-muted)]">
               <CheckCircle2 size={24} className="mb-2 opacity-50" />
               <p className="text-xs">All caught up! 🎉</p>
             </div>
@@ -437,7 +437,7 @@ export default function Dashboard() {
       {recentAchievements?.length > 0 && (
         <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-white flex items-center gap-2">
+            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
               <Award size={16} className="text-amber-400" />
               Recent Achievements
             </h2>
@@ -467,13 +467,13 @@ function StatCard({ icon, label, value, sub, color, percent }: any) {
   return (
     <div className="stat-card">
       <div className="flex items-start justify-between mb-2">
-        <div className="p-2 rounded-lg bg-white/5">{icon}</div>
+        <div className="p-2 rounded-lg bg-[var(--color-surface)]">{icon}</div>
         {percent !== undefined && (
           <span className={`text-xs font-bold ${color}`}>{Math.round(percent)}%</span>
         )}
       </div>
       <p className={`text-xl font-bold mt-1 ${color}`}>{value}</p>
-      <p className="text-xs text-slate-500 mt-0.5">{label}</p>
+      <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{label}</p>
       {sub && <p className="text-[11px] text-slate-600 mt-0.5">{sub}</p>}
     </div>
   )
@@ -492,12 +492,12 @@ function HabitRow({ habit, onToggle }: any) {
       >
         {habit.completed && (
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
-            <CheckCircle2 size={14} className="text-white" />
+            <CheckCircle2 size={14} className="text-[var(--color-text-base)]" />
           </motion.div>
         )}
       </div>
       <span className="text-base">{habit.icon}</span>
-      <span className={`text-sm flex-1 ${habit.completed ? 'line-through text-slate-500' : 'text-slate-200'}`}>
+      <span className={`text-sm flex-1 ${habit.completed ? 'line-through text-[var(--color-text-muted)]' : 'text-slate-200'}`}>
         {habit.name}
       </span>
       <span className="text-[10px] text-slate-600 capitalize">

@@ -35,8 +35,8 @@ export default function GoalsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Goals</h1>
-          <p className="text-slate-400 text-sm">{active.length} active · {completed.length} completed</p>
+          <h1 className="text-2xl font-bold text-[var(--color-text-base)]">Goals</h1>
+          <p className="text-[var(--color-text-muted)] text-sm">{active.length} active · {completed.length} completed</p>
         </div>
         <button onClick={() => setShowForm(true)} className="btn btn-primary">
           <Plus size={16} /> New Goal
@@ -49,7 +49,7 @@ export default function GoalsPage() {
         <div className="glass-card p-12 text-center">
           <Trophy size={40} className="mx-auto mb-3 text-slate-600" />
           <p className="text-slate-300 font-semibold">No goals yet</p>
-          <p className="text-slate-500 text-sm mt-1">Set goals to track your progress</p>
+          <p className="text-[var(--color-text-muted)] text-sm mt-1">Set goals to track your progress</p>
           <button onClick={() => setShowForm(true)} className="btn btn-primary mt-4"><Plus size={16} /> Create First Goal</button>
         </div>
       ) : (
@@ -63,8 +63,8 @@ export default function GoalsPage() {
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{goal.icon}</span>
                     <div>
-                      <p className="font-semibold text-white">{goal.title}</p>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <p className="font-semibold text-[var(--color-text-base)]">{goal.title}</p>
+                      <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
                         {CAT_ICONS[goal.category]} {goal.category.toLowerCase()}
                         {goal.targetDate ? ` · Due ${format(new Date(goal.targetDate), 'MMM d, yyyy')}` : ''}
                       </p>
@@ -72,21 +72,21 @@ export default function GoalsPage() {
                   </div>
                   <div className="flex items-center gap-1">
                     <button onClick={() => updateGoal.mutate({ id: goal.id, data: { status: 'COMPLETED', completedAt: new Date() } })}
-                      className="btn btn-ghost btn-icon text-slate-500 hover:text-emerald-400">
+                      className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-emerald-400">
                       <CheckCircle size={16} />
                     </button>
-                    <button onClick={() => deleteGoal.mutate(goal.id)} className="btn btn-ghost btn-icon text-slate-500 hover:text-rose-400">
+                    <button onClick={() => deleteGoal.mutate(goal.id)} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-rose-400">
                       <Trash2 size={14} />
                     </button>
                   </div>
                 </div>
 
-                {goal.description && <p className="text-sm text-slate-400 mb-3">{goal.description}</p>}
+                {goal.description && <p className="text-sm text-[var(--color-text-muted)] mb-3">{goal.description}</p>}
 
                 {goal.targetValue && (
                   <div className="mb-3">
                     <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-slate-400">Progress</span>
+                      <span className="text-[var(--color-text-muted)]">Progress</span>
                       <span className="font-semibold" style={{ color: goal.color }}>
                         {goal.currentValue} / {goal.targetValue} {goal.unit}
                       </span>
@@ -105,8 +105,8 @@ export default function GoalsPage() {
                       <div key={m.id} className="flex items-center gap-2 text-xs">
                         <button onClick={() => api.put(`/goals/${goal.id}/milestones/${m.id}`, { isCompleted: !m.isCompleted })
                           .then(() => qc.invalidateQueries({ queryKey: ['goals'] }))}
-                          className={`w-4 h-4 rounded flex-shrink-0 border transition-all flex items-center justify-center ${m.isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-white/20'}`}>
-                          {m.isCompleted && <CheckCircle size={10} className="text-white" />}
+                          className={`w-4 h-4 rounded flex-shrink-0 border transition-all flex items-center justify-center ${m.isCompleted ? 'bg-emerald-500 border-emerald-500' : 'border-[var(--color-border-subtle)]'}`}>
+                          {m.isCompleted && <CheckCircle size={10} className="text-[var(--color-text-base)]" />}
                         </button>
                         <span className={m.isCompleted ? 'line-through text-slate-600' : 'text-slate-300'}>{m.title}</span>
                       </div>
@@ -119,11 +119,11 @@ export default function GoalsPage() {
 
           {completed.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">✅ Completed</h3>
+              <h3 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">✅ Completed</h3>
               {completed.map((g: any) => (
                 <div key={g.id} className="glass-card p-3 flex items-center gap-3 opacity-60 mb-2">
                   <span className="text-xl">{g.icon}</span>
-                  <p className="text-sm line-through text-slate-400 flex-1">{g.title}</p>
+                  <p className="text-sm line-through text-[var(--color-text-muted)] flex-1">{g.title}</p>
                   <span className="badge badge-emerald text-xs">Done</span>
                 </div>
               ))}
@@ -167,27 +167,27 @@ function GoalForm({ onClose, onSave }: any) {
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} exit={{opacity:0,scale:0.95}} className="modal-content max-h-[90vh] overflow-y-auto">
-        <h3 className="text-lg font-bold text-white mb-4">Create New Goal</h3>
+        <h3 className="text-lg font-bold text-[var(--color-text-base)] mb-4">Create New Goal</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input value={form.title} onChange={e => setForm(p=>({...p,title:e.target.value}))} placeholder="Goal title" className="input-field" required />
           <textarea value={form.description} onChange={e => setForm(p=>({...p,description:e.target.value}))} placeholder="Description (optional)" className="input-field resize-none h-20" />
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Category</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Category</label>
               <select value={form.category} onChange={e => setForm(p=>({...p,category:e.target.value}))} className="input-field">
                 {CATEGORIES.map(c => <option key={c} value={c}>{CAT_ICONS[c]} {c.toLowerCase()}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Target Date</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Target Date</label>
               <input type="date" value={form.targetDate} onChange={e => setForm(p=>({...p,targetDate:e.target.value}))} className="input-field" />
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Target Value</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Target Value</label>
               <input type="number" value={form.targetValue} onChange={e => setForm(p=>({...p,targetValue:e.target.value}))} placeholder="e.g. 55" className="input-field" />
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Unit</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Unit</label>
               <input value={form.unit} onChange={e => setForm(p=>({...p,unit:e.target.value}))} placeholder="kg, km, ..." className="input-field" />
             </div>
           </div>

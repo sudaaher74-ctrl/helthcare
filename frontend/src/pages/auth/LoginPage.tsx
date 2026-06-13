@@ -55,22 +55,22 @@ export default function LoginPage() {
             transition={{ type: 'spring', stiffness: 300, delay: 0.1 }}
             className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-violet mb-4 animate-pulse-glow"
           >
-            <Zap size={32} className="text-white" />
+            <Zap size={32} className="text-[var(--color-text-base)]" />
           </motion.div>
           <h1 className="text-3xl font-extrabold gradient-text-violet">LifeOS</h1>
-          <p className="text-slate-400 mt-1">Your Personal Life Operating System</p>
+          <p className="text-[var(--color-text-muted)] mt-1">Your Personal Life Operating System</p>
         </div>
 
         {/* Card */}
         <div className="glass-card p-8">
-          <h2 className="text-xl font-bold text-white mb-1">Welcome back</h2>
-          <p className="text-sm text-slate-400 mb-6">Sign in to continue your journey</p>
+          <h2 className="text-xl font-bold text-[var(--color-text-base)] mb-1">Welcome back</h2>
+          <p className="text-sm text-[var(--color-text-muted)] mb-6">Sign in to continue your journey</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
               <div className="relative">
-                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input
                   {...register('email')}
                   type="email"
@@ -85,7 +85,7 @@ export default function LoginPage() {
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
               <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input
                   {...register('password')}
                   type={showPass ? 'text' : 'password'}
@@ -96,7 +96,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-slate-300"
                 >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -120,10 +120,10 @@ export default function LoginPage() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/5" />
+              <div className="w-full border-t border-[var(--color-border-subtle)]" />
             </div>
             <div className="relative flex justify-center">
-              <span className="px-3 text-xs text-slate-500 bg-[#16162a]">or continue with</span>
+              <span className="px-3 text-xs text-[var(--color-text-muted)] bg-[#16162a]">or continue with</span>
             </div>
           </div>
 
@@ -135,7 +135,7 @@ export default function LoginPage() {
             <span>Continue with Google</span>
           </a>
 
-          <p className="text-center text-sm text-slate-500 mt-6">
+          <p className="text-center text-sm text-[var(--color-text-muted)] mt-6">
             Don't have an account?{' '}
             <Link to="/register" className="text-violet-400 hover:text-violet-300 font-semibold">
               Create one

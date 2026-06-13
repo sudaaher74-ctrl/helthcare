@@ -21,16 +21,16 @@ export default function AnalyticsPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-white bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500">
+          <h1 className="text-3xl font-black text-[var(--color-text-base)] bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500">
             Insights
           </h1>
-          <p className="text-slate-400 text-sm mt-1">Track your progress and discover trends</p>
+          <p className="text-[var(--color-text-muted)] text-sm mt-1">Track your progress and discover trends</p>
         </div>
-        <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/10 w-fit">
+        <div className="flex gap-1 p-1 bg-[var(--color-surface)] rounded-xl border border-[var(--color-border-subtle)] w-fit">
           {PERIODS.map(p => (
             <button key={p} onClick={() => setPeriod(p)}
               className={`px-5 py-1.5 rounded-lg text-sm font-bold transition-all capitalize ${
-                period === p ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/20' : 'text-slate-400 hover:text-white'
+                period === p ? 'bg-violet-600 text-[var(--color-text-base)] shadow-lg shadow-violet-500/20' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-base)]'
               }`}>
               {p}
             </button>
@@ -48,7 +48,7 @@ export default function AnalyticsPage() {
           {data?.weight?.data?.length > 1 && (
             <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
-              <h2 className="font-bold text-white mb-6 flex items-center gap-2 relative z-10">
+              <h2 className="font-bold text-[var(--color-text-base)] mb-6 flex items-center gap-2 relative z-10">
                 <TrendingUp size={18} className="text-emerald-400" /> Weight Progress
               </h2>
               <div className="h-64 relative z-10">
@@ -69,7 +69,7 @@ export default function AnalyticsPage() {
           {data?.habits?.data?.length > 0 && (
             <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
-              <h2 className="font-bold text-white mb-6 flex items-center gap-2 relative z-10">
+              <h2 className="font-bold text-[var(--color-text-base)] mb-6 flex items-center gap-2 relative z-10">
                 <Activity size={18} className="text-amber-400" /> Habit Completion Rate
               </h2>
               <div className="h-64 relative z-10">
@@ -90,7 +90,7 @@ export default function AnalyticsPage() {
           {data?.nutrition?.data?.length > 0 && (
             <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
-              <h2 className="font-bold text-white mb-6 flex items-center gap-2 relative z-10">
+              <h2 className="font-bold text-[var(--color-text-base)] mb-6 flex items-center gap-2 relative z-10">
                 <span>🔥</span> Daily Calories
               </h2>
               <div className="h-64 relative z-10">
@@ -111,7 +111,7 @@ export default function AnalyticsPage() {
           {data?.sleep?.data?.length > 0 && (
             <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
-              <h2 className="font-bold text-white mb-6 flex items-center gap-2 relative z-10">
+              <h2 className="font-bold text-[var(--color-text-base)] mb-6 flex items-center gap-2 relative z-10">
                 <span>😴</span> Sleep Hours
                 <span className="badge badge-cyan ml-2 border border-cyan-400/20 bg-cyan-400/10">Avg: {data.sleep.avgHours}h</span>
               </h2>
@@ -137,12 +137,12 @@ export default function AnalyticsPage() {
                 { label: 'Total Hours', value: `${Math.round(data.workouts.totalMinutes/60)}h`, icon: '⏱️', color: 'text-amber-400', shadow: 'shadow-amber-500/20' },
                 { label: 'Avg Duration', value: data.workouts.totalSessions ? `${Math.round(data.workouts.totalMinutes/data.workouts.totalSessions)}min` : '--', icon: '📊', color: 'text-emerald-400', shadow: 'shadow-emerald-500/20' },
               ].map(s => (
-                <div key={s.label} className={`glass-card p-6 flex flex-col items-center justify-center text-center transition-all hover:scale-105 hover:bg-white/5`}>
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 mb-4 shadow-lg ${s.shadow}`}>
+                <div key={s.label} className={`glass-card p-6 flex flex-col items-center justify-center text-center transition-all hover:scale-105 hover:bg-[var(--color-surface)]`}>
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-[var(--color-surface)] border border-[var(--color-border-subtle)] mb-4 shadow-lg ${s.shadow}`}>
                     <span className="text-2xl">{s.icon}</span>
                   </div>
                   <p className={`text-3xl font-black ${s.color}`}>{s.value}</p>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mt-2">{s.label}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mt-2">{s.label}</p>
                 </div>
               ))}
             </div>

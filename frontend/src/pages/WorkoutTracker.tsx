@@ -34,8 +34,8 @@ export default function WorkoutTracker() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Workout Tracker</h1>
-          <p className="text-slate-400 text-sm">{format(new Date(), 'EEEE, MMMM d')}</p>
+          <h1 className="text-2xl font-bold text-[var(--color-text-base)]">Workout Tracker</h1>
+          <p className="text-[var(--color-text-muted)] text-sm">{format(new Date(), 'EEEE, MMMM d')}</p>
         </div>
         <button onClick={() => setShowForm(true)} className="btn btn-primary">
           <Plus size={16} /> Log Workout
@@ -54,7 +54,7 @@ export default function WorkoutTracker() {
             <div key={s.label} className="stat-card">
               <span className="text-2xl">{s.icon}</span>
               <p className={`text-2xl font-extrabold mt-2 ${s.color}`}>{s.value}</p>
-              <p className="text-xs text-slate-500">{s.unit}</p>
+              <p className="text-xs text-[var(--color-text-muted)]">{s.unit}</p>
               <p className="text-xs text-slate-600 mt-0.5">{s.label}</p>
             </div>
           ))}
@@ -68,7 +68,7 @@ export default function WorkoutTracker() {
         <div className="glass-card p-12 text-center">
           <Dumbbell size={40} className="mx-auto mb-3 text-slate-600" />
           <p className="text-slate-300 font-semibold text-lg">No workouts logged yet</p>
-          <p className="text-slate-500 text-sm mt-1">Start tracking your training today!</p>
+          <p className="text-[var(--color-text-muted)] text-sm mt-1">Start tracking your training today!</p>
           <button onClick={() => setShowForm(true)} className="btn btn-primary mt-4">
             <Plus size={16} /> Log First Workout
           </button>
@@ -83,8 +83,8 @@ export default function WorkoutTracker() {
                     {CAT_ICONS[w.category] || '💪'}
                   </div>
                   <div>
-                    <p className="font-semibold text-white">{w.name}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="font-semibold text-[var(--color-text-base)]">{w.name}</p>
+                    <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
                       {format(new Date(w.date), 'MMM d')} · {w.durationMinutes}min
                       {w.caloriesBurned ? ` · ${w.caloriesBurned} kcal` : ''}
                       {w.exercises?.length ? ` · ${w.exercises.length} exercises` : ''}
@@ -95,15 +95,15 @@ export default function WorkoutTracker() {
                   <span className={`badge badge-violet text-xs`}>
                     {w.category.replace('_',' ').toLowerCase()}
                   </span>
-                  <button onClick={() => deleteWorkout.mutate(w.id)} className="btn btn-ghost btn-icon text-slate-500 hover:text-rose-400">
+                  <button onClick={() => deleteWorkout.mutate(w.id)} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-rose-400">
                     <Trash2 size={14} />
                   </button>
                 </div>
               </div>
               {w.exercises?.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-white/5 flex flex-wrap gap-2">
+                <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)] flex flex-wrap gap-2">
                   {w.exercises.slice(0,4).map((ex: any) => (
-                    <span key={ex.id} className="text-xs bg-white/5 text-slate-400 rounded-lg px-2 py-1">
+                    <span key={ex.id} className="text-xs bg-[var(--color-surface)] text-[var(--color-text-muted)] rounded-lg px-2 py-1">
                       {ex.name} {ex.sets?.length ? `× ${ex.sets.length} sets` : ''}
                     </span>
                   ))}
@@ -163,27 +163,27 @@ function LogWorkoutModal({ onClose, onSave }: any) {
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} exit={{opacity:0,scale:0.95}}
         className="modal-content max-h-[90vh] overflow-y-auto">
-        <h3 className="text-lg font-bold text-white mb-4">Log Workout</h3>
+        <h3 className="text-lg font-bold text-[var(--color-text-base)] mb-4">Log Workout</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input value={form.name} onChange={e => setForm(p=>({...p,name:e.target.value}))}
             placeholder="Workout name (e.g. Push Day)" className="input-field" required />
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Category</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Category</label>
               <select value={form.category} onChange={e => setForm(p=>({...p,category:e.target.value}))} className="input-field">
                 {CATEGORIES.map(c => <option key={c} value={c}>{CAT_ICONS[c]} {c.replace('_',' ').toLowerCase()}</option>)}
               </select>
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Date</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Date</label>
               <input type="date" value={form.date} onChange={e => setForm(p=>({...p,date:e.target.value}))} className="input-field" />
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Duration (min)</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Duration (min)</label>
               <input type="number" value={form.durationMinutes} onChange={e => setForm(p=>({...p,durationMinutes:e.target.value}))} placeholder="60" className="input-field" />
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Calories Burned</label>
+              <label className="text-xs text-[var(--color-text-muted)] mb-1 block">Calories Burned</label>
               <input type="number" value={form.caloriesBurned} onChange={e => setForm(p=>({...p,caloriesBurned:e.target.value}))} placeholder="300" className="input-field" />
             </div>
           </div>
@@ -201,7 +201,7 @@ function LogWorkoutModal({ onClose, onSave }: any) {
                   placeholder="Exercise name (e.g. Bench Press)" className="input-field text-sm" />
                 {ex.sets.map((s, si) => (
                   <div key={si} className="grid grid-cols-3 gap-2 items-center">
-                    <span className="text-xs text-slate-500">Set {si+1}</span>
+                    <span className="text-xs text-[var(--color-text-muted)]">Set {si+1}</span>
                     <input type="number" value={s.reps} onChange={e => setExercises(p => p.map((x,i) => i===ei ? {...x, sets: x.sets.map((ss,ssi) => ssi===si ? {...ss, reps: e.target.value} : ss)} : x))}
                       placeholder="Reps" className="input-field text-sm" />
                     <input type="number" value={s.weight} onChange={e => setExercises(p => p.map((x,i) => i===ei ? {...x, sets: x.sets.map((ss,ssi) => ssi===si ? {...ss, weight: e.target.value} : ss)} : x))}

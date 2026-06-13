@@ -4,9 +4,10 @@ import { motion } from 'framer-motion'
 import {
   LayoutDashboard, Target, Apple, Dumbbell, Moon, Scale,
   Trophy, CheckSquare, Calendar, BarChart2, Award, Settings,
-  Zap, Menu, X, PlusCircle, User
+  Zap, Menu, X, PlusCircle, User, Sun
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
+import { useThemeStore } from '@/stores/themeStore'
 import { useState } from 'react'
 
 const navItems = [
@@ -34,6 +35,7 @@ const mobileNav = [
 
 export default function AppLayout() {
   const { user } = useAuthStore()
+  const { theme, toggleTheme } = useThemeStore()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -41,30 +43,33 @@ export default function AppLayout() {
       {/* Desktop Sidebar */}
       <aside className="sidebar">
         {/* Logo */}
-        <div className="flex items-center gap-3 p-5 pb-4 border-b border-white/5">
+        <div className="flex items-center gap-3 p-5 pb-4 border-b border-[var(--color-border-subtle)]">
           <div className="w-8 h-8 rounded-lg gradient-violet flex items-center justify-center flex-shrink-0">
-            <Zap size={16} className="text-white" />
+            <Zap size={16} className="text-[var(--color-text-base)]" />
           </div>
           <div>
             <span className="font-bold text-base gradient-text-violet">LifeOS</span>
-            <p className="text-[10px] text-slate-500 leading-none mt-0.5">Life Operating System</p>
+            <p className="text-[10px] text-[var(--color-text-muted)] leading-none mt-0.5">Life Operating System</p>
           </div>
         </div>
 
         {/* User summary */}
         {user && (
-          <div className="px-4 py-3 border-b border-white/5">
+          <div className="px-4 py-3 border-b border-[var(--color-border-subtle)] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full gradient-violet flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+              <div className="w-8 h-8 rounded-full gradient-violet flex items-center justify-center text-sm font-bold text-[var(--color-text-base)] flex-shrink-0">
                 {user.name.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-slate-200 truncate">{user.name}</p>
-                <p className="text-[11px] text-slate-500 truncate">
+                <p className="text-sm font-semibold text-[var(--color-text-base)] truncate">{user.name}</p>
+                <p className="text-[11px] text-[var(--color-text-muted)] truncate">
                   {user.currentWeight}kg → {user.targetWeight}kg
                 </p>
               </div>
             </div>
+            <button onClick={toggleTheme} className="p-2 rounded-lg bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-base)] transition-colors">
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
           </div>
         )}
 
@@ -92,9 +97,9 @@ export default function AppLayout() {
 
         {/* Weight progress indicator */}
         {user?.currentWeight && user?.targetWeight && (
-          <div className="p-4 border-t border-white/5">
+          <div className="p-4 border-t border-[var(--color-border-subtle)]">
             <div className="glass-card p-3">
-              <div className="flex justify-between text-xs text-slate-400 mb-2">
+              <div className="flex justify-between text-xs text-[var(--color-text-muted)] mb-2">
                 <span>Weight Goal</span>
                 <span className="text-violet-400 font-semibold">
                   {Math.max(0, user.targetWeight - user.currentWeight).toFixed(1)}kg left
@@ -108,7 +113,7 @@ export default function AppLayout() {
                   }}
                 />
               </div>
-              <div className="flex justify-between text-[10px] text-slate-600 mt-1.5">
+              <div className="flex justify-between text-[10px] text-[var(--color-text-muted)] mt-1.5">
                 <span>{user.currentWeight}kg</span>
                 <span>{user.targetWeight}kg</span>
               </div>
@@ -120,17 +125,17 @@ export default function AppLayout() {
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-[150] md:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setSidebarOpen(false)} />
+          <div className="absolute inset-0 bg-[var(--color-bg-primary)]/60" onClick={() => setSidebarOpen(false)} />
           <motion.div
             initial={{ x: -280 }}
             animate={{ x: 0 }}
             exit={{ x: -280 }}
-            className="absolute left-0 top-0 h-full w-64 bg-[#0a0a14] border-r border-white/5 overflow-y-auto"
+            className="absolute left-0 top-0 h-full w-64 bg-[var(--color-bg-primary)] border-r border-[var(--color-border-subtle)] overflow-y-auto"
           >
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg gradient-violet flex items-center justify-center">
-                  <Zap size={14} className="text-white" />
+                  <Zap size={14} className="text-[var(--color-text-base)]" />
                 </div>
                 <span className="font-bold gradient-text-violet">LifeOS</span>
               </div>
@@ -148,20 +153,25 @@ export default function AppLayout() {
       )}
 
       {/* Main Content */}
-      <main className="main-content flex-1 ml-[240px] min-h-screen">
+      <main className="main-content flex-1 ml-[240px] min-h-screen bg-[var(--color-bg-primary)]">
         {/* Mobile top bar */}
-        <div className="md:hidden sticky top-0 z-40 flex items-center justify-between px-4 py-3 bg-[#0a0a0f]/90 backdrop-blur-xl border-b border-white/5">
+        <div className="md:hidden sticky top-0 z-40 flex items-center justify-between px-4 py-3 bg-[var(--glass-bg)] backdrop-blur-xl border-b border-[var(--color-border-subtle)]">
           <button onClick={() => setSidebarOpen(true)} className="btn btn-ghost btn-icon">
-            <Menu size={20} />
+            <Menu size={20} className="text-[var(--color-text-base)]" />
           </button>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-md gradient-violet flex items-center justify-center">
-              <Zap size={12} className="text-white" />
+              <Zap size={12} className="text-[var(--color-text-base)]" />
             </div>
             <span className="font-bold text-sm gradient-text-violet">LifeOS</span>
           </div>
-          <div className="w-8 h-8 rounded-full gradient-violet flex items-center justify-center text-xs font-bold text-white">
-            {user?.name?.charAt(0).toUpperCase() || 'U'}
+          <div className="flex items-center gap-3">
+            <button onClick={toggleTheme} className="p-2 rounded-lg bg-[var(--color-surface)] text-[var(--color-text-muted)] hover:text-[var(--color-text-base)] transition-colors">
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <div className="w-8 h-8 rounded-full gradient-violet flex items-center justify-center text-xs font-bold text-[var(--color-text-base)]">
+              {user?.name?.charAt(0).toUpperCase() || 'U'}
+            </div>
           </div>
         </div>
 
@@ -190,7 +200,7 @@ export default function AppLayout() {
               className="bottom-nav-item flex items-center justify-center -mt-6"
             >
               <div className="bg-violet-600 rounded-full p-3 shadow-lg shadow-violet-500/30">
-                <item.icon size={28} className="text-white" />
+                <item.icon size={28} className="text-[var(--color-text-base)]" />
               </div>
               <span className="mt-1">{item.label}</span>
             </button>

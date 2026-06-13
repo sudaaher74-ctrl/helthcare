@@ -41,7 +41,7 @@ export default function ScoreRing({ label, value, color, gradient, icon }: Score
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-base leading-none">{icon}</span>
           <motion.span
-            className="text-lg font-extrabold text-white leading-tight"
+            className="text-lg font-extrabold text-[var(--color-text-base)] leading-tight"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -50,7 +50,7 @@ export default function ScoreRing({ label, value, color, gradient, icon }: Score
           </motion.span>
         </div>
       </div>
-      <p className="text-[11px] font-semibold text-slate-400 text-center">{label}</p>
+      <p className="text-[11px] font-semibold text-[var(--color-text-muted)] text-center">{label}</p>
     </div>
   )
 }

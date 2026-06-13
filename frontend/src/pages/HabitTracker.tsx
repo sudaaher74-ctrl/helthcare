@@ -64,8 +64,8 @@ export default function HabitTracker() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Habit Tracker</h1>
-          <p className="text-slate-400 text-sm mt-0.5">{format(new Date(), 'EEEE, MMMM d')}</p>
+          <h1 className="text-2xl font-bold text-[var(--color-text-base)]">Habit Tracker</h1>
+          <p className="text-[var(--color-text-muted)] text-sm mt-0.5">{format(new Date(), 'EEEE, MMMM d')}</p>
         </div>
         <button onClick={() => { setEditHabit(null); setShowForm(true) }}
           className="btn btn-primary">
@@ -78,8 +78,8 @@ export default function HabitTracker() {
       <div className="glass-card p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-3xl font-extrabold text-white">{completed}<span className="text-slate-500 text-xl font-normal">/{total}</span></p>
-            <p className="text-slate-400 text-sm">habits completed today</p>
+            <p className="text-3xl font-extrabold text-[var(--color-text-base)]">{completed}<span className="text-[var(--color-text-muted)] text-xl font-normal">/{total}</span></p>
+            <p className="text-[var(--color-text-muted)] text-sm">habits completed today</p>
           </div>
           <div className="relative w-20 h-20">
             <svg viewBox="0 0 80 80" className="w-full h-full -rotate-90">
@@ -109,15 +109,15 @@ export default function HabitTracker() {
         <div className="grid grid-cols-3 gap-3 mt-4">
           <div className="text-center">
             <p className="text-xl font-bold text-amber-400">{stats?.completionRate || 0}%</p>
-            <p className="text-xs text-slate-500">7-Day Rate</p>
+            <p className="text-xs text-[var(--color-text-muted)]">7-Day Rate</p>
           </div>
           <div className="text-center">
             <p className="text-xl font-bold text-emerald-400">{stats?.totalCompleted || 0}</p>
-            <p className="text-xs text-slate-500">Total Completed</p>
+            <p className="text-xs text-[var(--color-text-muted)]">Total Completed</p>
           </div>
           <div className="text-center">
             <p className="text-xl font-bold text-violet-400">{total}</p>
-            <p className="text-xs text-slate-500">Active Habits</p>
+            <p className="text-xs text-[var(--color-text-muted)]">Active Habits</p>
           </div>
         </div>
       </div>
@@ -129,7 +129,7 @@ export default function HabitTracker() {
             className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all border ${
               filter === cat
                 ? 'bg-violet-500/20 border-violet-500/50 text-violet-300'
-                : 'border-white/10 text-slate-400 hover:border-white/20'
+                : 'border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:border-[var(--color-border-subtle)]'
             }`}>
             {cat === 'ALL' ? '🎯 All' : `${CATEGORY_ICONS[cat]} ${cat.charAt(0) + cat.slice(1).toLowerCase()}`}
           </button>
@@ -147,10 +147,10 @@ export default function HabitTracker() {
             <div key={category}>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-lg">{CATEGORY_ICONS[category]}</span>
-                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">
                   {category.charAt(0) + category.slice(1).toLowerCase()}
                 </h3>
-                <div className="flex-1 border-t border-white/5 ml-2" />
+                <div className="flex-1 border-t border-[var(--color-border-subtle)] ml-2" />
               </div>
               <div className="space-y-2">
                 {catHabits.map((habit: any) => (
@@ -194,7 +194,7 @@ function HabitCard({ habit, onToggle, onEdit, onDelete }: any) {
       layout
       className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${
         habit.completedToday
-          ? 'bg-white/2 border-white/5'
+          ? 'bg-white/2 border-[var(--color-border-subtle)]'
           : 'bg-white/3 border-white/8 hover:border-white/16'
       }`}
     >
@@ -206,7 +206,7 @@ function HabitCard({ habit, onToggle, onEdit, onDelete }: any) {
         <AnimatePresence>
           {habit.completedToday && (
             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-              <Check size={14} className="text-white" />
+              <Check size={14} className="text-[var(--color-text-base)]" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -215,7 +215,7 @@ function HabitCard({ habit, onToggle, onEdit, onDelete }: any) {
       <span className="text-xl">{habit.icon}</span>
 
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium truncate ${habit.completedToday ? 'line-through text-slate-500' : 'text-slate-200'}`}>
+        <p className={`text-sm font-medium truncate ${habit.completedToday ? 'line-through text-[var(--color-text-muted)]' : 'text-slate-200'}`}>
           {habit.name}
         </p>
         {habit.description && (
@@ -224,10 +224,10 @@ function HabitCard({ habit, onToggle, onEdit, onDelete }: any) {
       </div>
 
       <div className="flex items-center gap-1">
-        <button onClick={onEdit} className="btn btn-ghost btn-icon text-slate-500 hover:text-slate-300">
+        <button onClick={onEdit} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-slate-300">
           <Edit2 size={14} />
         </button>
-        <button onClick={onDelete} className="btn btn-ghost btn-icon text-slate-500 hover:text-rose-400">
+        <button onClick={onDelete} className="btn btn-ghost btn-icon text-[var(--color-text-muted)] hover:text-rose-400">
           <Trash2 size={14} />
         </button>
       </div>
@@ -272,7 +272,7 @@ function HabitForm({ habit, onClose, onSave }: any) {
         exit={{ opacity: 0, scale: 0.95 }}
         className="modal-content"
       >
-        <h3 className="text-lg font-bold text-white mb-4">
+        <h3 className="text-lg font-bold text-[var(--color-text-base)] mb-4">
           {habit ? 'Edit Habit' : 'Create New Habit'}
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -305,7 +305,7 @@ function HabitForm({ habit, onClose, onSave }: any) {
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Color</label>
               <input type="color" value={formData.color}
                 onChange={(e) => setFormData((p) => ({ ...p, color: e.target.value }))}
-                className="w-full h-[42px] rounded-lg border border-white/10 bg-transparent cursor-pointer" />
+                className="w-full h-[42px] rounded-lg border border-[var(--color-border-subtle)] bg-transparent cursor-pointer" />
             </div>
           </div>
           <div className="flex gap-3 pt-2">
