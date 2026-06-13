@@ -5,7 +5,7 @@ import { Plus, Scale, TrendingUp, Trash2, Target } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import api from '@/lib/api'
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 import { useAuthStore } from '@/stores/authStore'
 
 export default function WeightTracker() {
@@ -135,22 +135,33 @@ export default function WeightTracker() {
       {/* Chart */}
       {chartData.length > 1 && (
         <div className="glass-card p-5">
-          <h2 className="font-bold text-white mb-4">Weight Progress</h2>
-          <div className="h-48">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-bold text-white flex items-center gap-2">
+              <TrendingUp className="text-emerald-400" size={18} />
+              Weight Progress
+            </h2>
+          </div>
+          <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
-                <XAxis dataKey="date" tick={{ fill: '#475569', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis domain={['auto', 'auto']} tick={{ fill: '#475569', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} dy={10} />
+                <YAxis domain={['auto', 'auto']} tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} dx={-10} />
                 <Tooltip
-                  contentStyle={{ background: '#1a1a2e', border: '1px solid rgba(148,163,184,0.1)', borderRadius: 8, color: '#f1f5f9', fontSize: 12 }}
+                  contentStyle={{ background: 'rgba(20, 20, 20, 0.9)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, color: '#f1f5f9', fontSize: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
+                  itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
                   formatter={(val: any) => [`${val} kg`, 'Weight']}
                 />
-                <ReferenceLine y={target} stroke="#7c3aed" strokeDasharray="4 2" strokeOpacity={0.6} label={{ value: 'Goal', fill: '#a78bfa', fontSize: 11 }} />
-                <Line type="monotone" dataKey="weight" stroke="#10b981" strokeWidth={2.5}
-                  dot={{ fill: '#10b981', r: 3, strokeWidth: 0 }}
-                  activeDot={{ r: 5, fill: '#34d399' }}
+                <ReferenceLine y={target} stroke="#7c3aed" strokeDasharray="4 4" strokeOpacity={0.8} label={{ position: 'top', value: 'Goal', fill: '#a78bfa', fontSize: 11 }} />
+                <Area type="monotone" dataKey="weight" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorWeight)"
+                  activeDot={{ r: 6, fill: '#34d399', stroke: '#064e3b', strokeWidth: 2 }}
                 />
-              </LineChart>
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>

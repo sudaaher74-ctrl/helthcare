@@ -31,6 +31,10 @@ export default function TasksPage() {
   const inProgress = (tasks || []).filter((t: any) => t.status === 'IN_PROGRESS' || t.status === 'REVIEW')
   const done = (tasks || []).filter((t: any) => t.status === 'DONE')
 
+  const totalTasks = (tasks || []).length
+  const doneTasks = done.length
+  const focusScore = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -39,6 +43,26 @@ export default function TasksPage() {
           <p className="text-slate-400 text-sm">{inProgress.length} in progress · {done.length} completed</p>
         </div>
         <button onClick={() => setShowForm(true)} className="btn btn-primary"><Plus size={16}/> New Task</button>
+      </div>
+
+      {/* Focus Score */}
+      <div className="glass-card p-5 border-l-4 border-l-violet-500 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-full bg-violet-500/20 flex items-center justify-center border border-violet-500/30">
+            <span className="text-2xl">🎯</span>
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Daily Focus Score</h2>
+            <div className="flex items-end gap-2">
+              <span className="text-3xl font-black text-white">{focusScore}</span>
+              <span className="text-violet-400 font-bold mb-1">/ 100</span>
+            </div>
+          </div>
+        </div>
+        <div className="text-right hidden sm:block">
+          <p className="text-sm text-slate-300">Keep knocking them out!</p>
+          <p className="text-xs text-slate-500">+10 XP per completed task</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">

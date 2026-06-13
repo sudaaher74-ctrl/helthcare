@@ -15,17 +15,22 @@ export default function AnalyticsPage() {
     queryFn: () => api.get(`/analytics?period=${period}`).then(r => r.data.data),
   })
 
-  const tooltipStyle = { background: '#1a1a2e', border: '1px solid rgba(148,163,184,0.1)', borderRadius: 8, color: '#f1f5f9', fontSize: 12 }
+  const tooltipStyle = { background: 'rgba(20, 20, 20, 0.9)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, color: '#f1f5f9', fontSize: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Analytics</h1>
-        <div className="flex gap-1 p-1 bg-white/5 rounded-xl">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-black text-white bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-500">
+            Insights
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">Track your progress and discover trends</p>
+        </div>
+        <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/10 w-fit">
           {PERIODS.map(p => (
             <button key={p} onClick={() => setPeriod(p)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all capitalize ${
-                period === p ? 'bg-violet-600 text-white' : 'text-slate-400 hover:text-slate-200'
+              className={`px-5 py-1.5 rounded-lg text-sm font-bold transition-all capitalize ${
+                period === p ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/20' : 'text-slate-400 hover:text-white'
               }`}>
               {p}
             </button>
@@ -41,18 +46,19 @@ export default function AnalyticsPage() {
         <div className="space-y-6">
           {/* Weight Progress */}
           {data?.weight?.data?.length > 1 && (
-            <div className="glass-card p-5">
-              <h2 className="font-bold text-white mb-4 flex items-center gap-2">
+            <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
+              <h2 className="font-bold text-white mb-6 flex items-center gap-2 relative z-10">
                 <TrendingUp size={18} className="text-emerald-400" /> Weight Progress
               </h2>
-              <div className="h-48">
+              <div className="h-64 relative z-10">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={data.weight.data}>
-                    <XAxis dataKey="date" tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false}
+                  <LineChart data={data.weight.data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} dy={10}
                       tickFormatter={d => new Date(d).toLocaleDateString('en', {month:'short',day:'numeric'})} />
-                    <YAxis domain={['auto','auto']} tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <Tooltip contentStyle={tooltipStyle} formatter={(v: any) => [`${v} kg`, 'Weight']} />
-                    <Line type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2.5} dot={false} />
+                    <YAxis domain={['auto','auto']} tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} dx={-10} />
+                    <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#10b981', fontWeight: 'bold' }} formatter={(v: any) => [`${v} kg`, 'Weight']} />
+                    <Line type="monotone" dataKey="value" stroke="#10b981" strokeWidth={3} dot={false} activeDot={{ r: 6, fill: '#34d399', stroke: '#064e3b', strokeWidth: 2 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -61,18 +67,19 @@ export default function AnalyticsPage() {
 
           {/* Habit Completion */}
           {data?.habits?.data?.length > 0 && (
-            <div className="glass-card p-5">
-              <h2 className="font-bold text-white mb-4 flex items-center gap-2">
+            <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
+              <h2 className="font-bold text-white mb-6 flex items-center gap-2 relative z-10">
                 <Activity size={18} className="text-amber-400" /> Habit Completion Rate
               </h2>
-              <div className="h-48">
+              <div className="h-64 relative z-10">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={data.habits.data}>
-                    <XAxis dataKey="date" tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false}
+                  <BarChart data={data.habits.data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} dy={10}
                       tickFormatter={d => new Date(d).toLocaleDateString('en', {month:'short',day:'numeric'})} />
-                    <YAxis domain={[0,100]} tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}%`} />
-                    <Tooltip contentStyle={tooltipStyle} formatter={(v: any) => [`${v}%`, 'Completion']} />
-                    <Bar dataKey="rate" fill="#f59e0b" radius={[4,4,0,0]} />
+                    <YAxis domain={[0,100]} tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} dx={-10} tickFormatter={v => `${v}%`} />
+                    <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#f59e0b', fontWeight: 'bold' }} formatter={(v: any) => [`${v}%`, 'Completion']} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
+                    <Bar dataKey="rate" fill="#f59e0b" radius={[6,6,0,0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -81,18 +88,19 @@ export default function AnalyticsPage() {
 
           {/* Nutrition Calories */}
           {data?.nutrition?.data?.length > 0 && (
-            <div className="glass-card p-5">
-              <h2 className="font-bold text-white mb-4 flex items-center gap-2">
+            <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
+              <h2 className="font-bold text-white mb-6 flex items-center gap-2 relative z-10">
                 <span>🔥</span> Daily Calories
               </h2>
-              <div className="h-48">
+              <div className="h-64 relative z-10">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={data.nutrition.data}>
-                    <XAxis dataKey="date" tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false}
+                  <BarChart data={data.nutrition.data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} dy={10}
                       tickFormatter={d => new Date(d).toLocaleDateString('en', {month:'short',day:'numeric'})} />
-                    <YAxis tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false} />
-                    <Tooltip contentStyle={tooltipStyle} formatter={(v: any) => [`${Math.round(v)} kcal`, 'Calories']} />
-                    <Bar dataKey="calories" fill="#f97316" radius={[4,4,0,0]} />
+                    <YAxis tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} dx={-10} />
+                    <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#f97316', fontWeight: 'bold' }} formatter={(v: any) => [`${Math.round(v)} kcal`, 'Calories']} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
+                    <Bar dataKey="calories" fill="#f97316" radius={[6,6,0,0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -101,19 +109,20 @@ export default function AnalyticsPage() {
 
           {/* Sleep */}
           {data?.sleep?.data?.length > 0 && (
-            <div className="glass-card p-5">
-              <h2 className="font-bold text-white mb-4 flex items-center gap-2">
+            <div className="glass-card p-6 flex flex-col relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl -mr-10 -mt-10 transition-opacity group-hover:opacity-100 opacity-50" />
+              <h2 className="font-bold text-white mb-6 flex items-center gap-2 relative z-10">
                 <span>😴</span> Sleep Hours
-                <span className="badge badge-cyan ml-2">Avg: {data.sleep.avgHours}h</span>
+                <span className="badge badge-cyan ml-2 border border-cyan-400/20 bg-cyan-400/10">Avg: {data.sleep.avgHours}h</span>
               </h2>
-              <div className="h-48">
+              <div className="h-64 relative z-10">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={data.sleep.data}>
-                    <XAxis dataKey="date" tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false}
+                  <BarChart data={data.sleep.data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <XAxis dataKey="date" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} dy={10}
                       tickFormatter={d => new Date(d).toLocaleDateString('en', {month:'short',day:'numeric'})} />
-                    <YAxis domain={[0,12]} tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}h`} />
-                    <Tooltip contentStyle={tooltipStyle} formatter={(v: any) => [`${v}h`, 'Sleep']} />
-                    <Bar dataKey="hours" fill="#6366f1" radius={[4,4,0,0]} />
+                    <YAxis domain={[0,12]} tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} dx={-10} tickFormatter={v => `${v}h`} />
+                    <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#6366f1', fontWeight: 'bold' }} formatter={(v: any) => [`${v}h`, 'Sleep']} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
+                    <Bar dataKey="hours" fill="#6366f1" radius={[6,6,0,0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -122,16 +131,18 @@ export default function AnalyticsPage() {
 
           {/* Workout Summary */}
           {data?.workouts && (
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                { label: 'Total Sessions', value: data.workouts.totalSessions, icon: '🏋️', color: 'text-violet-400' },
-                { label: 'Total Hours', value: `${Math.round(data.workouts.totalMinutes/60)}h`, icon: '⏱️', color: 'text-amber-400' },
-                { label: 'Avg Duration', value: data.workouts.totalSessions ? `${Math.round(data.workouts.totalMinutes/data.workouts.totalSessions)}min` : '--', icon: '📊', color: 'text-emerald-400' },
+                { label: 'Total Sessions', value: data.workouts.totalSessions, icon: '🏋️', color: 'text-violet-400', shadow: 'shadow-violet-500/20' },
+                { label: 'Total Hours', value: `${Math.round(data.workouts.totalMinutes/60)}h`, icon: '⏱️', color: 'text-amber-400', shadow: 'shadow-amber-500/20' },
+                { label: 'Avg Duration', value: data.workouts.totalSessions ? `${Math.round(data.workouts.totalMinutes/data.workouts.totalSessions)}min` : '--', icon: '📊', color: 'text-emerald-400', shadow: 'shadow-emerald-500/20' },
               ].map(s => (
-                <div key={s.label} className="stat-card">
-                  <span className="text-2xl">{s.icon}</span>
-                  <p className={`text-2xl font-extrabold mt-2 ${s.color}`}>{s.value}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
+                <div key={s.label} className={`glass-card p-6 flex flex-col items-center justify-center text-center transition-all hover:scale-105 hover:bg-white/5`}>
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 mb-4 shadow-lg ${s.shadow}`}>
+                    <span className="text-2xl">{s.icon}</span>
+                  </div>
+                  <p className={`text-3xl font-black ${s.color}`}>{s.value}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mt-2">{s.label}</p>
                 </div>
               ))}
             </div>

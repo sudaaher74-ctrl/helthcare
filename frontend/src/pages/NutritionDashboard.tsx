@@ -42,12 +42,13 @@ export default function NutritionDashboard() {
   })
 
   const { totals, meals, waterML } = data || { totals: {}, meals: [], waterML: 0 }
+  const dailyCalories = Math.round(totals?.calories || 0)
+  const calorieGoal = 2800
+
   const macros = [
-    { label: 'Calories', current: Math.round(totals?.calories||0), goal: 2800, unit: 'kcal', color: '#f97316', bg: 'from-orange-500 to-amber-500' },
     { label: 'Protein', current: Math.round(totals?.protein||0), goal: 150, unit: 'g', color: '#06b6d4', bg: 'from-cyan-500 to-blue-500' },
     { label: 'Carbs', current: Math.round(totals?.carbs||0), goal: 350, unit: 'g', color: '#10b981', bg: 'from-emerald-500 to-green-500' },
     { label: 'Fat', current: Math.round(totals?.fat||0), goal: 80, unit: 'g', color: '#a78bfa', bg: 'from-violet-500 to-purple-500' },
-    { label: 'Fiber', current: Math.round(totals?.fiber||0), goal: 30, unit: 'g', color: '#f59e0b', bg: 'from-amber-500 to-yellow-500' },
   ]
 
   const handleImageAnalyze = async (file: File) => {
@@ -102,56 +103,55 @@ export default function NutritionDashboard() {
         </div>
       </div>
 
-      {/* Macro Rings */}
-      <div className="glass-card p-5">
-        <h2 className="font-bold text-white mb-4">Daily Nutrition</h2>
-        <div className="grid grid-cols-5 gap-3 mb-5">
-          {macros.map((m) => {
-            const pct = Math.min(100, m.goal ? (m.current / m.goal) * 100 : 0)
-            const r = 30
-            const circ = 2 * Math.PI * r
-            return (
-              <div key={m.label} className="flex flex-col items-center gap-2">
-                <div className="relative">
-                  <svg width="72" height="72" className="-rotate-90">
-                    <circle cx="36" cy="36" r={r} fill="none" stroke="rgba(148,163,184,0.08)" strokeWidth="5" />
-                    <motion.circle cx="36" cy="36" r={r} fill="none" stroke={m.color} strokeWidth="5"
-                      strokeLinecap="round" strokeDasharray={circ}
-                      initial={{ strokeDashoffset: circ }}
-                      animate={{ strokeDashoffset: circ * (1 - pct / 100) }}
-                      transition={{ duration: 1.2, ease: 'easeOut' }}
-                      style={{ filter: `drop-shadow(0 0 4px ${m.color}88)` }}
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-sm font-bold text-white">{m.current}</span>
-                    <span className="text-[9px] text-slate-500">{m.unit}</span>
-                  </div>
-                </div>
-                <p className="text-[11px] text-slate-400 text-center">{m.label}</p>
-              </div>
-            )
-          })}
-        </div>
-        {macros.map((m) => (
-          <div key={m.label} className="mb-2">
-            <div className="flex justify-between text-xs mb-1">
-              <span className="text-slate-400">{m.label}</span>
-              <span className="text-slate-300 font-medium">{m.current}/{m.goal}{m.unit}</span>
-            </div>
-            <div className="progress-bar h-1.5">
-              <motion.div className={`progress-bar-fill bg-gradient-to-r ${m.bg}`}
-                initial={{ width: 0 }}
-                animate={{ width: `${Math.min(100, m.goal ? (m.current / m.goal) * 100 : 0)}%` }}
-                transition={{ duration: 1, ease: 'easeOut' }}
+      {/* Main Calorie Ring & Macros */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="glass-card p-6 flex flex-col items-center justify-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-orange-500/5 blur-3xl rounded-full scale-150" />
+          <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6 z-10">Calories Today</h2>
+          <div className="relative w-48 h-48 flex items-center justify-center z-10">
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+              <motion.circle
+                cx="50" cy="50" r="45" fill="none"
+                stroke="url(#calorieGradient)" strokeWidth="8" strokeLinecap="round"
+                initial={{ strokeDasharray: "0 283" }}
+                animate={{ strokeDasharray: `${Math.min((dailyCalories/calorieGoal)*283, 283)} 283` }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                style={{ filter: 'drop-shadow(0 0 10px rgba(249,115,22,0.4))' }}
               />
+              <defs>
+                <linearGradient id="calorieGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#f59e0b" />
+                  <stop offset="100%" stopColor="#f97316" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+              <span className="text-4xl font-black text-white drop-shadow-lg">{dailyCalories}</span>
+              <span className="text-xs text-orange-400 font-bold mt-1">/ {calorieGoal} kcal</span>
             </div>
           </div>
-        ))}
-      </div>
+          <div className="mt-6 w-full max-w-xs space-y-4 relative z-10">
+            {macros.map((m) => (
+              <div key={m.label}>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-slate-400 font-semibold">{m.label}</span>
+                  <span className="text-slate-300">{m.current} / {m.goal}{m.unit}</span>
+                </div>
+                <div className="progress-bar h-2">
+                  <motion.div className={`progress-bar-fill bg-gradient-to-r ${m.bg}`}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min(100, m.goal ? (m.current / m.goal) * 100 : 0)}%` }}
+                    transition={{ duration: 1, delay: 0.2 }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
 
-      {/* Water + AI Coach */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Water + AI Coach Container */}
+        <div className="flex flex-col gap-6">
         {/* Water */}
         <div className="glass-card p-5">
           <h3 className="font-semibold text-white flex items-center gap-2 mb-3">
@@ -194,6 +194,7 @@ export default function NutritionDashboard() {
             </div>
           </div>
         )}
+      </div>
       </div>
 
       {/* Meal Log */}
