@@ -68,6 +68,7 @@ model User {
   waterLogs        WaterLog[]
   refreshTokens    RefreshToken[]
   dailyCheckIns    DailyCheckIn[]
+  expenses         Expense[]
 
   @@map("users")
 }
@@ -656,4 +657,34 @@ enum NotificationType {
   STREAK_WARNING
   GOAL_DEADLINE
   SYSTEM
+}
+
+enum ExpenseCategory {
+  FOOD
+  CLOTHES
+  RECHARGE
+  BILLS
+  ENTERTAINMENT
+  TRANSPORT
+  OTHER
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FINANCE / EXPENSES
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Expense {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  amount      Float
+  category    ExpenseCategory
+  description String
+  date        DateTime
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("expenses")
 }

@@ -24,6 +24,7 @@ import TasksPage from '@/pages/TasksPage'
 import CalendarPage from '@/pages/CalendarPage'
 import AnalyticsPage from '@/pages/AnalyticsPage'
 import AchievementsPage from '@/pages/AchievementsPage'
+import FinanceTracker from '@/pages/FinanceTracker'
 import SettingsPage from '@/pages/SettingsPage'
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -101,6 +102,7 @@ export default function App() {
             <Route path="calendar" element={<CalendarPage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="achievements" element={<AchievementsPage />} />
+            <Route path="finance" element={<FinanceTracker />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
 

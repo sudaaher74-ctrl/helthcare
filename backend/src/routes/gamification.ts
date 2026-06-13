@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { getGamificationStatus, addGamificationReward } from '../controllers/gamificationController';
-import { requireAuth } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 
 const router = Router();
 
-router.use(requireAuth);
+router.use(authenticate as any);
 
 router.get('/status', getGamificationStatus);
 router.post('/reward', addGamificationReward);

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import {
   LayoutDashboard, Target, Apple, Dumbbell, Moon, Scale,
   Trophy, CheckSquare, Calendar, BarChart2, Award, Settings,
-  Zap, Menu, X, PlusCircle, User, Sun
+  Zap, Menu, X, PlusCircle, User, Sun, Wallet
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
@@ -21,6 +21,7 @@ const navItems = [
   { to: '/tasks', icon: CheckSquare, label: 'Tasks' },
   { to: '/calendar', icon: Calendar, label: 'Calendar' },
   { to: '/analytics', icon: BarChart2, label: 'Analytics' },
+  { to: '/finance', icon: Wallet, label: 'Finance' },
   { to: '/achievements', icon: Award, label: 'Achievements' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ]
@@ -28,6 +29,7 @@ const navItems = [
 const mobileNav = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Home' },
   { to: '/goals', icon: Trophy, label: 'Goals' },
+  { to: '/finance', icon: Wallet, label: 'Finance' },
   { to: '#', icon: PlusCircle, label: 'Log', action: 'log' },
   { to: '/analytics', icon: BarChart2, label: 'Insights' },
   { to: '/settings', icon: User, label: 'Profile' },
