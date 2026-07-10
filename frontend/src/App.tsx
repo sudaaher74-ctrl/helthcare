@@ -17,6 +17,7 @@ import Dashboard from '@/pages/Dashboard'
 import HabitTracker from '@/pages/HabitTracker'
 import NutritionDashboard from '@/pages/NutritionDashboard'
 import WorkoutTracker from '@/pages/WorkoutTracker'
+import GymPlanner from '@/pages/GymPlanner'
 import SleepTracker from '@/pages/SleepTracker'
 import WeightTracker from '@/pages/WeightTracker'
 import GoalsPage from '@/pages/GoalsPage'
@@ -95,6 +96,7 @@ export default function App() {
             <Route path="habits" element={<HabitTracker />} />
             <Route path="nutrition" element={<NutritionDashboard />} />
             <Route path="workout" element={<WorkoutTracker />} />
+            <Route path="gym" element={<GymPlanner />} />
             <Route path="sleep" element={<SleepTracker />} />
             <Route path="weight" element={<WeightTracker />} />
             <Route path="goals" element={<GoalsPage />} />

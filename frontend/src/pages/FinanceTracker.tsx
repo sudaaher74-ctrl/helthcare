@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format } from 'date-fns'
-import { Plus, Trash2, Wallet, CreditCard, ShoppingBag, Smartphone, Coffee, FileText, LayoutList } from 'lucide-react'
+import { Plus, Trash2, Wallet, CreditCard, ShoppingBag, Smartphone, Coffee, FileText, LayoutList, MessageSquareText, Sparkles, Zap } from 'lucide-react'
 import { toast } from 'sonner'
 import api from '@/lib/api'
 
@@ -20,6 +20,7 @@ export default function FinanceTracker() {
   const qc = useQueryClient()
   const [currentMonth] = useState(format(new Date(), 'yyyy-MM'))
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showSmsModal, setShowSmsModal] = useState(false)
 
   const { data, isLoading } = useQuery({
     queryKey: ['expenses', currentMonth],
@@ -43,9 +44,14 @@ export default function FinanceTracker() {
           <h1 className="text-2xl font-bold text-[var(--color-text-base)]">Finances</h1>
           <p className="text-[var(--color-text-muted)] text-sm">{format(new Date(), 'MMMM yyyy')}</p>
         </div>
-        <button onClick={() => setShowAddModal(true)} className="btn btn-primary btn-sm">
-          <Plus size={15} /> Add Expense
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setShowSmsModal(true)} className="btn btn-secondary btn-sm">
+            <MessageSquareText size={15} /> Auto-import
+          </button>
+          <button onClick={() => setShowAddModal(true)} className="btn btn-primary btn-sm">
+            <Plus size={15} /> Add Expense
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -104,7 +110,14 @@ export default function FinanceTracker() {
                     {CATEGORY_ICONS[expense.category]}
                   </div>
                   <div>
-                    <p className="font-semibold text-[var(--color-text-base)]">{expense.description}</p>
+                    <p className="font-semibold text-[var(--color-text-base)] flex items-center gap-2">
+                      {expense.description}
+                      {expense.source === 'SMS' && (
+                        <span className="badge badge-violet text-[10px] inline-flex items-center gap-1">
+                          <Zap size={10} /> Auto
+                        </span>
+                      )}
+                    </p>
                     <p className="text-xs text-[var(--color-text-muted)] flex items-center gap-2">
                       <span className="capitalize">{expense.category.toLowerCase()}</span>
                       <span>·</span>
@@ -126,7 +139,125 @@ export default function FinanceTracker() {
 
       <AnimatePresence>
         {showAddModal && <AddExpenseModal onClose={() => setShowAddModal(false)} onSave={() => qc.invalidateQueries({ queryKey: ['expenses'] })} />}
+        {showSmsModal && <SmsImportModal onClose={() => setShowSmsModal(false)} onSave={() => qc.invalidateQueries({ queryKey: ['expenses'] })} />}
       </AnimatePresence>
+    </div>
+  )
+}
+
+function SmsImportModal({ onClose, onSave }: { onClose: () => void; onSave: () => void }) {
+  const [text, setText] = useState('')
+  const [preview, setPreview] = useState<any | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [result, setResult] = useState<{ imported: number; duplicates: number; skipped: number } | null>(null)
+
+  // Split pasted text into individual SMS (blank line OR newline separated).
+  const messages = text.split(/\n\s*\n|\n/).map((s) => s.trim()).filter(Boolean)
+
+  const runPreview = async () => {
+    if (!messages[0]) return
+    setBusy(true)
+    try {
+      const r = await api.post('/expenses/sms/preview', { message: messages[0] })
+      setPreview(r.data.data)
+    } catch {
+      toast.error('Could not parse SMS')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const runImport = async () => {
+    if (messages.length === 0) return
+    setBusy(true)
+    try {
+      const r = await api.post('/expenses/sms/batch', { messages })
+      const summary = r.data.data.summary
+      setResult(summary)
+      if (summary.imported > 0) {
+        toast.success(`Imported ${summary.imported} expense${summary.imported > 1 ? 's' : ''}`)
+        onSave()
+      } else {
+        toast('No new expenses found', { icon: 'ℹ️' })
+      }
+    } catch {
+      toast.error('Import failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="modal-content">
+        <div className="flex items-center gap-2 mb-1">
+          <MessageSquareText size={18} className="text-[var(--color-text-base)]" />
+          <h3 className="text-lg font-bold text-[var(--color-text-base)]">Auto-import from SMS</h3>
+        </div>
+        <p className="text-xs text-[var(--color-text-muted)] mb-4">
+          Paste your bank / UPI payment messages. We detect the amount, merchant, and category automatically.
+          Credits, OTPs, and duplicates are ignored.
+        </p>
+
+        <textarea
+          value={text}
+          onChange={(e) => { setText(e.target.value); setPreview(null); setResult(null) }}
+          rows={5}
+          placeholder={'Rs.499 debited from a/c XX3421 to SWIGGY via UPI ref 452310098765\nINR 1,250.50 spent on ICICI Card at MYNTRA ...'}
+          className="input-field font-mono text-xs"
+        />
+
+        {messages.length > 0 && (
+          <p className="text-[11px] text-[var(--color-text-muted)] mt-1">{messages.length} message{messages.length > 1 ? 's' : ''} detected</p>
+        )}
+
+        {preview && (
+          <div className="glass-card p-3 mt-3 text-sm">
+            {preview.isTransaction ? (
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-[var(--color-text-base)] flex items-center gap-1">
+                    <Sparkles size={13} /> {preview.merchant || 'Payment'}
+                  </p>
+                  <p className="text-xs text-[var(--color-text-muted)] capitalize">
+                    {preview.direction.toLowerCase()} · {String(preview.category || '').toLowerCase()}
+                  </p>
+                </div>
+                <p className="font-bold text-[var(--color-text-base)]">${Number(preview.amount).toFixed(2)}</p>
+              </div>
+            ) : (
+              <p className="text-xs text-[var(--color-text-muted)]">Not a transaction message — this one will be skipped.</p>
+            )}
+          </div>
+        )}
+
+        {result && (
+          <div className="glass-card p-3 mt-3 text-xs text-[var(--color-text-muted)] flex gap-4">
+            <span className="text-[var(--color-text-base)] font-semibold">{result.imported} imported</span>
+            <span>{result.duplicates} duplicate</span>
+            <span>{result.skipped} skipped</span>
+          </div>
+        )}
+
+        <div className="flex gap-3 pt-4">
+          <button type="button" onClick={runPreview} disabled={busy || messages.length === 0} className="btn btn-secondary flex-1 disabled:opacity-40">
+            Preview
+          </button>
+          <button type="button" onClick={runImport} disabled={busy || messages.length === 0} className="btn btn-primary flex-1 disabled:opacity-40">
+            {busy ? 'Working…' : `Import ${messages.length || ''}`.trim()}
+          </button>
+        </div>
+
+        <details className="mt-4">
+          <summary className="text-xs text-[var(--color-text-muted)] cursor-pointer">Set up fully-automatic capture (Android)</summary>
+          <p className="text-[11px] text-[var(--color-text-muted)] mt-2 leading-relaxed">
+            Use a free SMS-forwarder app (MacroDroid / Tasker / “SMS to URL”) to POST each new bank
+            SMS to <code className="bg-[var(--color-surface)] px-1 rounded">/api/expenses/sms/ingest</code> as
+            <code className="bg-[var(--color-surface)] px-1 rounded"> {'{ "message": "%sms_body%" }'}</code>.
+            Every payment then lands here on its own — no pasting.
+          </p>
+        </details>
+      </motion.div>
     </div>
   )
 }

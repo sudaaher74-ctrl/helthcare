@@ -1,6 +1,8 @@
 import { Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
 import { AuthRequest } from '../middleware/auth';
+import { parseSms } from '../sms/parseSms';
+import { categorizeExpense } from '../ai/expenseCategorizer';
 
 // ─── GET EXPENSES ─────────────────────────────────────────────────────────────
 export const getExpenses = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -98,6 +100,103 @@ export const deleteExpense = async (req: AuthRequest, res: Response, next: NextF
     await prisma.expense.delete({ where: { id } });
 
     res.json({ success: true, message: 'Expense deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─── SMS AUTO-IMPORT ──────────────────────────────────────────────────────────
+
+// Parse + categorize a single SMS and (if it is a spend) create an expense,
+// skipping non-transactions, credits, and already-imported messages.
+async function ingestOne(userId: string, message: string, receivedAt?: string) {
+  const parsed = parseSms(message, receivedAt);
+
+  if (!parsed.isTransaction) {
+    return { status: 'skipped' as const, reason: 'Not a transaction SMS', parsed };
+  }
+  if (parsed.direction === 'CREDIT') {
+    return { status: 'skipped' as const, reason: 'Money received (not an expense)', parsed };
+  }
+
+  const existing = await prisma.expense.findFirst({ where: { userId, smsRef: parsed.smsRef } });
+  if (existing) {
+    return { status: 'duplicate' as const, reason: 'Already imported', expense: existing, parsed };
+  }
+
+  const category = await categorizeExpense(parsed.merchant, message);
+  const expense = await prisma.expense.create({
+    data: {
+      userId,
+      amount: parsed.amount,
+      category: category as any,
+      description: parsed.merchant ? `Paid to ${parsed.merchant}` : 'UPI / card payment',
+      date: receivedAt ? new Date(receivedAt) : new Date(),
+      source: 'SMS',
+      merchant: parsed.merchant,
+      smsRef: parsed.smsRef,
+    },
+  });
+
+  return { status: 'imported' as const, expense, parsed };
+}
+
+// POST /api/expenses/sms/preview — parse only, no write (used by the UI preview).
+export const previewSms = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const { message, receivedAt } = req.body;
+    if (!message) return res.status(400).json({ success: false, message: 'message is required' });
+
+    const parsed = parseSms(message, receivedAt);
+    const category = parsed.isTransaction ? await categorizeExpense(parsed.merchant, message) : null;
+    res.json({ success: true, data: { ...parsed, category } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// POST /api/expenses/sms/ingest — ingest one SMS (webhook target for an
+// Android SMS-forwarder / Tasker / MacroDroid, or the manual paste box).
+export const ingestSms = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+    const { message, receivedAt } = req.body;
+    if (!message) return res.status(400).json({ success: false, message: 'message is required' });
+
+    const result = await ingestOne(userId, message, receivedAt);
+    res.status(result.status === 'imported' ? 201 : 200).json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// POST /api/expenses/sms/batch — ingest many at once { messages: [{message, receivedAt}] }.
+export const ingestSmsBatch = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+    const { messages } = req.body;
+    if (!Array.isArray(messages)) {
+      return res.status(400).json({ success: false, message: 'messages array is required' });
+    }
+
+    const results = [];
+    for (const m of messages) {
+      const msg = typeof m === 'string' ? m : m?.message;
+      const receivedAt = typeof m === 'string' ? undefined : m?.receivedAt;
+      if (!msg) continue;
+      results.push(await ingestOne(userId, msg, receivedAt));
+    }
+
+    const summary = {
+      imported: results.filter((r) => r.status === 'imported').length,
+      duplicates: results.filter((r) => r.status === 'duplicate').length,
+      skipped: results.filter((r) => r.status === 'skipped').length,
+    };
+    res.json({ success: true, data: { summary, results } });
   } catch (error) {
     next(error);
   }

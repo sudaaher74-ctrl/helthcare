@@ -69,6 +69,7 @@ model User {
   refreshTokens    RefreshToken[]
   dailyCheckIns    DailyCheckIn[]
   expenses         Expense[]
+  workoutPlans     WorkoutPlan[]
 
   @@map("users")
 }
@@ -683,8 +684,60 @@ model Expense {
   description String
   date        DateTime
 
+  // Source & auto-import metadata
+  source      ExpenseSource @default(MANUAL)
+  merchant    String?
+  smsRef      String?       // dedupe key derived from the source SMS
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([userId, smsRef])
   @@map("expenses")
+}
+
+enum ExpenseSource {
+  MANUAL
+  SMS
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GYM PLANNER — WEEKLY SCHEDULE (Mon–Sat) + STEP-BY-STEP GUIDED WORKOUTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+// One exercise within a scheduled training day (embedded).
+type PlanExercise {
+  name        String
+  muscleGroup MuscleGroup
+  sets        Int          @default(3)
+  reps        String       @default("8-12")   // range or duration, e.g. "8-12" / "30s"
+  restSeconds Int          @default(90)
+  steps       String[]     // step-by-step "how to perform" guidance
+  tips        String?      // optional form cue / common mistake
+}
+
+// One day of the weekly plan (embedded).
+type PlanDay {
+  weekday   Int             // 1=Mon, 2=Tue, ... 6=Sat, 7=Sun
+  title     String          // e.g. "Push Day"
+  focus     String          // e.g. "Chest · Shoulders · Triceps"
+  isRest    Boolean         @default(false)
+  exercises PlanExercise[]
+}
+
+model WorkoutPlan {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @db.ObjectId
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String    @default("My Weekly Plan")
+  goal      String    @default("GENERAL")    // MUSCLE_GAIN | FAT_LOSS | STRENGTH | GENERAL
+  level     String    @default("BEGINNER")   // BEGINNER | INTERMEDIATE | ADVANCED
+  active    Boolean   @default(true)
+  days      PlanDay[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("workout_plans")
 }

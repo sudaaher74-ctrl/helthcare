@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import {
   LayoutDashboard, Target, Apple, Dumbbell, Moon, Scale,
   Trophy, CheckSquare, Calendar, BarChart2, Award, Settings,
-  Zap, Menu, X, PlusCircle, User, Sun, Wallet
+  Zap, Menu, X, PlusCircle, User, Sun, Wallet, Flame
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
@@ -15,6 +15,7 @@ const navItems = [
   { to: '/habits', icon: Target, label: 'Habits' },
   { to: '/nutrition', icon: Apple, label: 'Nutrition' },
   { to: '/workout', icon: Dumbbell, label: 'Workout' },
+  { to: '/gym', icon: Flame, label: 'Gym Planner' },
   { to: '/sleep', icon: Moon, label: 'Sleep' },
   { to: '/weight', icon: Scale, label: 'Weight' },
   { to: '/goals', icon: Trophy, label: 'Goals' },
@@ -78,19 +79,19 @@ export default function AppLayout() {
         <nav className="flex-1 overflow-y-auto py-2">
           <div className="px-3 py-2">
             <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-3 mb-1">Core</p>
-            {navItems.slice(0, 6).map((item) => (
+            {navItems.slice(0, 7).map((item) => (
               <SidebarItem key={item.to} {...item} />
             ))}
           </div>
           <div className="px-3 py-2">
             <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-3 mb-1">Productivity</p>
-            {navItems.slice(6, 9).map((item) => (
+            {navItems.slice(7, 10).map((item) => (
               <SidebarItem key={item.to} {...item} />
             ))}
           </div>
           <div className="px-3 py-2">
             <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-3 mb-1">Insights</p>
-            {navItems.slice(9).map((item) => (
+            {navItems.slice(10).map((item) => (
               <SidebarItem key={item.to} {...item} />
             ))}
           </div>
@@ -191,7 +192,7 @@ export default function AppLayout() {
       {/* Bottom Navigation (Mobile) */}
       <nav className="bottom-nav">
         {mobileNav.map((item) => (
-          item.action ? (
+          (item as any).action ? (
             <button
               key={item.label}
               onClick={() => {

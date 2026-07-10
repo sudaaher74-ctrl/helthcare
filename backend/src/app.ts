@@ -34,6 +34,7 @@ import dashboardRoutes from './routes/dashboard';
 import gamificationRoutes from './routes/gamification';
 import dailyCheckinRoutes from './routes/dailyCheckin';
 import expensesRoutes from './routes/expenses';
+import workoutPlanRoutes from './routes/workoutPlan';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -99,6 +100,7 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/gamification', gamificationRoutes);
 app.use('/api/daily-checkin', dailyCheckinRoutes);
 app.use('/api/expenses', expensesRoutes);
+app.use('/api/workout-plan', workoutPlanRoutes);
 
 // ─── Error Handling ──────────────────────────────────────────────────────────
 app.use(notFound);
