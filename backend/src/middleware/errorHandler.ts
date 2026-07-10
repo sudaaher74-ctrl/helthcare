@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { Request, Response, NextFunction } from 'express';
 
 export const errorHandler = (
@@ -6,8 +7,19 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
+  let statusCode = err.statusCode || 500;
+  let message = err.message || 'Internal Server Error';
+
+  // Prisma Error Handling
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    if (err.code === 'P2002') {
+      statusCode = 409;
+      message = 'A record with that unique field already exists (e.g., email).';
+    } else if (err.code === 'P2025') {
+      statusCode = 404;
+      message = 'Record not found in the database.';
+    }
+  }
 
   console.error(`[ERROR] ${statusCode}: ${message}`, err.stack);
 

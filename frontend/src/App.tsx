@@ -43,23 +43,25 @@ const OnboardingGuard = ({ children }: { children: React.ReactNode }) => {
 export default function App() {
   const { setAuth } = useAuthStore()
 
-  // Apply mesh background gradient and force personal user auth
+  // Apply mesh background gradient and force personal user auth (if VITE_MOCK_AUTH is true)
   useEffect(() => {
     document.title = 'LifeOS — Your Personal Life Operating System'
-    setAuth(
-      {
-        id: 'local-personal-user',
-        email: 'personal@lifeos.local',
-        name: 'Personal User',
-        dailyCalorieGoal: 2500,
-        dailyProteinGoal: 150,
-        dailyWaterGoal: 3000,
-        theme: 'DARK',
-        isOnboarded: true,
-      },
-      'mock-token',
-      'mock-refresh'
-    )
+    if (import.meta.env.VITE_MOCK_AUTH === 'true') {
+      setAuth(
+        {
+          id: 'local-personal-user',
+          email: 'personal@lifeos.local',
+          name: 'Personal User',
+          dailyCalorieGoal: 2500,
+          dailyProteinGoal: 150,
+          dailyWaterGoal: 3000,
+          theme: 'DARK',
+          isOnboarded: true,
+        },
+        'mock-token',
+        'mock-refresh'
+      )
+    }
   }, [setAuth])
 
   return (

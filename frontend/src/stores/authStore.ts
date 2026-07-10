@@ -30,19 +30,10 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      user: {
-        id: 'local-personal-user',
-        email: 'personal@lifeos.local',
-        name: 'Personal User',
-        dailyCalorieGoal: 2500,
-        dailyProteinGoal: 150,
-        dailyWaterGoal: 3000,
-        theme: 'DARK',
-        isOnboarded: true,
-      },
-      accessToken: 'mock-token',
-      refreshToken: 'mock-refresh',
-      isAuthenticated: true,
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
 
       setAuth: (user, accessToken, refreshToken) =>
         set({ user, accessToken, refreshToken, isAuthenticated: true }),

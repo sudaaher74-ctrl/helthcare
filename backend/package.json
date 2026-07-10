@@ -4,7 +4,7 @@
   "description": "LifeOS AI-Powered Personal Life Operating System — Backend API",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/app.ts",
+    "dev": "tsx watch src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js",
     "db:generate": "prisma generate",
@@ -52,6 +52,7 @@
     "nodemon": "^3.1.4",
     "prisma": "^5.14.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.23.0",
     "typescript": "^5.5.3"
   }
 }
