@@ -15,16 +15,13 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     let user = await prisma.user.findFirst();
 
     if (!user) {
-      // Create the default personal user if database is completely empty
-      user = await prisma.user.create({
-        data: {
-          email: 'personal@lifeos.local',
-          name: 'Personal User',
-          isOnboarded: false,
-          theme: 'DARK',
-          activityLevel: 'MODERATE',
-        }
-      });
+      // Mock user for local testing without replica set
+      req.user = {
+        id: '64d26b6f0000000000000000', // valid ObjectId
+        email: 'personal@lifeos.local',
+        name: 'Personal User',
+      };
+      return next();
     }
 
     req.user = {

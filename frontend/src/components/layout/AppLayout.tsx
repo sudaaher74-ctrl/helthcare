@@ -30,7 +30,6 @@ const mobileNav = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Home' },
   { to: '/goals', icon: Trophy, label: 'Goals' },
   { to: '/finance', icon: Wallet, label: 'Finance' },
-  { to: '#', icon: PlusCircle, label: 'Log', action: 'log' },
   { to: '/analytics', icon: BarChart2, label: 'Insights' },
   { to: '/settings', icon: User, label: 'Profile' },
 ]
