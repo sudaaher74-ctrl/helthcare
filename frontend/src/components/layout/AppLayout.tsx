@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useThemeStore } from '@/stores/themeStore'
+import VoiceAssistantFAB from '@/components/ui/VoiceAssistantFAB'
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -202,6 +203,8 @@ export default function AppLayout() {
           ))}
         </nav>
       </div>
+
+      <VoiceAssistantFAB />
     </div>
   )
 }

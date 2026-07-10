@@ -1,7 +1,7 @@
 // Mock AI Provider — Returns realistic nutrition estimates for demonstration
 // Replace with real OpenAI/Gemini/Claude provider when API keys are available
 
-import { AIProvider, FoodAnalysisResult } from '../types';
+import { AIProvider, FoodAnalysisResult, ParsedCommand } from '../types';
 
 const MOCK_FOODS = [
   { name: 'Rice (White, Cooked)', portionSize: '1 cup (186g)', calories: 242, protein: 4.4, carbs: 53.2, fat: 0.4, fiber: 0.6, sugar: 0.1 },
@@ -43,6 +43,50 @@ export class MockAIProvider implements AIProvider {
       ...totals,
       analysisNotes: 'This is a demo analysis. Connect OpenAI, Gemini, or Claude API for real food recognition.',
       provider: 'mock',
+    };
+  }
+
+  async parseVoiceCommand(text: string): Promise<ParsedCommand> {
+    await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate AI delay
+    const lowerText = text.toLowerCase();
+
+    // Simple keyword matching to mock an AI NLP intent parser
+    if (lowerText.includes('workout') || lowerText.includes('gym')) {
+      return {
+        intent: 'CREATE_WORKOUT',
+        data: {
+          name: 'AI Generated Workout',
+          duration: parseInt(lowerText.match(/(\d+)\s*(min|minute)/)?.[1] || '60', 10),
+          notes: `Parsed from voice: "${text}"`,
+        },
+        message: 'Understood. Adding a workout.',
+      };
+    }
+    
+    if (lowerText.includes('water') || lowerText.includes('drink')) {
+      return {
+        intent: 'LOG_WATER',
+        data: {
+          amountML: parseInt(lowerText.match(/(\d+)\s*(ml|glass|liter)/)?.[1] || '250', 10),
+        },
+        message: 'Got it. Logging water.',
+      };
+    }
+
+    if (lowerText.includes('remind') || lowerText.includes('task') || lowerText.includes('buy')) {
+      return {
+        intent: 'CREATE_TASK',
+        data: {
+          title: text.replace(/remind me to|add task/gi, '').trim() || 'New Voice Task',
+        },
+        message: 'Task added successfully.',
+      };
+    }
+
+    return {
+      intent: 'UNKNOWN',
+      data: {},
+      message: 'Sorry, I did not understand that command. Try "Add chest workout for 60 min".',
     };
   }
 }

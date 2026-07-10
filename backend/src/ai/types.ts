@@ -23,6 +23,13 @@ export interface FoodAnalysisResult {
   provider: string;
 }
 
+export interface ParsedCommand {
+  intent: 'CREATE_WORKOUT' | 'CREATE_TASK' | 'LOG_WATER' | 'LOG_MEAL' | 'UNKNOWN';
+  data: any;
+  message?: string;
+}
+
 export interface AIProvider {
   analyzeFood(imageBase64: string, mimeType: string): Promise<FoodAnalysisResult>;
+  parseVoiceCommand?(text: string): Promise<ParsedCommand>;
 }

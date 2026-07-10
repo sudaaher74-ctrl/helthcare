@@ -27,6 +27,18 @@ class FoodAnalyzerService {
       return mock.analyzeFood(imageBase64, mimeType);
     }
   }
+
+  async parseVoiceCommand(text: string) {
+    if (this.provider.parseVoiceCommand) {
+      try {
+        return await this.provider.parseVoiceCommand(text);
+      } catch (error) {
+        console.error('[AI] Primary provider parseVoiceCommand failed, falling back to mock:', error);
+      }
+    }
+    const mock = new MockAIProvider();
+    return mock.parseVoiceCommand(text);
+  }
 }
 
 export const foodAnalyzer = new FoodAnalyzerService();
