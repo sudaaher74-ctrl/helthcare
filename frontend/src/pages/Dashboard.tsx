@@ -4,12 +4,13 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
   Scale, Flame, Droplets, Dumbbell, Moon, CheckCircle2,
-  TrendingUp, ArrowRight, Target, Zap, Award, Plus
+  TrendingUp, ArrowRight, Target, Zap, Award, Sparkles,
+  Wallet, ChevronRight, Clock
 } from 'lucide-react'
 import { toast } from 'sonner'
 import api from '@/lib/api'
-import ScoreRing from '@/components/dashboard/ScoreRing'
-import MacroBar from '@/components/dashboard/MacroBar'
+import { PremiumCard } from '@/components/ui/PremiumCard'
+import { AnimatedProgress } from '@/components/ui/AnimatedProgress'
 
 export default function Dashboard() {
   const qc = useQueryClient()
@@ -30,546 +31,320 @@ export default function Dashboard() {
   const { scores, todayStats, habits, weightHistory, streaks, recentAchievements, upcomingTasks, user, gamification, todaysMission, aiCoach } = data || {}
 
   const scoreItems = [
-    { label: 'Health', value: scores?.healthScore || 0, color: '#10b981', gradient: 'gradient-health', icon: '❤️' },
-    { label: 'Nutrition', value: scores?.nutritionScore || 0, color: '#06b6d4', gradient: 'gradient-nutrition', icon: '🥗' },
-    { label: 'Discipline', value: scores?.disciplineScore || 0, color: '#f59e0b', gradient: 'gradient-discipline', icon: '🎯' },
-    { label: 'Productivity', value: scores?.productivityScore || 0, color: '#f97316', gradient: 'gradient-productivity', icon: '⚡' },
+    { label: 'Health', value: scores?.healthScore || 0, color: '#10b981' },
+    { label: 'Nutrition', value: scores?.nutritionScore || 0, color: '#f97316' },
+    { label: 'Discipline', value: scores?.disciplineScore || 0, color: '#f59e0b' },
+    { label: 'Productivity', value: scores?.productivityScore || 0, color: '#8b5cf6' },
   ]
 
+  const totalMission = todaysMission?.total || 4;
+  const progressMission = todaysMission?.progress || 0;
+  const missionPercent = (progressMission / totalMission) * 100;
+
   return (
-    <div className="space-y-6 pb-4">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text-base)]">
-            Good {getGreeting()}, {user?.name?.split(' ')[0]} 👋
-          </h1>
-          <p className="text-[var(--color-text-muted)] text-sm mt-0.5 mb-2">
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-          </p>
-        </div>
-        
-        {/* Gamification Widget */}
-        <div className="flex flex-col items-end hidden sm:flex">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="bg-[var(--color-surface)] border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] font-black text-xs px-2 py-0.5 rounded">
-              LVL {gamification?.level || 1}
-            </div>
-            <span className="text-xs font-bold text-[var(--color-text-muted)]">{gamification?.xp || 0} / {gamification?.nextLevelXp || 1000} XP</span>
-          </div>
-          <div className="w-40 h-2 bg-[var(--color-surface-hover)] rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-[var(--color-text-base)] to-[var(--color-text-muted)] rounded-full transition-all duration-1000"
-              style={{ width: `${gamification?.progressPercent || 0}%` }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* TOP SECTION: Life Score, AI Coach, Mission */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Large Life Score */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="glass-card p-6 flex flex-col items-center justify-center relative overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-[var(--color-surface)] blur-3xl rounded-full scale-150" />
-          <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-6 z-10">Life Score</h2>
-          <div className="relative w-48 h-48 flex items-center justify-center z-10">
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-              <motion.circle
-                cx="50" cy="50" r="45" fill="none"
-                stroke="url(#lifeScoreGradient)" strokeWidth="8" strokeLinecap="round"
-                initial={{ strokeDasharray: "0 283" }}
-                animate={{ strokeDasharray: `${(scores?.lifeScore || 0) * 2.83} 283` }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-                style={{ filter: 'drop-shadow(0 0 10px rgba(124,58,237,0.5))' }}
-              />
-              <defs>
-                <linearGradient id="lifeScoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#a78bfa" />
-                  <stop offset="100%" stopColor="#7c3aed" />
-                </linearGradient>
-              </defs>
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-              <span className="text-5xl font-black text-[var(--color-text-base)] tracking-tighter shadow-md drop-shadow-lg">
-                {scores?.lifeScore || 0}
-              </span>
-              <span className="text-xs text-[var(--color-text-muted)] font-bold mt-1">/ 100</span>
-            </div>
-          </div>
-          <div className="mt-6 flex items-center gap-2 bg-[var(--color-surface)] px-4 py-2 rounded-full border border-[var(--color-border-subtle)] z-10">
-            <span className="text-lg">🔥</span>
-            <span className="text-sm font-semibold text-[var(--color-text-muted)]">Excellent Momentum</span>
-          </div>
-        </motion.div>
-
-        {/* AI Coach Card */}
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="glass-card p-6 flex flex-col lg:col-span-1 border-t-2 border-t-blue-500/50 relative overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 p-4 opacity-10">
-            <Zap size={100} />
-          </div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 rounded-full bg-[var(--color-surface)] flex items-center justify-center">
-              <span className="text-lg">🧠</span>
-            </div>
-            <h2 className="font-bold text-[var(--color-text-base)]">AI Coach</h2>
-          </div>
-          <div className="flex-1 text-slate-300 text-sm leading-relaxed whitespace-pre-wrap relative z-10">
-            {aiCoach?.message || "Analyzing your day..."}
-          </div>
-          <div className="mt-4 pt-4 border-t border-[var(--color-border-subtle)] text-xs text-[var(--color-text-muted)] flex justify-between items-center relative z-10">
-            <span>Powered by LifeOS</span>
-            <button className="text-[var(--color-text-muted)] font-semibold hover:text-[var(--color-text-muted)] transition-colors">Ask Coach</button>
-          </div>
-        </motion.div>
-
-        {/* Today's Mission */}
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="glass-card p-6 lg:col-span-1"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Target className="text-[var(--color-text-muted)]" size={18} />
-              Today's Mission
-            </h2>
-            <span className="text-xs font-bold text-[var(--color-text-muted)] bg-[var(--color-surface)] px-2 py-1 rounded-md">
-              {todaysMission?.progress || 0}/{todaysMission?.total || 4}
-            </span>
-          </div>
+    <div className="space-y-12 pb-12">
+      {/* ─── 1. HERO SECTION ─────────────────────────────────────────────── */}
+      <section className="relative">
+        <PremiumCard className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-900 border-none !p-0">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
           
-          <div className="progress-bar mb-5">
-            <div 
-              className="progress-bar-fill bg-gradient-to-r from-[var(--color-text-base)] to-[var(--color-text-muted)]" 
-              style={{ width: `${((todaysMission?.progress || 0) / (todaysMission?.total || 4)) * 100}%` }}
-            />
-          </div>
-
-          <div className="space-y-3">
-            {todaysMission?.items?.map((item: any) => (
-              <div key={item.id} className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${item.completed ? 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)] border-[var(--color-border-subtle)]' : 'border-[var(--color-border-subtle)] bg-[var(--color-surface)]'}`}>
-                  {item.completed && <CheckCircle2 size={12} className="text-[var(--color-text-base)]" />}
-                </div>
-                <span className={`text-sm ${item.completed ? 'text-[var(--color-text-muted)] line-through' : 'text-slate-200'}`}>
-                  {item.label}
-                </span>
-              </div>
-            ))}
-          </div>
-          
-          {todaysMission?.progress === todaysMission?.total && (
-            <div className="mt-4 bg-[var(--color-surface)] border border-[var(--color-border-subtle)] rounded-lg p-3 text-center">
-              <p className="text-xs font-bold text-[var(--color-text-muted)]">Mission Accomplished! 🎉 +100 XP</p>
-            </div>
-          )}
-        </motion.div>
-      </div>
-
-      {/* Secondary Score Rings */}
-      <div className="mt-8">
-        <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">Sub-Scores</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
-          {scoreItems.map((item) => (
-            <ScoreRing key={item.label} {...item} />
-          ))}
-        </div>
-      </div>
-
-      {/* Quick Stats Grid */}
-      <div>
-        <h2 className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">Today's Stats</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 stagger-children">
-          <StatCard
-            icon={<Scale size={18} className="text-[var(--color-text-muted)]" />}
-            label="Current Weight"
-            value={`${todayStats?.currentWeight || '--'} kg`}
-            sub={todayStats?.weightRemaining ? `${todayStats.weightRemaining}kg to goal` : 'Goal not set'}
-            color="text-[var(--color-text-muted)]"
-          />
-          <StatCard
-            icon={<Flame size={18} className="text-[var(--color-text-muted)]" />}
-            label="Calories"
-            value={`${todayStats?.calories || 0}`}
-            sub={`of ${todayStats?.calorieGoal || 2800} kcal`}
-            color="text-[var(--color-text-muted)]"
-            percent={todayStats?.calories && todayStats?.calorieGoal
-              ? Math.min(100, (todayStats.calories / todayStats.calorieGoal) * 100) : 0}
-          />
-          <StatCard
-            icon={<span className="text-lg">🥩</span>}
-            label="Protein"
-            value={`${todayStats?.protein || 0}g`}
-            sub={`of ${todayStats?.proteinGoal || 150}g`}
-            color="text-[var(--color-text-muted)]"
-            percent={todayStats?.protein && todayStats?.proteinGoal
-              ? Math.min(100, (todayStats.protein / todayStats.proteinGoal) * 100) : 0}
-          />
-          <StatCard
-            icon={<Droplets size={18} className="text-[var(--color-text-muted)]" />}
-            label="Water"
-            value={`${todayStats?.water || 0}L`}
-            sub={`of ${todayStats?.waterGoal || 3}L`}
-            color="text-[var(--color-text-muted)]"
-            percent={todayStats?.water && todayStats?.waterGoal
-              ? Math.min(100, (todayStats.water / todayStats.waterGoal) * 100) : 0}
-          />
-          <StatCard
-            icon={<Target size={18} className="text-[var(--color-text-muted)]" />}
-            label="Habits"
-            value={`${todayStats?.habitsCompleted || 0}/${todayStats?.habitsTotal || 0}`}
-            sub={`${todayStats?.habitRate || 0}% complete`}
-            color="text-[var(--color-text-muted)]"
-            percent={todayStats?.habitRate || 0}
-          />
-          <StatCard
-            icon={<Dumbbell size={18} className="text-[var(--color-text-muted)]" />}
-            label="Workout"
-            value={todayStats?.hasWorkedOut ? 'Done ✓' : 'Not yet'}
-            sub={todayStats?.hasWorkedOut ? 'Great work!' : 'Time to train!'}
-            color={todayStats?.hasWorkedOut ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-muted)]'}
-          />
-          <StatCard
-            icon={<Moon size={18} className="text-[var(--color-text-muted)]" />}
-            label="Sleep"
-            value={todayStats?.sleepHours ? `${todayStats.sleepHours}h` : '--'}
-            sub={todayStats?.sleepHours ? getSleepLabel(todayStats.sleepHours) : 'Not logged'}
-            color="text-[var(--color-text-muted)]"
-          />
-          <StatCard
-            icon={<TrendingUp size={18} className="text-[var(--color-text-muted)]" />}
-            label="Weight Goal"
-            value={todayStats?.targetWeight ? `${todayStats.targetWeight} kg` : '--'}
-            sub={todayStats?.weightRemaining
-              ? `${todayStats.weightRemaining}kg remaining`
-              : 'Set your goal'}
-            color="text-[var(--color-text-muted)]"
-          />
-        </div>
-      </div>
-
-      {/* Main Grid — Habits + Nutrition */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Today's Habits */}
-        <div className="glass-card p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Target size={18} className="text-[var(--color-text-muted)]" />
-              Today's Habits
-            </h2>
-            <Link to="/habits" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)] flex items-center gap-1">
-              View all <ArrowRight size={12} />
-            </Link>
-          </div>
-          <div className="space-y-2 max-h-72 overflow-y-auto">
-            {habits?.slice(0, 8).map((habit: any) => (
-              <HabitRow
-                key={habit.id}
-                habit={habit}
-                onToggle={() => completeHabit.mutate({ id: habit.id, completed: !habit.completed })}
-              />
-            ))}
-          </div>
-          <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-[var(--color-text-muted)]">
-                {todayStats?.habitsCompleted}/{todayStats?.habitsTotal} completed
-              </span>
-              <div className="flex gap-1">
-                {Array.from({ length: todayStats?.habitsTotal || 0 }).map((_, i) => (
-                  <div key={i} className={`w-2 h-2 rounded-full ${
-                    i < (todayStats?.habitsCompleted || 0) ? 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)]' : 'bg-[var(--color-surface-hover)]'
-                  }`} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Nutrition Summary */}
-        <div className="glass-card p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Flame size={18} className="text-[var(--color-text-muted)]" />
-              Nutrition Today
-            </h2>
-            <Link to="/nutrition" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)] flex items-center gap-1">
-              Log food <ArrowRight size={12} />
-            </Link>
-          </div>
-          <div className="space-y-3.5">
-            <MacroBar
-              label="Calories"
-              current={todayStats?.calories || 0}
-              goal={todayStats?.calorieGoal || 2800}
-              unit="kcal"
-              color="#f97316"
-              gradient="from-[var(--color-text-base)] to-[var(--color-text-muted)]"
-            />
-            <MacroBar
-              label="Protein"
-              current={todayStats?.protein || 0}
-              goal={todayStats?.proteinGoal || 150}
-              unit="g"
-              color="#06b6d4"
-              gradient="from-[var(--color-text-base)] to-[var(--color-text-muted)]"
-            />
-            <MacroBar
-              label="Water"
-              current={todayStats?.water || 0}
-              goal={todayStats?.waterGoal || 3}
-              unit="L"
-              color="#3b82f6"
-              gradient="from-[var(--color-text-base)] to-[var(--color-text-muted)]"
-            />
-          </div>
-
-          {/* Quick add water */}
-          <div className="mt-4 pt-3 border-t border-[var(--color-border-subtle)]">
-            <p className="text-xs text-[var(--color-text-muted)] mb-2">Quick add water:</p>
-            <div className="flex gap-2">
-              {[250, 500, 750].map((ml) => (
-                <button key={ml}
-                  onClick={() => logWater(ml, qc)}
-                  className="btn btn-secondary btn-sm flex-1 text-xs">
-                  +{ml}ml
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Weight + Streaks + Tasks */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Weight Trend */}
-        <div className="glass-card p-5 lg:col-span-1">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Scale size={16} className="text-[var(--color-text-muted)]" />
-              Weight Trend
-            </h2>
-            <Link to="/weight" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
-              <ArrowRight size={14} />
-            </Link>
-          </div>
-          {weightHistory && weightHistory.length > 0 ? (
-            <MiniWeightChart data={weightHistory} target={todayStats?.targetWeight} />
-          ) : (
-            <div className="flex flex-col items-center justify-center h-24 text-[var(--color-text-muted)]">
-              <Scale size={24} className="mb-2 opacity-50" />
-              <p className="text-xs">No weight logged yet</p>
-              <Link to="/weight" className="text-xs text-[var(--color-text-muted)] mt-1">Log your weight →</Link>
-            </div>
-          )}
-        </div>
-
-        {/* Streaks */}
-        <div className="glass-card p-5">
-          <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2 mb-3">
-            <span className="streak-fire">🔥</span>
-            Active Streaks
-          </h2>
-          <div className="space-y-2.5">
-            {(streaks || []).map((s: any) => (
-              <div key={s.type} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-base">{getStreakIcon(s.type)}</span>
-                  <span className="text-sm text-slate-300 capitalize">
-                    {s.type.toLowerCase()}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`text-sm font-bold ${s.currentStreak > 0 ? 'text-[var(--color-text-muted)]' : 'text-slate-600'}`}>
-                    {s.currentStreak}
-                  </span>
-                  <span className="text-xs text-slate-600">/ {s.longestStreak} best</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Upcoming Tasks */}
-        <div className="glass-card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-[var(--color-text-muted)]" />
-              Upcoming Tasks
-            </h2>
-            <Link to="/tasks" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)]">
-              <ArrowRight size={14} />
-            </Link>
-          </div>
-          {upcomingTasks?.length > 0 ? (
-            <div className="space-y-2">
-              {upcomingTasks?.map((task: any) => (
-                <div key={task.id} className="flex items-center gap-3 py-1.5">
-                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)}`} />
-                  <span className="text-sm text-slate-300 truncate flex-1">{task.title}</span>
-                  <span className={`badge badge-${getCategoryBadge(task.category)} text-[10px]`}>
-                    {task.category.toLowerCase()}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-20 text-[var(--color-text-muted)]">
-              <CheckCircle2 size={24} className="mb-2 opacity-50" />
-              <p className="text-xs">All caught up! 🎉</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Recent Achievements */}
-      {recentAchievements?.length > 0 && (
-        <div className="glass-card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-[var(--color-text-base)] flex items-center gap-2">
-              <Award size={16} className="text-[var(--color-text-muted)]" />
-              Recent Achievements
-            </h2>
-            <Link to="/achievements" className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-muted)] flex items-center gap-1">
-              View all <ArrowRight size={12} />
-            </Link>
-          </div>
-          <div className="flex gap-3 overflow-x-auto pb-2">
-            {recentAchievements?.map((ua: any) => (
-              <div key={ua.id} className="flex-shrink-0 flex flex-col items-center gap-1 p-3 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border-subtle)] min-w-[80px]">
-                <span className="text-2xl">{ua.achievement.icon}</span>
-                <p className="text-[10px] text-[var(--color-text-muted)] font-semibold text-center leading-tight">
-                  {ua.achievement.name}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 p-8 md:p-12 relative z-10">
+            {/* Left: Greeting & Mission */}
+            <div className="lg:col-span-5 flex flex-col justify-center text-white space-y-6">
+              <div>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold uppercase tracking-wider mb-4">
+                  <Sparkles size={14} className="text-blue-300" /> AI Insights Active
+                </motion.div>
+                <h1 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mb-2">
+                  Good {getGreeting()},<br/>{user?.name?.split(' ')[0]}
+                </h1>
+                <p className="text-blue-200 text-sm md:text-base font-medium max-w-sm leading-relaxed">
+                  {aiCoach?.message || "Good sleep yesterday. Drink 800ml more water. Workout scheduled at 6PM. You spent $45 yesterday. Goal progress is improving."}
                 </p>
               </div>
+
+              <div className="pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-semibold text-blue-100">Today's Mission</span>
+                  <span className="font-mono text-sm font-bold">{progressMission}/{totalMission}</span>
+                </div>
+                <AnimatedProgress progress={missionPercent} color="bg-white" height={6} className="bg-white/20" />
+                
+                <div className="flex gap-2 mt-6">
+                  <button className="flex-1 bg-white text-blue-900 font-semibold py-3 px-4 rounded-xl hover:bg-blue-50 transition-colors shadow-lg shadow-black/10 text-sm">
+                    Log Workout
+                  </button>
+                  <button className="flex-1 bg-white/10 text-white border border-white/20 font-semibold py-3 px-4 rounded-xl hover:bg-white/20 transition-colors text-sm">
+                    Log Water
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Life Score */}
+            <div className="lg:col-span-7 flex items-center justify-center lg:justify-end">
+              <div className="relative">
+                <div className="absolute inset-0 bg-blue-500 blur-[80px] rounded-full opacity-40"></div>
+                
+                {/* Score Circle */}
+                <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center bg-white/5 backdrop-blur-xl rounded-full border border-white/20 shadow-2xl">
+                  <svg className="w-[90%] h-[90%] transform -rotate-90 drop-shadow-2xl" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
+                    <motion.circle
+                      cx="50" cy="50" r="45" fill="none"
+                      stroke="#60a5fa" strokeWidth="6" strokeLinecap="round"
+                      initial={{ strokeDasharray: "0 283" }}
+                      animate={{ strokeDasharray: `${(scores?.lifeScore || 0) * 2.83} 283` }}
+                      transition={{ duration: 2, ease: "easeOut" }}
+                      style={{ filter: 'drop-shadow(0 0 8px rgba(96,165,250,0.8))' }}
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                    <span className="text-[10px] uppercase tracking-widest font-bold text-blue-200 mb-1">Life Score</span>
+                    <span className="font-heading text-6xl md:text-7xl font-bold text-white tracking-tighter drop-shadow-md">
+                      {scores?.lifeScore || 0}
+                    </span>
+                    <span className="text-xs text-blue-200 font-medium mt-2 bg-black/20 px-3 py-1 rounded-full border border-white/10">
+                      Top 10%
+                    </span>
+                  </div>
+                </div>
+
+                {/* Orbiting Sub-scores (Simplified for design) */}
+                <div className="absolute top-0 -left-4 bg-white text-black px-3 py-1.5 rounded-xl shadow-xl border border-white/20 flex items-center gap-2 text-xs font-bold transform -rotate-6">
+                  <span className="text-[#10b981]">●</span> {scores?.healthScore || 0} Health
+                </div>
+                <div className="absolute bottom-10 -right-8 bg-[#111111] text-white px-3 py-1.5 rounded-xl shadow-xl border border-white/10 flex items-center gap-2 text-xs font-bold transform rotate-3">
+                  <span className="text-[#f97316]">●</span> {scores?.nutritionScore || 0} Food
+                </div>
+              </div>
+            </div>
+          </div>
+        </PremiumCard>
+      </section>
+
+      {/* ─── 2. TIMELINE ───────────────────────────────────────────────── */}
+      <section>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-heading text-xl font-bold text-[var(--color-text-base-value)] tracking-tight">Today's Timeline</h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <PremiumCard className="!p-5 border-l-4 border-l-blue-500" hoverAction>
+            <div className="text-[10px] font-mono text-[var(--color-text-muted-value)] mb-2 flex items-center gap-1.5"><Clock size={12}/> 07:00 AM</div>
+            <h3 className="font-semibold text-sm mb-1 text-[var(--color-text-base-value)]">Morning Routine</h3>
+            <p className="text-xs text-[var(--color-text-muted-value)]">Meditation & Water</p>
+          </PremiumCard>
+          <PremiumCard className="!p-5 border-l-4 border-l-orange-500" hoverAction>
+            <div className="text-[10px] font-mono text-[var(--color-text-muted-value)] mb-2 flex items-center gap-1.5"><Clock size={12}/> 12:30 PM</div>
+            <h3 className="font-semibold text-sm mb-1 text-[var(--color-text-base-value)]">High Protein Lunch</h3>
+            <p className="text-xs text-[var(--color-text-muted-value)]">Target: 40g Protein</p>
+          </PremiumCard>
+          <PremiumCard className="!p-5 border-l-4 border-l-red-500 bg-red-500/5 border-red-500/20" hoverAction>
+            <div className="text-[10px] font-mono text-red-500 mb-2 flex items-center gap-1.5"><Clock size={12}/> 06:00 PM</div>
+            <h3 className="font-semibold text-sm mb-1 text-red-500">Push Workout</h3>
+            <p className="text-xs text-red-500/70">Scheduled in Gym Planner</p>
+          </PremiumCard>
+          <PremiumCard className="!p-5 border-l-4 border-l-purple-500 opacity-60" hoverAction>
+            <div className="text-[10px] font-mono text-[var(--color-text-muted-value)] mb-2 flex items-center gap-1.5"><Clock size={12}/> 10:30 PM</div>
+            <h3 className="font-semibold text-sm mb-1 text-[var(--color-text-base-value)]">Sleep Target</h3>
+            <p className="text-xs text-[var(--color-text-muted-value)]">Goal: 8 Hours</p>
+          </PremiumCard>
+        </div>
+      </section>
+
+      {/* ─── 3. HEALTH SUMMARY ─────────────────────────────────────────── */}
+      <section>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-heading text-xl font-bold text-[var(--color-text-base-value)] tracking-tight">Health Summary</h2>
+          <button className="text-[13px] font-semibold text-blue-500 hover:text-blue-600 flex items-center gap-1 transition-colors">
+            View Details <ChevronRight size={14} />
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Nutrition */}
+          <PremiumCard className="flex flex-col h-full" hoverAction>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500"><Flame size={16} /></div>
+                <span className="font-semibold text-sm text-[var(--color-text-base-value)]">Nutrition</span>
+              </div>
+            </div>
+            <div className="mt-auto">
+              <div className="flex items-end gap-1 mb-2">
+                <span className="font-mono text-3xl font-bold tracking-tight text-[var(--color-text-base-value)]">{todayStats?.calories || 0}</span>
+                <span className="text-xs font-medium text-[var(--color-text-muted-value)] mb-1">/ {todayStats?.calorieGoal || 2500} kcal</span>
+              </div>
+              <AnimatedProgress progress={Math.min(100, ((todayStats?.calories || 0) / (todayStats?.calorieGoal || 2500)) * 100)} color="bg-orange-500" height={6} />
+              
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                <div>
+                  <div className="text-[10px] font-bold text-[var(--color-text-muted-value)] uppercase tracking-wider mb-1">Protein</div>
+                  <div className="font-mono text-sm font-semibold">{todayStats?.protein || 0}g</div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold text-[var(--color-text-muted-value)] uppercase tracking-wider mb-1">Water</div>
+                  <div className="font-mono text-sm font-semibold">{todayStats?.water || 0}L</div>
+                </div>
+              </div>
+            </div>
+          </PremiumCard>
+
+          {/* Workout */}
+          <PremiumCard className="flex flex-col h-full" hoverAction>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500"><Dumbbell size={16} /></div>
+                <span className="font-semibold text-sm text-[var(--color-text-base-value)]">Workout</span>
+              </div>
+              {todayStats?.hasWorkedOut && (
+                <div className="bg-red-500/10 text-red-500 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Done</div>
+              )}
+            </div>
+            <div className="mt-auto">
+              <div className="mb-4">
+                {todayStats?.hasWorkedOut ? (
+                   <div className="font-heading text-xl font-bold text-[var(--color-text-base-value)]">Great job today!</div>
+                ) : (
+                   <div className="font-heading text-xl font-bold text-[var(--color-text-base-value)]">Time to train</div>
+                )}
+                <p className="text-xs text-[var(--color-text-muted-value)] mt-1">Consistency is key.</p>
+              </div>
+              <Link to="/workout" className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--color-bg-primary-value)] border border-[var(--color-border-subtle-value)] text-sm font-semibold hover:border-red-500/30 hover:bg-red-500/5 transition-all text-[var(--color-text-base-value)]">
+                Open Planner
+              </Link>
+            </div>
+          </PremiumCard>
+
+          {/* Sleep */}
+          <PremiumCard className="flex flex-col h-full" hoverAction>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-500"><Moon size={16} /></div>
+                <span className="font-semibold text-sm text-[var(--color-text-base-value)]">Sleep</span>
+              </div>
+            </div>
+            <div className="mt-auto">
+              <div className="flex items-end gap-1 mb-2">
+                <span className="font-mono text-3xl font-bold tracking-tight text-[var(--color-text-base-value)]">{todayStats?.sleepHours || '--'}</span>
+                <span className="text-xs font-medium text-[var(--color-text-muted-value)] mb-1">hours</span>
+              </div>
+              <p className="text-xs font-medium text-[var(--color-text-muted-value)]">{todayStats?.sleepHours ? getSleepLabel(todayStats.sleepHours) : 'Not logged yet'}</p>
+            </div>
+          </PremiumCard>
+
+          {/* Weight */}
+          <PremiumCard className="flex flex-col h-full" hoverAction>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500"><Scale size={16} /></div>
+                <span className="font-semibold text-sm text-[var(--color-text-base-value)]">Weight</span>
+              </div>
+            </div>
+            <div className="mt-auto">
+              <div className="flex items-end gap-1 mb-2">
+                <span className="font-mono text-3xl font-bold tracking-tight text-[var(--color-text-base-value)]">{todayStats?.currentWeight || '--'}</span>
+                <span className="text-xs font-medium text-[var(--color-text-muted-value)] mb-1">kg</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium text-[var(--color-text-muted-value)]">
+                <Target size={12} /> Target: <span className="font-mono">{todayStats?.targetWeight || '--'}</span> kg
+              </div>
+            </div>
+          </PremiumCard>
+        </div>
+      </section>
+
+      {/* ─── 4. ACTION & MANAGEMENT ────────────────────────────────────── */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Finance */}
+        <PremiumCard className="lg:col-span-1" hoverAction>
+           <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500"><Wallet size={16} /></div>
+                <span className="font-semibold text-sm text-[var(--color-text-base-value)]">Finance Overview</span>
+              </div>
+           </div>
+           <div>
+             <div className="text-[10px] font-bold text-[var(--color-text-muted-value)] uppercase tracking-widest mb-1">Spent Today</div>
+             <div className="font-mono text-3xl font-bold tracking-tight text-[var(--color-text-base-value)] mb-4">$45.00</div>
+             <AnimatedProgress progress={35} color="bg-emerald-500" height={6} />
+             <div className="flex justify-between text-[10px] text-[var(--color-text-muted-value)] font-semibold mt-2 uppercase tracking-wider">
+               <span>Daily Budget</span>
+               <span>35% Used</span>
+             </div>
+           </div>
+        </PremiumCard>
+
+        {/* Habits & Tasks */}
+        <PremiumCard className="lg:col-span-2">
+          <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500"><CheckCircle2 size={16} /></div>
+                <span className="font-semibold text-sm text-[var(--color-text-base-value)]">Habits & Tasks</span>
+              </div>
+              <Link to="/habits" className="text-[13px] font-semibold text-blue-500 hover:text-blue-600 transition-colors">
+                View All
+              </Link>
+           </div>
+           
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+             {habits?.slice(0, 4).map((habit: any) => (
+                <div key={habit.id} className="flex items-center gap-4 group cursor-pointer" onClick={() => completeHabit.mutate({ id: habit.id, completed: !habit.completed })}>
+                  <div className={`w-6 h-6 rounded-md flex items-center justify-center border-2 transition-all duration-300 ${habit.completed ? 'bg-blue-500 border-blue-500 text-white shadow-md shadow-blue-500/20' : 'border-[var(--color-border-subtle-value)] group-hover:border-blue-500/50'}`}>
+                    {habit.completed && <CheckCircle2 size={12} strokeWidth={3} />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-semibold truncate transition-colors ${habit.completed ? 'text-[var(--color-text-muted-value)] line-through' : 'text-[var(--color-text-base-value)] group-hover:text-blue-500'}`}>{habit.name}</p>
+                  </div>
+                </div>
+             ))}
+             {(!habits || habits.length === 0) && (
+               <div className="col-span-full py-8 text-center text-[var(--color-text-muted-value)] text-sm">
+                 <div className="w-12 h-12 rounded-2xl bg-[var(--color-bg-primary-value)] border border-[var(--color-border-subtle-value)] flex items-center justify-center mx-auto mb-3">
+                   <Target size={20} className="opacity-50" />
+                 </div>
+                 No habits set for today.
+               </div>
+             )}
+           </div>
+        </PremiumCard>
+
+      </section>
+
+      {/* ─── 5. ACHIEVEMENTS (Optional Section) ────────────────────────── */}
+      {recentAchievements?.length > 0 && (
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-heading text-xl font-bold text-[var(--color-text-base-value)] tracking-tight">Recent Achievements</h2>
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+            {recentAchievements?.map((ua: any) => (
+              <PremiumCard key={ua.id} className="min-w-[140px] flex-shrink-0 !p-4 flex flex-col items-center justify-center text-center">
+                <span className="text-4xl mb-3 drop-shadow-md">{ua.achievement.icon}</span>
+                <p className="text-[11px] font-bold text-[var(--color-text-base-value)] leading-tight uppercase tracking-wide">
+                  {ua.achievement.name}
+                </p>
+              </PremiumCard>
             ))}
           </div>
-        </div>
+        </section>
       )}
-    </div>
-  )
-}
 
-// ─── Sub Components ──────────────────────────────────────────────────────────
-
-function StatCard({ icon, label, value, sub, color, percent }: any) {
-  return (
-    <div className="stat-card">
-      <div className="flex items-start justify-between mb-2">
-        <div className="p-2 rounded-lg bg-[var(--color-surface)]">{icon}</div>
-        {percent !== undefined && (
-          <span className={`text-xs font-bold ${color}`}>{Math.round(percent)}%</span>
-        )}
-      </div>
-      <p className={`text-xl font-bold mt-1 ${color}`}>{value}</p>
-      <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{label}</p>
-      {sub && <p className="text-[11px] text-slate-600 mt-0.5">{sub}</p>}
-    </div>
-  )
-}
-
-function HabitRow({ habit, onToggle }: any) {
-  return (
-    <motion.div
-      layout
-      className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/3 transition-colors cursor-pointer"
-      onClick={onToggle}
-    >
-      <div
-        className="habit-check"
-        style={habit.completed ? { background: habit.color, borderColor: habit.color } : undefined}
-      >
-        {habit.completed && (
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
-            <CheckCircle2 size={14} className="text-[var(--color-text-base)]" />
-          </motion.div>
-        )}
-      </div>
-      <span className="text-base">{habit.icon}</span>
-      <span className={`text-sm flex-1 ${habit.completed ? 'line-through text-[var(--color-text-muted)]' : 'text-slate-200'}`}>
-        {habit.name}
-      </span>
-      <span className="text-[10px] text-slate-600 capitalize">
-        {habit.category.toLowerCase()}
-      </span>
-    </motion.div>
-  )
-}
-
-function MacroBarMini() { return null }
-
-function MiniWeightChart({ data, target }: { data: any[]; target?: number }) {
-  if (!data.length) return null
-  const weights = data.map((d) => d.weight)
-  const min = Math.min(...weights) - 1
-  const max = Math.max(...weights, target || 0) + 1
-  const range = max - min
-
-  return (
-    <div className="relative h-20">
-      <svg viewBox="0 0 200 60" className="w-full h-full" preserveAspectRatio="none">
-        {/* Target line */}
-        {target && (
-          <line
-            x1="0" y1={((max - target) / range) * 60}
-            x2="200" y2={((max - target) / range) * 60}
-            stroke="#7c3aed" strokeWidth="1" strokeDasharray="4,2" opacity="0.5"
-          />
-        )}
-        {/* Weight line */}
-        <polyline
-          points={data.map((d, i) => `${(i / (data.length - 1)) * 200},${((max - d.weight) / range) * 60}`).join(' ')}
-          fill="none" stroke="#10b981" strokeWidth="2"
-        />
-        {/* Last point dot */}
-        {data.length > 0 && (
-          <circle
-            cx="200" cy={((max - data[data.length - 1].weight) / range) * 60}
-            r="3" fill="#10b981"
-          />
-        )}
-      </svg>
-      <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[10px] text-slate-600 mt-1">
-        <span>{data[0]?.weight}kg</span>
-        <span className="text-[var(--color-text-muted)] font-bold">{data[data.length - 1]?.weight}kg</span>
-      </div>
     </div>
   )
 }
 
 function DashboardSkeleton() {
   return (
-    <div className="space-y-6">
-      <div className="skeleton h-8 w-48" />
-      <div className="grid grid-cols-5 gap-3">
-        {Array(5).fill(0).map((_, i) => <div key={i} className="skeleton h-28 rounded-2xl" />)}
-      </div>
-      <div className="grid grid-cols-4 gap-3">
-        {Array(8).fill(0).map((_, i) => <div key={i} className="skeleton h-24 rounded-2xl" />)}
+    <div className="space-y-12 pb-12">
+      <div className="skeleton h-[340px] rounded-3xl" />
+      <div className="skeleton h-8 w-48 rounded-md" />
+      <div className="grid grid-cols-4 gap-6">
+        {Array(4).fill(0).map((_, i) => <div key={i} className="skeleton h-48 rounded-3xl" />)}
       </div>
     </div>
   )
-}
-
-async function logWater(ml: number, qc: any) {
-  try {
-    await api.post('/nutrition/water', { amountML: ml })
-    toast.success(`💧 +${ml}ml logged!`)
-    qc.invalidateQueries({ queryKey: ['dashboard'] })
-  } catch {
-    toast.error('Failed to log water')
-  }
 }
 
 function getGreeting() {
@@ -580,30 +355,8 @@ function getGreeting() {
 }
 
 function getSleepLabel(hours: number) {
-  if (hours >= 8) return 'Excellent rest 💎'
-  if (hours >= 7) return 'Good sleep 👍'
-  if (hours >= 6) return 'Could be better'
-  return 'Need more sleep! 😴'
-}
-
-function getStreakIcon(type: string) {
-  const icons: Record<string, string> = {
-    HABIT: '🎯', WORKOUT: '💪', DIET: '🥗', SLEEP: '😴', PRODUCTIVITY: '⚡'
-  }
-  return icons[type] || '🔥'
-}
-
-function getPriorityColor(priority: string) {
-  const colors: Record<string, string> = {
-    URGENT: 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)]', HIGH: 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)]', MEDIUM: 'bg-[var(--color-text-base)] text-[var(--color-bg-primary)]', LOW: 'bg-slate-500'
-  }
-  return colors[priority] || 'bg-slate-500'
-}
-
-function getCategoryBadge(cat: string) {
-  const map: Record<string, string> = {
-    BUSINESS: 'violet', LEARNING: 'cyan', PERSONAL: 'emerald',
-    HEALTH: 'rose', FINANCE: 'amber',
-  }
-  return map[cat] || 'violet'
+  if (hours >= 8) return 'Optimal Recovery'
+  if (hours >= 7) return 'Good Quality'
+  if (hours >= 6) return 'Slightly Deprived'
+  return 'Action Needed'
 }
