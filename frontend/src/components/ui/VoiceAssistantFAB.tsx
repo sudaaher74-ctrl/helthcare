@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, MicOff, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/api';
 
 export default function VoiceAssistantFAB() {
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const queryClient = useQueryClient();
   
   const recognitionRef = useRef<any>(null);
 
@@ -74,6 +76,7 @@ export default function VoiceAssistantFAB() {
 
       if (res.data.success) {
         toast.success(res.data.message, { id: loadingToast });
+        queryClient.invalidateQueries(); // Refresh all data across the app to reflect the new additions
         setTimeout(() => setTranscript(''), 2000); // Clear after a moment
       } else {
         toast.error(res.data.message || 'Failed to process command', { id: loadingToast });
