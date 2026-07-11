@@ -473,6 +473,7 @@ model Streak {
   type           StreakType
   currentStreak  Int        @default(0)
   longestStreak  Int        @default(0)
+  freezesAvailable Int      @default(1)
   lastLoggedDate DateTime?
   startDate      DateTime?
 

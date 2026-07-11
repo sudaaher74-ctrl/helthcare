@@ -51,6 +51,31 @@ export class MockAIProvider implements AIProvider {
     const lowerText = text.toLowerCase();
 
     // Simple keyword matching to mock an AI NLP intent parser
+    if (lowerText.includes('spent') || lowerText.includes('bought') || lowerText.includes('paid')) {
+      const match = lowerText.match(/(\d+)/);
+      const amount = match ? parseFloat(match[1]) : 100;
+      return {
+        intent: 'LOG_EXPENSE',
+        data: {
+          amount,
+          description: text.trim(),
+          category: lowerText.includes('food') || lowerText.includes('grocery') ? 'FOOD' : 'OTHER'
+        },
+        message: `Got it. Logged expense of ${amount}.`
+      }
+    }
+
+    if (lowerText.includes('ate') || lowerText.includes('had') || lowerText.includes('food')) {
+      return {
+        intent: 'LOG_MEAL',
+        data: {
+          name: text.replace(/i ate|i had/i, '').trim(),
+          mealType: 'SNACKS'
+        },
+        message: `Got it. Logging your meal.`
+      }
+    }
+
     if (lowerText.includes('workout') || lowerText.includes('gym')) {
       return {
         intent: 'CREATE_WORKOUT',
@@ -81,5 +106,34 @@ export class MockAIProvider implements AIProvider {
       },
       message: 'Task added successfully.',
     };
+  }
+
+  async generateCrossPillarInsights(weeklyData: any): Promise<string[]> {
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    
+    const insights = [];
+    
+    // Mock analyzing the data
+    if (weeklyData.avgSleep < 6) {
+      insights.push("You tend to skip workouts on days you sleep under 6 hours.");
+    } else {
+      insights.push("Great sleep hygiene! Your workout consistency is up by 20% this week.");
+    }
+
+    if (weeklyData.totalExpense > 2000) {
+      insights.push("Your food-delivery spend jumps on high-stress, low-habit days.");
+    } else {
+      insights.push("You've been managing expenses well while hitting your nutrition goals.");
+    }
+    
+    if (weeklyData.habitScore > 75) {
+      insights.push("Weeks you hit your habit streak, your weight trend drops.");
+    }
+    
+    if (insights.length === 0) {
+      insights.push("Keep tracking your habits, workouts, and expenses to get personalized insights here.");
+    }
+    
+    return insights;
   }
 }

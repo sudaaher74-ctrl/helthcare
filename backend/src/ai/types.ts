@@ -24,7 +24,7 @@ export interface FoodAnalysisResult {
 }
 
 export interface ParsedCommand {
-  intent: 'CREATE_WORKOUT' | 'CREATE_TASK' | 'LOG_WATER' | 'LOG_MEAL' | 'UNKNOWN';
+  intent: 'CREATE_WORKOUT' | 'CREATE_TASK' | 'LOG_WATER' | 'LOG_MEAL' | 'LOG_EXPENSE' | 'UNKNOWN';
   data: any;
   message?: string;
 }
@@ -32,4 +32,5 @@ export interface ParsedCommand {
 export interface AIProvider {
   analyzeFood(imageBase64: string, mimeType: string): Promise<FoodAnalysisResult>;
   parseVoiceCommand?(text: string): Promise<ParsedCommand>;
+  generateCrossPillarInsights?(weeklyData: any): Promise<string[]>;
 }
