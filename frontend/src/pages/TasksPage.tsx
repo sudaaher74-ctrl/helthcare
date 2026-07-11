@@ -12,7 +12,7 @@ export default function TasksPage() {
   
   const { data: tasks, isLoading } = useQuery({
     queryKey: ['tasks'],
-    queryFn: () => api.get('/tasks').then(r => r.data.data),
+    queryFn: () => api.get('/tasks').then(r => r.data.data.tasks || r.data.data),
   })
 
   const completeTask = useMutation({

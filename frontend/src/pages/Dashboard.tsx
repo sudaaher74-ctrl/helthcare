@@ -26,6 +26,11 @@ export default function Dashboard() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['dashboard'] }),
   })
 
+  const completeTask = useMutation({
+    mutationFn: ({ id, status }: { id: string, status: string }) => api.put(`/tasks/${id}`, { status }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['dashboard'] }),
+  })
+
   if (isLoading) return <DashboardSkeleton />
 
   const { scores, todayStats, habits, weightHistory, streaks, recentAchievements, upcomingTasks, user, gamification, todaysMission, aiCoach } = data || {}
@@ -290,7 +295,7 @@ export default function Dashboard() {
            
            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
              {habits?.slice(0, 4).map((habit: any) => (
-                <div key={habit.id} className="flex items-center gap-4 group cursor-pointer" onClick={() => completeHabit.mutate({ id: habit.id, completed: !habit.completed })}>
+                <div key={`habit-${habit.id}`} className="flex items-center gap-4 group cursor-pointer" onClick={() => completeHabit.mutate({ id: habit.id, completed: !habit.completed })}>
                   <div className={`w-6 h-6 rounded-md flex items-center justify-center border-2 transition-all duration-300 ${habit.completed ? 'bg-blue-500 border-blue-500 text-white shadow-md shadow-blue-500/20' : 'border-[var(--color-border-subtle-value)] group-hover:border-blue-500/50'}`}>
                     {habit.completed && <CheckCircle2 size={12} strokeWidth={3} />}
                   </div>
@@ -299,12 +304,24 @@ export default function Dashboard() {
                   </div>
                 </div>
              ))}
-             {(!habits || habits.length === 0) && (
+             {upcomingTasks?.slice(0, 4).map((task: any) => {
+                const isDone = task.status === 'DONE';
+                return (
+                <div key={`task-${task.id}`} className="flex items-center gap-4 group cursor-pointer" onClick={() => completeTask.mutate({ id: task.id, status: isDone ? 'BACKLOG' : 'DONE' })}>
+                  <div className={`w-6 h-6 rounded-md flex items-center justify-center border-2 transition-all duration-300 ${isDone ? 'bg-violet-500 border-violet-500 text-white shadow-md shadow-violet-500/20' : 'border-[var(--color-border-subtle-value)] group-hover:border-violet-500/50'}`}>
+                    {isDone && <CheckCircle2 size={12} strokeWidth={3} />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-semibold truncate transition-colors ${isDone ? 'text-[var(--color-text-muted-value)] line-through' : 'text-[var(--color-text-base-value)] group-hover:text-violet-500'}`}>{task.title}</p>
+                  </div>
+                </div>
+             )})}
+             {(!habits?.length && !upcomingTasks?.length) && (
                <div className="col-span-full py-8 text-center text-[var(--color-text-muted-value)] text-sm">
                  <div className="w-12 h-12 rounded-2xl bg-[var(--color-bg-primary-value)] border border-[var(--color-border-subtle-value)] flex items-center justify-center mx-auto mb-3">
                    <Target size={20} className="opacity-50" />
                  </div>
-                 No habits set for today.
+                 No habits or tasks set for today.
                </div>
              )}
            </div>
