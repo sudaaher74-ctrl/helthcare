@@ -73,20 +73,13 @@ export class MockAIProvider implements AIProvider {
       };
     }
 
-    if (lowerText.includes('remind') || lowerText.includes('task') || lowerText.includes('buy')) {
-      return {
-        intent: 'CREATE_TASK',
-        data: {
-          title: text.replace(/remind me to|add task/gi, '').trim() || 'New Voice Task',
-        },
-        message: 'Task added successfully.',
-      };
-    }
-
+    // Default to creating a task if not specifically a workout or water
     return {
-      intent: 'UNKNOWN',
-      data: {},
-      message: 'Sorry, I did not understand that command. Try "Add chest workout for 60 min".',
+      intent: 'CREATE_TASK',
+      data: {
+        title: text.trim(),
+      },
+      message: 'Task added successfully.',
     };
   }
 }

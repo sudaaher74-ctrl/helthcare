@@ -22,7 +22,7 @@ export const getDashboard = async (req: AuthRequest, res: Response, next: NextFu
       prisma.waterLog.findMany({ where: { userId, date: today } }),
       prisma.weightLog.findMany({ where: { userId }, orderBy: { date: 'desc' }, take: 14 }),
       prisma.sleepLog.findUnique({ where: { userId_date: { userId, date: today } } }),
-      prisma.task.findMany({ where: { userId, status: { notIn: ['DONE', 'CANCELLED'] } } }),
+      prisma.task.findMany({ where: { userId, status: { notIn: ['DONE', 'CANCELLED'] } }, orderBy: { createdAt: 'desc' } }),
       prisma.streak.findMany({ where: { userId } }),
       prisma.workoutSession.findMany({ where: { userId, date: today, isCompleted: true } }),
       prisma.userAchievement.findMany({ where: { userId }, include: { achievement: true },
