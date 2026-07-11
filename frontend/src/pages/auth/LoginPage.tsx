@@ -57,7 +57,7 @@ export default function LoginPage() {
           >
             <Zap size={32} className="text-[var(--color-text-base)]" />
           </motion.div>
-          <h1 className="text-3xl font-extrabold gradient-text-violet">LifeOS</h1>
+          <h1 className="text-3xl font-extrabold gradient-text-violet">Sankalp</h1>
           <p className="text-[var(--color-text-muted)] mt-1">Your Personal Life Operating System</p>
         </div>
 

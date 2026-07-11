@@ -45,12 +45,12 @@ export default function App() {
 
   // Apply mesh background gradient and force personal user auth (if VITE_MOCK_AUTH is true)
   useEffect(() => {
-    document.title = 'LifeOS — Your Personal Life Operating System'
+    document.title = 'Sankalp — Your Personal Life Operating System'
     if (import.meta.env.VITE_MOCK_AUTH === 'true') {
       setAuth(
         {
           id: 'local-personal-user',
-          email: 'personal@lifeos.local',
+          email: 'personal@sankalp.local',
           name: 'Personal User',
           dailyCalorieGoal: 2500,
           dailyProteinGoal: 150,

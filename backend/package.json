@@ -1,7 +1,7 @@
 {
-  "name": "lifeos-backend",
+  "name": "sankalp-backend",
   "version": "1.0.0",
-  "description": "LifeOS AI-Powered Personal Life Operating System — Backend API",
+  "description": "Sankalp AI-Powered Personal Life Operating System — Backend API",
   "main": "dist/app.js",
   "scripts": {
     "dev": "tsx watch src/app.ts",

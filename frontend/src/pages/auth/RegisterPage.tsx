@@ -39,7 +39,7 @@ export default function RegisterPage() {
       })
       const { user, accessToken, refreshToken } = res.data.data
       setAuth(user, accessToken, refreshToken)
-      toast.success(`Welcome to LifeOS, ${user.name}! 🚀`)
+      toast.success(`Welcome to Sankalp, ${user.name}! 🚀`)
       navigate('/onboarding')
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Registration failed')
@@ -58,7 +58,7 @@ export default function RegisterPage() {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-violet mb-4">
             <Zap size={28} className="text-[var(--color-text-base)]" />
           </div>
-          <h1 className="text-3xl font-extrabold gradient-text-violet">LifeOS</h1>
+          <h1 className="text-3xl font-extrabold gradient-text-violet">Sankalp</h1>
           <p className="text-[var(--color-text-muted)] mt-1">Start your transformation today</p>
         </div>
 

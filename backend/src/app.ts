@@ -84,7 +84,7 @@ app.use(passport.initialize());
 
 // ─── Health Check ────────────────────────────────────────────────────────────
 app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'LifeOS API' });
+  res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'Sankalp API' });
 });
 
 // ─── API Routes ──────────────────────────────────────────────────────────────
@@ -116,7 +116,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`\n🚀 LifeOS API running on port ${PORT}`);
+  console.log(`\n🚀 Sankalp API running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV}`);
   console.log(`🌐 Client URL: ${process.env.CLIENT_URL}`);
 });

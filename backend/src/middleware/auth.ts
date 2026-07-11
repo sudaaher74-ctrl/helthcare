@@ -18,7 +18,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
       // Mock user for local testing without replica set
       req.user = {
         id: '64d26b6f0000000000000000', // valid ObjectId
-        email: 'personal@lifeos.local',
+        email: 'personal@sankalp.local',
         name: 'Personal User',
       };
       return next();

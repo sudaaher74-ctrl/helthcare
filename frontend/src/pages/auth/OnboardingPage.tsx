@@ -43,7 +43,7 @@ export default function OnboardingPage() {
       }
       const res = await api.post('/user/onboarding', payload)
       updateUser({ ...res.data.data })
-      toast.success('Setup complete! Welcome to LifeOS 🚀')
+      toast.success('Setup complete! Welcome to Sankalp 🚀')
       navigate('/dashboard')
     } catch (e: any) {
       toast.error(e.response?.data?.message || 'Setup failed')
@@ -192,7 +192,7 @@ export default function OnboardingPage() {
       </motion.div>
       <div>
         <h2 className="text-2xl font-bold text-[var(--color-text-base)]">You're all set!</h2>
-        <p className="text-[var(--color-text-muted)] mt-2">Your personalized Life OS is ready</p>
+        <p className="text-[var(--color-text-muted)] mt-2">Your personalized Sankalp is ready</p>
       </div>
       <div className="grid grid-cols-2 gap-3 text-left">
         {[
@@ -219,7 +219,7 @@ export default function OnboardingPage() {
           <div className="w-8 h-8 rounded-lg gradient-violet flex items-center justify-center">
             <Zap size={16} className="text-[var(--color-text-base)]" />
           </div>
-          <span className="font-bold gradient-text-violet">LifeOS Setup</span>
+          <span className="font-bold gradient-text-violet">Sankalp Setup</span>
         </div>
 
         {/* Progress */}
@@ -272,7 +272,7 @@ export default function OnboardingPage() {
               ) : (
                 <>
                   <Zap size={18} />
-                  Launch LifeOS
+                  Launch Sankalp
                 </>
               )}
             </button>

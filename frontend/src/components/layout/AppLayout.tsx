@@ -51,7 +51,7 @@ export default function AppLayout() {
             <Zap size={16} className="text-white" />
           </div>
           <div>
-            <h1 className="font-heading font-bold text-lg text-[var(--color-text-base-value)] leading-none tracking-tight">LifeOS</h1>
+            <h1 className="font-heading font-bold text-lg text-[var(--color-text-base-value)] leading-none tracking-tight">Sankalp</h1>
             <p className="text-[11px] font-medium text-[var(--color-text-muted-value)] mt-1">Premium Edition</p>
           </div>
         </div>
@@ -135,7 +135,7 @@ export default function AppLayout() {
                   <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                     <Zap size={16} className="text-white" />
                   </div>
-                  <span className="font-heading font-bold text-lg text-[var(--color-text-base-value)]">LifeOS</span>
+                  <span className="font-heading font-bold text-lg text-[var(--color-text-base-value)]">Sankalp</span>
                 </div>
                 <button onClick={() => setSidebarOpen(false)} className="p-2 rounded-full bg-[var(--color-bg-tertiary-value)] text-[var(--color-text-muted-value)]">
                   <X size={16} />
@@ -158,7 +158,7 @@ export default function AppLayout() {
           <button onClick={() => setSidebarOpen(true)} className="p-2 -ml-2 text-[var(--color-text-base-value)]">
             <Menu size={22} />
           </button>
-          <div className="font-heading font-bold text-[var(--color-text-base-value)] tracking-tight">LifeOS</div>
+          <div className="font-heading font-bold text-[var(--color-text-base-value)] tracking-tight">Sankalp</div>
           <button onClick={toggleTheme} className="p-2 -mr-2 text-[var(--color-text-base-value)]">
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>

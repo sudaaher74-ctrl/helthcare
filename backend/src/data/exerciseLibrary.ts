@@ -1,4 +1,4 @@
-// LifeOS Gym — Curated exercise library + default weekly split.
+// Sankalp Gym — Curated exercise library + default weekly split.
 // Each exercise carries the primary muscle group (matches the MuscleGroup enum),
 // programming defaults, and step-by-step "how to perform" guidance used by the
 // guided-workout player and the muscle map on the frontend.

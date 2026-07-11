@@ -1,4 +1,4 @@
-// LifeOS AI Food Analyzer — Orchestrates provider selection and fallback
+// Sankalp AI Food Analyzer — Orchestrates provider selection and fallback
 import { AIProvider, FoodAnalysisResult } from './types';
 import { MockAIProvider } from './providers/mockProvider';
 import { OpenAIProvider } from './providers/openaiProvider';

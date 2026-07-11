@@ -1,4 +1,4 @@
-// LifeOS — Complete Prisma Database Schema
+// Sankalp — Complete Prisma Database Schema
 // PostgreSQL via Supabase
 
 generator client {

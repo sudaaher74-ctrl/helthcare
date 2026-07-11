@@ -1,4 +1,4 @@
-// LifeOS — Modular AI Food Analyzer Service
+// Sankalp — Modular AI Food Analyzer Service
 // Supports: OpenAI GPT-4o Vision, Google Gemini Vision, Anthropic Claude Vision, Mock
 
 export interface FoodAnalysisResult {

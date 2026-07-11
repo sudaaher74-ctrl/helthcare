@@ -48,7 +48,7 @@ export const useAuthStore = create<AuthState>()(
         set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false }),
     }),
     {
-      name: 'lifeos-auth',
+      name: 'sankalp-auth',
       partialize: (state) => ({
         user: state.user,
         accessToken: state.accessToken,
