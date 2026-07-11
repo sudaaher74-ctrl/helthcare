@@ -1,10 +1,9 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 import { foodAnalyzer } from '../ai/foodAnalyzer';
 
 // POST /api/ai/analyze-food
-export const analyzeFood = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const analyzeFood = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { imageBase64, mimeType } = req.body;
     if (!imageBase64) {
@@ -16,7 +15,7 @@ export const analyzeFood = async (req: AuthRequest, res: Response, next: NextFun
 };
 
 // POST /api/ai/process-voice-command
-export const processVoiceCommand = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const processVoiceCommand = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { text } = req.body;
     if (!text) {

@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/analytics?period=week|month|year
-export const getAnalytics = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getAnalytics = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { period = 'week' } = req.query;
     const days = period === 'year' ? 365 : period === 'month' ? 30 : 7;

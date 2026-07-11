@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/achievements
-export const getAchievements = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getAchievements = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const [all, unlocked] = await Promise.all([
       prisma.achievement.findMany(),
@@ -26,7 +25,7 @@ export const getAchievements = async (req: AuthRequest, res: Response, next: Nex
 };
 
 // POST /api/achievements/seed — Admin: seed default achievements
-export const seedAchievements = async (_req: AuthRequest, res: Response, next: NextFunction) => {
+export const seedAchievements = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const achievements = [
       { key: 'FIRST_HABIT', name: 'First Step', description: 'Complete your first habit', icon: '⭐', category: 'HABIT', xpReward: 50, rarity: 'COMMON' },

@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/daily-checkin
-export const getDailyCheckin = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getDailyCheckin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -24,7 +23,7 @@ export const getDailyCheckin = async (req: AuthRequest, res: Response, next: Nex
 };
 
 // POST /api/daily-checkin
-export const logDailyCheckin = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const logDailyCheckin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { mood, notes } = req.body;
     

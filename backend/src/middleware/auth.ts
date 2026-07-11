@@ -1,15 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
 
-export interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-    name: string;
-  };
-}
-
-export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // For personal use, we bypass JWT and always attach the single default user
     let user = await prisma.user.findFirst();

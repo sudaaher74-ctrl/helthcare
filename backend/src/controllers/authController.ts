@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { prisma } from '../utils/prisma';
 import { AppError } from '../middleware/errorHandler';
-import { AuthRequest } from '../middleware/auth';
 
 const generateTokens = (user: { id: string; email: string; name: string }) => {
   const accessToken = jwt.sign(
@@ -126,7 +125,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
 };
 
 // GET /api/auth/me
-export const getMe = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getMe = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await prisma.user.findUnique({ where: { id: req.user!.id }, select: userSelect });
     res.json({ success: true, data: user });
@@ -149,7 +148,7 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 // GET /api/auth/google/callback — called by passport
-export const googleCallback = async (req: AuthRequest, res: Response) => {
+export const googleCallback = async (req: Request, res: Response) => {
   const user = req.user as any;
   if (!user) return res.redirect(`${process.env.CLIENT_URL}/login?error=oauth_failed`);
 

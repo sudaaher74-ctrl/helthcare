@@ -1,11 +1,10 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 import { parseSms } from '../sms/parseSms';
 import { categorizeExpense } from '../ai/expenseCategorizer';
 
 // ─── GET EXPENSES ─────────────────────────────────────────────────────────────
-export const getExpenses = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getExpenses = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
@@ -57,7 +56,7 @@ export const getExpenses = async (req: AuthRequest, res: Response, next: NextFun
 };
 
 // ─── ADD EXPENSE ──────────────────────────────────────────────────────────────
-export const addExpense = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const addExpense = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
     if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
@@ -85,7 +84,7 @@ export const addExpense = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // ─── DELETE EXPENSE ───────────────────────────────────────────────────────────
-export const deleteExpense = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const deleteExpense = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
     if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
@@ -142,7 +141,7 @@ async function ingestOne(userId: string, message: string, receivedAt?: string) {
 }
 
 // POST /api/expenses/sms/preview — parse only, no write (used by the UI preview).
-export const previewSms = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const previewSms = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { message, receivedAt } = req.body;
     if (!message) return res.status(400).json({ success: false, message: 'message is required' });
@@ -157,7 +156,7 @@ export const previewSms = async (req: AuthRequest, res: Response, next: NextFunc
 
 // POST /api/expenses/sms/ingest — ingest one SMS (webhook target for an
 // Android SMS-forwarder / Tasker / MacroDroid, or the manual paste box).
-export const ingestSms = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const ingestSms = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
     if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
@@ -173,7 +172,7 @@ export const ingestSms = async (req: AuthRequest, res: Response, next: NextFunct
 };
 
 // POST /api/expenses/sms/batch — ingest many at once { messages: [{message, receivedAt}] }.
-export const ingestSmsBatch = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const ingestSmsBatch = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
     if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });

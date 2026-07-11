@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/dashboard
-export const getDashboard = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getDashboard = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user!.id;
     const today = new Date(); today.setHours(0, 0, 0, 0);

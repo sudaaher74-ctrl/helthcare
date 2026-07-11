@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/goals
-export const getGoals = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getGoals = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const goals = await prisma.goal.findMany({
       where: { userId: req.user!.id },
@@ -15,7 +14,7 @@ export const getGoals = async (req: AuthRequest, res: Response, next: NextFuncti
 };
 
 // POST /api/goals
-export const createGoal = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createGoal = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { title, description, category, icon, color, targetValue, unit, targetDate, milestones } = req.body;
     const goal = await prisma.goal.create({
@@ -44,7 +43,7 @@ export const createGoal = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // PUT /api/goals/:id
-export const updateGoal = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateGoal = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = { ...req.body };
     if (data.targetDate) data.targetDate = new Date(data.targetDate);
@@ -59,7 +58,7 @@ export const updateGoal = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // DELETE /api/goals/:id
-export const deleteGoal = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const deleteGoal = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await prisma.goal.deleteMany({ where: { id: req.params.id, userId: req.user!.id } });
     res.json({ success: true, message: 'Goal deleted' });
@@ -67,7 +66,7 @@ export const deleteGoal = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // PUT /api/goals/:id/milestones/:milestoneId
-export const updateMilestone = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateMilestone = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { milestoneId } = req.params;
     const { isCompleted } = req.body;

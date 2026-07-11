@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/sleep
-export const getSleepLogs = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getSleepLogs = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { limit = 30 } = req.query;
     const logs = await prisma.sleepLog.findMany({
@@ -20,7 +19,7 @@ export const getSleepLogs = async (req: AuthRequest, res: Response, next: NextFu
 };
 
 // POST /api/sleep
-export const createSleepLog = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createSleepLog = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { bedTime, wakeTime, quality, deepSleep, remSleep, awakenings, notes, date } = req.body;
 
@@ -42,7 +41,7 @@ export const createSleepLog = async (req: AuthRequest, res: Response, next: Next
 };
 
 // PUT /api/sleep/:id
-export const updateSleepLog = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateSleepLog = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const log = await prisma.sleepLog.updateMany({
       where: { id: req.params.id, userId: req.user!.id },
@@ -53,7 +52,7 @@ export const updateSleepLog = async (req: AuthRequest, res: Response, next: Next
 };
 
 // DELETE /api/sleep/:id
-export const deleteSleepLog = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const deleteSleepLog = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await prisma.sleepLog.deleteMany({ where: { id: req.params.id, userId: req.user!.id } });
     res.json({ success: true, message: 'Sleep log deleted' });

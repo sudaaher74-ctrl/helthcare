@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/tasks
-export const getTasks = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getTasks = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { status, category, priority } = req.query;
     const where: any = { userId: req.user!.id };
@@ -30,7 +29,7 @@ export const getTasks = async (req: AuthRequest, res: Response, next: NextFuncti
 };
 
 // POST /api/tasks
-export const createTask = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { title, description, category, priority, status, dueDate, estimatedMinutes, tags } = req.body;
     const task = await prisma.task.create({
@@ -51,7 +50,7 @@ export const createTask = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // PUT /api/tasks/:id
-export const updateTask = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = { ...req.body };
     if (data.status === 'DONE' && !data.completedAt) data.completedAt = new Date();
@@ -67,7 +66,7 @@ export const updateTask = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // DELETE /api/tasks/:id
-export const deleteTask = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await prisma.task.deleteMany({ where: { id: req.params.id, userId: req.user!.id } });
     res.json({ success: true, message: 'Task deleted' });
@@ -75,7 +74,7 @@ export const deleteTask = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // POST /api/tasks/:id/time-log
-export const logTaskTime = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const logTaskTime = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { startTime, endTime, notes } = req.body;
     const start = new Date(startTime);

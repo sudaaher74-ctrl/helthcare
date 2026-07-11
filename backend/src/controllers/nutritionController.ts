@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/nutrition/meals?date=YYYY-MM-DD
-export const getMeals = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getMeals = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { date } = req.query;
     const targetDate = date ? new Date(date as string) : new Date();
@@ -39,7 +38,7 @@ export const getMeals = async (req: AuthRequest, res: Response, next: NextFuncti
 };
 
 // POST /api/nutrition/meals
-export const createMeal = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createMeal = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { date, mealType, name, notes, foodEntries } = req.body;
     const mealDate = date ? new Date(date) : new Date();
@@ -94,7 +93,7 @@ export const createMeal = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // PUT /api/nutrition/meals/:id
-export const updateMeal = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateMeal = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const meal = await prisma.meal.updateMany({
@@ -106,7 +105,7 @@ export const updateMeal = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // DELETE /api/nutrition/meals/:id
-export const deleteMeal = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const deleteMeal = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await prisma.meal.deleteMany({ where: { id: req.params.id, userId: req.user!.id } });
     res.json({ success: true, message: 'Meal deleted' });
@@ -114,7 +113,7 @@ export const deleteMeal = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // POST /api/nutrition/water
-export const logWater = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const logWater = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { amountML, date } = req.body;
     const logDate = date ? new Date(date) : new Date();
@@ -127,7 +126,7 @@ export const logWater = async (req: AuthRequest, res: Response, next: NextFuncti
 };
 
 // GET /api/nutrition/coach — AI Diet Coach recommendations
-export const getDietCoach = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getDietCoach = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user!.id },

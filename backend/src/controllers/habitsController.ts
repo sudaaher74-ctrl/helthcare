@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/habits
-export const getHabits = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getHabits = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const habits = await prisma.habit.findMany({
       where: { userId: req.user!.id, isActive: true },
@@ -14,7 +13,7 @@ export const getHabits = async (req: AuthRequest, res: Response, next: NextFunct
 };
 
 // GET /api/habits/today
-export const getTodayHabits = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getTodayHabits = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -40,7 +39,7 @@ export const getTodayHabits = async (req: AuthRequest, res: Response, next: Next
 };
 
 // POST /api/habits
-export const createHabit = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createHabit = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, description, category, icon, color, frequency, reminderTime } = req.body;
     const habit = await prisma.habit.create({
@@ -52,7 +51,7 @@ export const createHabit = async (req: AuthRequest, res: Response, next: NextFun
 };
 
 // PUT /api/habits/:id
-export const updateHabit = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateHabit = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const habit = await prisma.habit.updateMany({
@@ -64,7 +63,7 @@ export const updateHabit = async (req: AuthRequest, res: Response, next: NextFun
 };
 
 // DELETE /api/habits/:id
-export const deleteHabit = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const deleteHabit = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await prisma.habit.updateMany({
       where: { id: req.params.id, userId: req.user!.id },
@@ -75,7 +74,7 @@ export const deleteHabit = async (req: AuthRequest, res: Response, next: NextFun
 };
 
 // POST /api/habits/:id/complete
-export const completeHabit = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const completeHabit = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { date, completed } = req.body;
@@ -98,7 +97,7 @@ export const completeHabit = async (req: AuthRequest, res: Response, next: NextF
 };
 
 // GET /api/habits/stats
-export const getHabitStats = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getHabitStats = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { period = 'week' } = req.query;
     const days = period === 'month' ? 30 : period === 'year' ? 365 : 7;

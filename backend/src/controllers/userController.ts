@@ -1,6 +1,5 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 
 const userSelect = {
@@ -12,7 +11,7 @@ const userSelect = {
 };
 
 // GET /api/user/profile
-export const getProfile = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await prisma.user.findUnique({ where: { id: req.user!.id }, select: userSelect });
     res.json({ success: true, data: user });
@@ -20,7 +19,7 @@ export const getProfile = async (req: AuthRequest, res: Response, next: NextFunc
 };
 
 // PUT /api/user/profile
-export const updateProfile = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const allowed = [
       'name', 'age', 'gender', 'height', 'currentWeight', 'targetWeight',
@@ -37,7 +36,7 @@ export const updateProfile = async (req: AuthRequest, res: Response, next: NextF
 };
 
 // POST /api/user/complete-onboarding
-export const completeOnboarding = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const completeOnboarding = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, age, gender, height, currentWeight, targetWeight, activityLevel,
             dailyCalorieGoal, dailyProteinGoal } = req.body;

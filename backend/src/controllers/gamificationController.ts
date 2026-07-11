@@ -1,6 +1,5 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // Helper function to calculate XP required for a given level (exponential scaling)
 export const calculateXPForLevel = (level: number) => {
@@ -8,7 +7,7 @@ export const calculateXPForLevel = (level: number) => {
 };
 
 // GET /api/gamification/status
-export const getGamificationStatus = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getGamificationStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user!.id },
@@ -39,7 +38,7 @@ export const getGamificationStatus = async (req: AuthRequest, res: Response, nex
 };
 
 // POST /api/gamification/reward
-export const addGamificationReward = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const addGamificationReward = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { xpAmount, lifePointsAmount, reason } = req.body;
     

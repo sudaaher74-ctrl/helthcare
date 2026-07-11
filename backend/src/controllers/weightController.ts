@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/weight
-export const getWeightLogs = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getWeightLogs = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { limit = 30 } = req.query;
     const logs = await prisma.weightLog.findMany({
@@ -38,7 +37,7 @@ export const getWeightLogs = async (req: AuthRequest, res: Response, next: NextF
 };
 
 // POST /api/weight
-export const createWeightLog = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createWeightLog = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { weight, bodyFat, muscleMass, notes, date } = req.body;
     const logDate = date ? new Date(date) : new Date();
@@ -58,7 +57,7 @@ export const createWeightLog = async (req: AuthRequest, res: Response, next: Nex
 };
 
 // PUT /api/weight/:id
-export const updateWeightLog = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateWeightLog = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const log = await prisma.weightLog.updateMany({
       where: { id: req.params.id, userId: req.user!.id },
@@ -69,7 +68,7 @@ export const updateWeightLog = async (req: AuthRequest, res: Response, next: Nex
 };
 
 // DELETE /api/weight/:id
-export const deleteWeightLog = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const deleteWeightLog = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await prisma.weightLog.deleteMany({ where: { id: req.params.id, userId: req.user!.id } });
     res.json({ success: true, message: 'Weight log deleted' });

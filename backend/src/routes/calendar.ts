@@ -1,9 +1,10 @@
+import { Request, Response, NextFunction } from 'express';
 import { Router } from 'express';
-import { authenticate, AuthRequest } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 import { prisma } from '../utils/prisma';
 const router = Router();
 router.use(authenticate as any);
-router.get('/:date', async (req: AuthRequest, res, next) => {
+router.get('/:date', async (req: Request, res, next) => {
   try {
     const date = new Date(req.params.date); date.setHours(0,0,0,0);
     const userId = req.user!.id;

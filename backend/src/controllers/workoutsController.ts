@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
-import { AuthRequest } from '../middleware/auth';
 
 // GET /api/workouts
-export const getWorkouts = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getWorkouts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { limit = 20, date } = req.query;
     const where: any = { userId: req.user!.id };
@@ -20,7 +19,7 @@ export const getWorkouts = async (req: AuthRequest, res: Response, next: NextFun
 };
 
 // POST /api/workouts
-export const createWorkout = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createWorkout = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, category, date, startTime, endTime, durationMinutes, caloriesBurned, notes, mood, exercises } = req.body;
     const workoutDate = date ? new Date(date) : new Date();
@@ -71,7 +70,7 @@ export const createWorkout = async (req: AuthRequest, res: Response, next: NextF
 };
 
 // PUT /api/workouts/:id
-export const updateWorkout = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const updateWorkout = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { exercises, ...data } = req.body;
     const session = await prisma.workoutSession.updateMany({
@@ -83,7 +82,7 @@ export const updateWorkout = async (req: AuthRequest, res: Response, next: NextF
 };
 
 // DELETE /api/workouts/:id
-export const deleteWorkout = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const deleteWorkout = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await prisma.workoutSession.deleteMany({ where: { id: req.params.id, userId: req.user!.id } });
     res.json({ success: true, message: 'Workout deleted' });
@@ -91,7 +90,7 @@ export const deleteWorkout = async (req: AuthRequest, res: Response, next: NextF
 };
 
 // GET /api/workouts/stats
-export const getWorkoutStats = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const getWorkoutStats = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const sessions = await prisma.workoutSession.findMany({
