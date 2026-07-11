@@ -55,10 +55,10 @@ export default function RegisterPage() {
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-violet mb-4">
-            <Zap size={28} className="text-[var(--color-text-base)]" />
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-violet mb-4 shadow-lg shadow-purple-500/20">
+            <Zap size={28} className="text-white" />
           </div>
-          <h1 className="text-3xl font-extrabold gradient-text-violet">Sankalp</h1>
+          <h1 className="text-3xl font-extrabold font-heading gradient-text-violet tracking-tight">Sankalp</h1>
           <p className="text-[var(--color-text-muted)] mt-1">Start your transformation today</p>
         </div>
 
@@ -68,7 +68,7 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Full Name</label>
+              <label className="block text-sm font-semibold text-[var(--color-text-base)] mb-1.5">Full Name</label>
               <div className="relative">
                 <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input {...register('name')} placeholder="Your name" className="input-field pl-10" />
@@ -77,7 +77,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
+              <label className="block text-sm font-semibold text-[var(--color-text-base)] mb-1.5">Email</label>
               <div className="relative">
                 <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input {...register('email')} type="email" placeholder="you@example.com" className="input-field pl-10" />
@@ -86,7 +86,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+              <label className="block text-sm font-semibold text-[var(--color-text-base)] mb-1.5">Password</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input
@@ -96,7 +96,7 @@ export default function RegisterPage() {
                   className="input-field pl-10 pr-10"
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-slate-300">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-base)]">
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
@@ -104,7 +104,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Confirm Password</label>
+              <label className="block text-sm font-semibold text-[var(--color-text-base)] mb-1.5">Confirm Password</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input {...register('confirmPassword')} type={showPass ? 'text' : 'password'} placeholder="••••••••" className="input-field pl-10" />
@@ -127,7 +127,7 @@ export default function RegisterPage() {
               <div className="w-full border-t border-[var(--color-border-subtle)]" />
             </div>
             <div className="relative flex justify-center">
-              <span className="px-3 text-xs text-[var(--color-text-muted)] bg-[#16162a]">or</span>
+              <span className="px-3 text-xs text-[var(--color-text-muted)] bg-[var(--color-bg-secondary-value)]">or</span>
             </div>
           </div>
 

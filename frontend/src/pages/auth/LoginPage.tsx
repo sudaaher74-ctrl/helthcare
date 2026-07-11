@@ -53,11 +53,11 @@ export default function LoginPage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 300, delay: 0.1 }}
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-violet mb-4 animate-pulse-glow"
+            className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-violet mb-4 shadow-lg shadow-purple-500/20"
           >
-            <Zap size={32} className="text-[var(--color-text-base)]" />
+            <Zap size={28} className="text-white" />
           </motion.div>
-          <h1 className="text-3xl font-extrabold gradient-text-violet">Sankalp</h1>
+          <h1 className="text-3xl font-extrabold font-heading gradient-text-violet tracking-tight">Sankalp</h1>
           <p className="text-[var(--color-text-muted)] mt-1">Your Personal Life Operating System</p>
         </div>
 
@@ -68,7 +68,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
+              <label className="block text-sm font-semibold text-[var(--color-text-base)] mb-1.5">Email</label>
               <div className="relative">
                 <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input
@@ -83,7 +83,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+              <label className="block text-sm font-semibold text-[var(--color-text-base)] mb-1.5">Password</label>
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" />
                 <input
@@ -96,7 +96,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-slate-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-base)]"
                 >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -123,7 +123,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-[var(--color-border-subtle)]" />
             </div>
             <div className="relative flex justify-center">
-              <span className="px-3 text-xs text-[var(--color-text-muted)] bg-[#16162a]">or continue with</span>
+              <span className="px-3 text-xs text-[var(--color-text-muted)] bg-[var(--color-bg-secondary-value)]">or continue with</span>
             </div>
           </div>
 
