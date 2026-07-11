@@ -52,6 +52,11 @@ export default function GymPlanner() {
     onSuccess: () => { toast.success('Plan reset to default split'); qc.invalidateQueries({ queryKey: ['workout-plan'] }) },
   })
 
+  const setManualPlan = useMutation({
+    mutationFn: (data: { weekday: number, focus: string }) => api.post('/workout-plan/manual', data),
+    onSuccess: () => { toast.success('Plan updated'); qc.invalidateQueries({ queryKey: ['workout-plan'] }) },
+  })
+
   const days: PlanDay[] = plan?.days ?? []
   const day = days.find((d) => d.weekday === selected)
 
@@ -100,7 +105,23 @@ export default function GymPlanner() {
       {isLoading ? (
         <div className="space-y-3">{Array(4).fill(0).map((_, i) => <div key={i} className="skeleton h-20 rounded-xl" />)}</div>
       ) : !day ? (
-        <div className="glass-card p-10 text-center text-[var(--color-text-muted)]">No plan for this day.</div>
+        <div className="glass-card p-10 text-center text-[var(--color-text-muted)] flex flex-col items-center justify-center">
+          <Dumbbell size={40} className="mb-4 text-slate-600" />
+          <p className="text-lg font-semibold text-slate-300">No plan for this day.</p>
+          <p className="text-sm mt-1">Use the voice assistant or set a plan below.</p>
+          <div className="mt-6 flex flex-wrap gap-2 justify-center">
+            {['Chest', 'Back', 'Legs', 'Full Body'].map(focus => (
+              <button 
+                key={focus}
+                onClick={() => setManualPlan.mutate({ weekday: selected, focus })}
+                className="btn btn-secondary btn-sm"
+                disabled={setManualPlan.isPending}
+              >
+                + {focus} Day
+              </button>
+            ))}
+          </div>
+        </div>
       ) : day.isRest ? (
         <div className="glass-card p-12 text-center">
           <Moon />
