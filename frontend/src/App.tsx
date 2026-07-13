@@ -6,11 +6,7 @@ import { AnimatePresence } from 'framer-motion'
 // Layout
 import AppLayout from '@/components/layout/AppLayout'
 
-// Auth Pages
-import LoginPage from '@/pages/auth/LoginPage'
-import RegisterPage from '@/pages/auth/RegisterPage'
-import OnboardingPage from '@/pages/auth/OnboardingPage'
-import AuthCallback from '@/pages/auth/AuthCallback'
+
 
 // Main Pages
 import Dashboard from '@/pages/Dashboard'
@@ -28,40 +24,26 @@ import AchievementsPage from '@/pages/AchievementsPage'
 import FinanceTracker from '@/pages/FinanceTracker'
 import SettingsPage from '@/pages/SettingsPage'
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuthStore()
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />
-}
-
-const OnboardingGuard = ({ children }: { children: React.ReactNode }) => {
-  const { user, isAuthenticated } = useAuthStore()
-  if (!isAuthenticated) return <Navigate to="/login" replace />
-  if (user && !user.isOnboarded) return <Navigate to="/onboarding" replace />
-  return <>{children}</>
-}
-
 export default function App() {
   const { setAuth } = useAuthStore()
 
-  // Apply mesh background gradient and force personal user auth (if VITE_MOCK_AUTH is true)
+  // Apply mesh background gradient and force personal user auth
   useEffect(() => {
     document.title = 'Sankalp — Your Personal Life Operating System'
-    if (import.meta.env.VITE_MOCK_AUTH === 'true') {
-      setAuth(
-        {
-          id: 'local-personal-user',
-          email: 'personal@sankalp.local',
-          name: 'Personal User',
-          dailyCalorieGoal: 2500,
-          dailyProteinGoal: 150,
-          dailyWaterGoal: 3000,
-          theme: 'DARK',
-          isOnboarded: true,
-        },
-        'mock-token',
-        'mock-refresh'
-      )
-    }
+    setAuth(
+      {
+        id: 'local-personal-user',
+        email: 'personal@sankalp.local',
+        name: 'Personal User',
+        dailyCalorieGoal: 2500,
+        dailyProteinGoal: 150,
+        dailyWaterGoal: 3000,
+        theme: 'DARK',
+        isOnboarded: true,
+      },
+      'mock-token',
+      'mock-refresh'
+    )
   }, [setAuth])
 
   return (
@@ -69,30 +51,8 @@ export default function App() {
       <div className="mesh-bg" aria-hidden="true" />
       <AnimatePresence mode="wait">
         <Routes>
-          {/* Public */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
-
-          {/* Onboarding */}
-          <Route
-            path="/onboarding"
-            element={
-              <ProtectedRoute>
-                <OnboardingPage />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Protected App */}
-          <Route
-            path="/"
-            element={
-              <OnboardingGuard>
-                <AppLayout />
-              </OnboardingGuard>
-            }
-          >
+          {/* Protected App (Now Public) */}
+          <Route path="/" element={<AppLayout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="habits" element={<HabitTracker />} />
