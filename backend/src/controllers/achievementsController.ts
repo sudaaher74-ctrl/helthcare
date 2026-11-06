@@ -59,3 +59,38 @@ export const seedAchievements = async (_req: Request, res: Response, next: NextF
     res.json({ success: true, message: `Seeded ${achievements.length} achievements` });
   } catch (e) { next(e); }
 };
+
+// Internal service function to unlock an achievement for a user
+export const checkAndUnlockAchievement = async (userId: string, key: string) => {
+  try {
+    const achievement = await prisma.achievement.findUnique({ where: { key } });
+    if (!achievement) return null;
+
+    const existing = await prisma.userAchievement.findUnique({
+      where: { userId_achievementId: { userId, achievementId: achievement.id } },
+    });
+    if (existing) return null; // already unlocked
+
+    // Unlock achievement
+    const unlocked = await prisma.userAchievement.create({
+      data: {
+        userId,
+        achievementId: achievement.id,
+      },
+      include: { achievement: true },
+    });
+
+    // Reward XP
+    if (achievement.xpReward > 0) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { xp: { increment: achievement.xpReward } },
+      });
+    }
+
+    return unlocked;
+  } catch (err) {
+    console.error(`[Achievement] Failed to unlock ${key}:`, err);
+    return null;
+  }
+};

@@ -1,12 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
+import { checkAndUnlockAchievement } from './achievementsController';
 
 // GET /api/workouts
 export const getWorkouts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { limit = 20, date } = req.query;
     const where: any = { userId: req.user!.id };
-    if (date) { const d = new Date(date as string); d.setHours(0, 0, 0, 0); where.date = d; }
+    if (date) {
+      const d = new Date(date as string);
+      d.setHours(0, 0, 0, 0);
+      const nextD = new Date(d);
+      nextD.setDate(nextD.getDate() + 1);
+      where.date = { gte: d, lt: nextD };
+    }
 
     const sessions = await prisma.workoutSession.findMany({
       where,
@@ -62,8 +69,9 @@ export const createWorkout = async (req: Request, res: Response, next: NextFunct
       include: { exercises: { include: { sets: true } } },
     });
 
-    // Update workout streak
+    // Update workout streak & check achievements
     await updateWorkoutStreak(req.user!.id);
+    await checkAndUnlockAchievement(req.user!.id, 'FIRST_WORKOUT');
 
     res.status(201).json({ success: true, data: session });
   } catch (e) { next(e); }
@@ -72,10 +80,18 @@ export const createWorkout = async (req: Request, res: Response, next: NextFunct
 // PUT /api/workouts/:id
 export const updateWorkout = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { exercises, ...data } = req.body;
-    const session = await prisma.workoutSession.updateMany({
+    const existing = await prisma.workoutSession.findFirst({
       where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Workout not found' });
+    }
+
+    const { exercises, ...data } = req.body;
+    const session = await prisma.workoutSession.update({
+      where: { id: req.params.id },
       data,
+      include: { exercises: { include: { sets: true } } },
     });
     res.json({ success: true, data: session });
   } catch (e) { next(e); }

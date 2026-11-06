@@ -33,7 +33,13 @@ export default function SleepTracker() {
       const bedDate = new Date(`${form.date}T${form.bedTime}`)
       let wakeDate = new Date(`${form.date}T${form.wakeTime}`)
       if (wakeDate <= bedDate) wakeDate.setDate(wakeDate.getDate() + 1)
-      await api.post('/sleep', { bedTime: bedDate.toISOString(), wakeTime: wakeDate.toISOString(), quality: form.quality, notes: form.notes })
+      await api.post('/sleep', {
+        date: form.date,
+        bedTime: bedDate.toISOString(),
+        wakeTime: wakeDate.toISOString(),
+        quality: form.quality,
+        notes: form.notes
+      })
       toast.success('Sleep logged! 😴')
       setShowForm(false)
       qc.invalidateQueries({ queryKey: ['sleep', 'dashboard'] })

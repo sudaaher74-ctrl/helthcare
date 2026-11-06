@@ -59,8 +59,15 @@ export const createWeightLog = async (req: Request, res: Response, next: NextFun
 // PUT /api/weight/:id
 export const updateWeightLog = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const log = await prisma.weightLog.updateMany({
+    const existing = await prisma.weightLog.findFirst({
       where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Weight log not found' });
+    }
+
+    const log = await prisma.weightLog.update({
+      where: { id: req.params.id },
       data: req.body,
     });
     res.json({ success: true, data: log });

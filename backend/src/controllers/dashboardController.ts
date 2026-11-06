@@ -6,26 +6,29 @@ export const getDashboard = async (req: Request, res: Response, next: NextFuncti
   try {
     const userId = req.user!.id;
     const today = new Date(); today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
     const sevenDaysAgo = new Date(today); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     const [user, todayHabits, habitLogs, meals, waterLogs, weightLogs, sleepLogs,
-           tasks, streaks, workoutSessions, userAchievements] = await Promise.all([
+           tasks, completedTodayTasksCount, streaks, workoutSessions, userAchievements, todayExpenses] = await Promise.all([
       prisma.user.findUnique({ where: { id: userId },
         select: { name: true, currentWeight: true, targetWeight: true, dailyCalorieGoal: true,
                   dailyProteinGoal: true, dailyWaterGoal: true, avatar: true,
                   xp: true, level: true, lifePoints: true } }),
       prisma.habit.findMany({ where: { userId, isActive: true },
-        include: { logs: { where: { date: today } } } }),
+        include: { logs: { where: { date: { gte: today, lt: tomorrow } } } } }),
       prisma.habitLog.findMany({ where: { userId, date: { gte: sevenDaysAgo }, completed: true } }),
-      prisma.meal.findMany({ where: { userId, date: today } }),
-      prisma.waterLog.findMany({ where: { userId, date: today } }),
+      prisma.meal.findMany({ where: { userId, date: { gte: today, lt: tomorrow } } }),
+      prisma.waterLog.findMany({ where: { userId, date: { gte: today, lt: tomorrow } } }),
       prisma.weightLog.findMany({ where: { userId }, orderBy: { date: 'desc' }, take: 14 }),
-      prisma.sleepLog.findUnique({ where: { userId_date: { userId, date: today } } }),
+      prisma.sleepLog.findFirst({ where: { userId, date: { gte: today, lt: tomorrow } } }),
       prisma.task.findMany({ where: { userId, status: { notIn: ['DONE', 'CANCELLED'] } }, orderBy: { createdAt: 'desc' } }),
+      prisma.task.count({ where: { userId, status: 'DONE', completedAt: { gte: today, lt: tomorrow } } }),
       prisma.streak.findMany({ where: { userId } }),
-      prisma.workoutSession.findMany({ where: { userId, date: today, isCompleted: true } }),
+      prisma.workoutSession.findMany({ where: { userId, date: { gte: today, lt: tomorrow }, isCompleted: true } }),
       prisma.userAchievement.findMany({ where: { userId }, include: { achievement: true },
         orderBy: { unlockedAt: 'desc' }, take: 5 }),
+      prisma.expense.findMany({ where: { userId, date: { gte: today, lt: tomorrow } } }),
     ]);
 
     // Calculate today's nutrition
@@ -55,9 +58,11 @@ export const getDashboard = async (req: Request, res: Response, next: NextFuncti
     const disciplineScore = Math.round(
       habitRate * 0.6 + weeklyHabitRate * 0.4
     );
-    const productivityScore = Math.min(100, Math.round(
-      (tasks.filter((t) => t.status === 'DONE').length / Math.max(tasks.length, 1)) * 100
-    ));
+    const totalTodayTasks = tasks.length + completedTodayTasksCount;
+    const productivityScore = totalTodayTasks > 0
+      ? Math.min(100, Math.round((completedTodayTasksCount / totalTodayTasks) * 100))
+      : 100;
+    const todaySpent = todayExpenses.reduce((sum, exp) => sum + exp.amount, 0);
     const lifeScore = Math.round(
       healthScore * 0.3 + nutritionScore * 0.25 + disciplineScore * 0.25 + productivityScore * 0.2
     );
@@ -124,6 +129,8 @@ export const getDashboard = async (req: Request, res: Response, next: NextFuncti
           habitRate,
           hasWorkedOut: workoutSessions.length > 0,
           sleepHours: sleepLogs ? parseFloat((sleepLogs.durationMinutes / 60).toFixed(1)) : null,
+          spentToday: parseFloat(todaySpent.toFixed(2)),
+          expenseCount: todayExpenses.length,
           currentWeight: user?.currentWeight,
           targetWeight: user?.targetWeight,
           weightRemaining: user?.currentWeight && user?.targetWeight

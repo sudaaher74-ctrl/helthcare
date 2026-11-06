@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
+import { checkAndUnlockAchievement } from './achievementsController';
 
 // GET /api/tasks
 export const getTasks = async (req: Request, res: Response, next: NextFunction) => {
@@ -52,13 +53,26 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
 // PUT /api/tasks/:id
 export const updateTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const existing = await prisma.task.findFirst({
+      where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Task not found' });
+    }
+
     const data = { ...req.body };
-    if (data.status === 'DONE' && !data.completedAt) data.completedAt = new Date();
+    if (data.status === 'DONE') {
+      if (!data.completedAt) data.completedAt = new Date();
+      const doneCount = await prisma.task.count({ where: { userId: req.user!.id, status: 'DONE' } });
+      if (doneCount + 1 >= 50) {
+        await checkAndUnlockAchievement(req.user!.id, 'PRODUCTIVITY_MASTER');
+      }
+    }
     if (data.status === 'IN_PROGRESS' && !data.startedAt) data.startedAt = new Date();
     if (data.dueDate) data.dueDate = new Date(data.dueDate);
 
-    const task = await prisma.task.updateMany({
-      where: { id: req.params.id, userId: req.user!.id },
+    const task = await prisma.task.update({
+      where: { id: req.params.id },
       data,
     });
     res.json({ success: true, data: task });

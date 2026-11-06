@@ -6,13 +6,13 @@ export const getDailyCheckin = async (req: Request, res: Response, next: NextFun
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const checkin = await prisma.dailyCheckIn.findUnique({
+    const checkin = await prisma.dailyCheckIn.findFirst({
       where: {
-        userId_date: {
-          userId: req.user!.id,
-          date: today
-        }
+        userId: req.user!.id,
+        date: { gte: today, lt: tomorrow }
       }
     });
 

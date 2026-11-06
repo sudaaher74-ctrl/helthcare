@@ -1,11 +1,11 @@
 import React from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Scale, Flame, Droplets, Dumbbell, Moon, CheckCircle2,
   TrendingUp, ArrowRight, Target, Zap, Award, Sparkles,
-  Wallet, ChevronRight, Clock
+  Wallet, ChevronRight, Clock, Plus
 } from 'lucide-react'
 import { toast } from 'sonner'
 import api from '@/lib/api'
@@ -14,6 +14,7 @@ import { AnimatedProgress } from '@/components/ui/AnimatedProgress'
 
 export default function Dashboard() {
   const qc = useQueryClient()
+  const navigate = useNavigate()
 
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard'],
@@ -29,6 +30,15 @@ export default function Dashboard() {
   const completeTask = useMutation({
     mutationFn: ({ id, status }: { id: string, status: string }) => api.put(`/tasks/${id}`, { status }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['dashboard'] }),
+  })
+
+  const logQuickWater = useMutation({
+    mutationFn: (amountML: number = 250) => api.post('/nutrition/water', { amountML }),
+    onSuccess: () => {
+      toast.success('Added 250ml water! 💧')
+      qc.invalidateQueries({ queryKey: ['dashboard'] })
+    },
+    onError: () => toast.error('Failed to log water'),
   })
 
   if (isLoading) return <DashboardSkeleton />
@@ -76,11 +86,18 @@ export default function Dashboard() {
                 <AnimatedProgress progress={missionPercent} color="bg-white" height={6} className="bg-white/20" />
                 
                 <div className="flex gap-2 mt-6">
-                  <button className="flex-1 bg-white text-blue-900 font-semibold py-3 px-4 rounded-xl hover:bg-blue-50 transition-colors shadow-lg shadow-black/10 text-sm">
-                    Log Workout
+                  <button
+                    onClick={() => navigate('/gym')}
+                    className="flex-1 bg-white text-blue-900 font-semibold py-3 px-4 rounded-xl hover:bg-blue-50 transition-colors shadow-lg shadow-black/10 text-sm flex items-center justify-center gap-1.5"
+                  >
+                    <Dumbbell size={15} /> Log Workout
                   </button>
-                  <button className="flex-1 bg-white/10 text-white border border-white/20 font-semibold py-3 px-4 rounded-xl hover:bg-white/20 transition-colors text-sm">
-                    Log Water
+                  <button
+                    onClick={() => logQuickWater.mutate(250)}
+                    disabled={logQuickWater.isPending}
+                    className="flex-1 bg-white/10 text-white border border-white/20 font-semibold py-3 px-4 rounded-xl hover:bg-white/20 transition-colors text-sm flex items-center justify-center gap-1.5"
+                  >
+                    <Droplets size={15} /> +250ml Water
                   </button>
                 </div>
               </div>
@@ -161,9 +178,9 @@ export default function Dashboard() {
       <section>
         <div className="flex items-center justify-between mb-6">
           <h2 className="font-heading text-xl font-bold text-[var(--color-text-base-value)] tracking-tight">Health Summary</h2>
-          <button className="text-[13px] font-semibold text-blue-500 hover:text-blue-600 flex items-center gap-1 transition-colors">
-            View Details <ChevronRight size={14} />
-          </button>
+          <Link to="/analytics" className="text-[13px] font-semibold text-blue-500 hover:text-blue-600 flex items-center gap-1 transition-colors">
+            View Insights <ChevronRight size={14} />
+          </Link>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -263,23 +280,28 @@ export default function Dashboard() {
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Finance */}
-        <PremiumCard className="lg:col-span-1" hoverAction>
-           <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500"><Wallet size={16} /></div>
-                <span className="font-semibold text-sm text-[var(--color-text-base-value)]">Finance Overview</span>
+        <Link to="/finance" className="block lg:col-span-1">
+          <PremiumCard hoverAction className="h-full">
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500"><Wallet size={16} /></div>
+                  <span className="font-semibold text-sm text-[var(--color-text-base-value)]">Finance Overview</span>
+                </div>
+                <ChevronRight size={14} className="text-[var(--color-text-muted-value)]" />
+            </div>
+            <div>
+              <div className="text-[10px] font-bold text-[var(--color-text-muted-value)] uppercase tracking-widest mb-1">Spent Today</div>
+              <div className="font-mono text-3xl font-bold tracking-tight text-[var(--color-text-base-value)] mb-4">
+                ₹{(todayStats?.spentToday || 0).toFixed(2)}
               </div>
-           </div>
-           <div>
-             <div className="text-[10px] font-bold text-[var(--color-text-muted-value)] uppercase tracking-widest mb-1">Spent Today</div>
-             <div className="font-mono text-3xl font-bold tracking-tight text-[var(--color-text-base-value)] mb-4">$45.00</div>
-             <AnimatedProgress progress={35} color="bg-emerald-500" height={6} />
-             <div className="flex justify-between text-[10px] text-[var(--color-text-muted-value)] font-semibold mt-2 uppercase tracking-wider">
-               <span>Daily Budget</span>
-               <span>35% Used</span>
-             </div>
-           </div>
-        </PremiumCard>
+              <AnimatedProgress progress={Math.min(100, (((todayStats?.spentToday || 0) / 1000) * 100))} color="bg-emerald-500" height={6} />
+              <div className="flex justify-between text-[10px] text-[var(--color-text-muted-value)] font-semibold mt-2 uppercase tracking-wider">
+                <span>{todayStats?.expenseCount || 0} transaction{todayStats?.expenseCount === 1 ? '' : 's'}</span>
+                <span>Track Expenses &rarr;</span>
+              </div>
+            </div>
+          </PremiumCard>
+        </Link>
 
         {/* Habits & Tasks */}
         <PremiumCard className="lg:col-span-2">

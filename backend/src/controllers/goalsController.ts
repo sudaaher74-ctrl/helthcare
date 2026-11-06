@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
+import { checkAndUnlockAchievement } from './achievementsController';
 
 // GET /api/goals
 export const getGoals = async (req: Request, res: Response, next: NextFunction) => {
@@ -45,12 +46,22 @@ export const createGoal = async (req: Request, res: Response, next: NextFunction
 // PUT /api/goals/:id
 export const updateGoal = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const existing = await prisma.goal.findFirst({
+      where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Goal not found' });
+    }
+
     const data = { ...req.body };
     if (data.targetDate) data.targetDate = new Date(data.targetDate);
-    if (data.status === 'COMPLETED' && !data.completedAt) data.completedAt = new Date();
+    if (data.status === 'COMPLETED') {
+      if (!data.completedAt) data.completedAt = new Date();
+      await checkAndUnlockAchievement(req.user!.id, 'GOAL_ACHIEVED');
+    }
 
-    const goal = await prisma.goal.updateMany({
-      where: { id: req.params.id, userId: req.user!.id },
+    const goal = await prisma.goal.update({
+      where: { id: req.params.id },
       data,
     });
     res.json({ success: true, data: goal });

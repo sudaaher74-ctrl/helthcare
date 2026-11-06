@@ -50,8 +50,10 @@ export default function WeightTracker() {
   }
 
   const current = logs[0]?.weight
-  const target = user?.targetWeight || 55
-  const remaining = target - (current || 0)
+  const target = user?.targetWeight || (current ? current : 70)
+  const isLoss = current && target ? current > target : false
+  const diff = current && target ? Math.abs(current - target) : 0
+  const isGoalReached = current && target ? Math.abs(current - target) < 0.2 : false
   const bmi = user?.height && current
     ? (current / ((user.height / 100) ** 2)).toFixed(1) : '--'
 
@@ -60,7 +62,9 @@ export default function WeightTracker() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-text-base)]">Weight Tracker</h1>
-          <p className="text-[var(--color-text-muted)] text-sm">Track your weight gain journey</p>
+          <p className="text-[var(--color-text-muted)] text-sm">
+            {isLoss ? 'Track your weight loss journey' : 'Track your body composition & progress'}
+          </p>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="btn btn-primary">
           <Plus size={16} /> Log Weight
@@ -102,8 +106,8 @@ export default function WeightTracker() {
         </div>
         <div className="stat-card">
           <TrendingUp size={20} className="text-[var(--color-text-muted)] mb-2" />
-          <p className={`text-2xl font-extrabold ${remaining > 0 ? 'text-[var(--color-text-muted)]' : 'text-[var(--color-text-muted)]'}`}>
-            {remaining > 0 ? `+${remaining.toFixed(1)}` : '✓'}
+          <p className="text-2xl font-extrabold text-[var(--color-text-base)]">
+            {isGoalReached ? 'Goal Reached!' : `${isLoss ? '-' : '+'}${diff.toFixed(1)}`}
           </p>
           <p className="text-xs text-[var(--color-text-muted)]">kg to goal</p>
         </div>

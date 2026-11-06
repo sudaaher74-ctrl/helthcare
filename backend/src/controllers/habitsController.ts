@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../utils/prisma';
+import { checkAndUnlockAchievement } from './achievementsController';
 
 // GET /api/habits
 export const getHabits = async (req: Request, res: Response, next: NextFunction) => {
@@ -17,13 +18,15 @@ export const getTodayHabits = async (req: Request, res: Response, next: NextFunc
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
     const habits = await prisma.habit.findMany({
       where: { userId: req.user!.id, isActive: true },
       orderBy: [{ category: 'asc' }, { sortOrder: 'asc' }],
       include: {
         logs: {
-          where: { date: today },
+          where: { date: { gte: today, lt: tomorrow } },
         },
       },
     });
@@ -54,8 +57,15 @@ export const createHabit = async (req: Request, res: Response, next: NextFunctio
 export const updateHabit = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const habit = await prisma.habit.updateMany({
+    const existing = await prisma.habit.findFirst({
       where: { id, userId: req.user!.id },
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Habit not found' });
+    }
+
+    const habit = await prisma.habit.update({
+      where: { id },
       data: req.body,
     });
     res.json({ success: true, data: habit });
@@ -87,9 +97,10 @@ export const completeHabit = async (req: Request, res: Response, next: NextFunct
       create: { habitId: id, userId: req.user!.id, date: logDate, completed, completedAt: completed ? new Date() : null },
     });
 
-    // Update habit streak
+    // Update habit streak & achievements
     if (completed) {
       await updateHabitStreak(req.user!.id);
+      await checkAndUnlockAchievement(req.user!.id, 'FIRST_HABIT');
     }
 
     res.json({ success: true, data: log });

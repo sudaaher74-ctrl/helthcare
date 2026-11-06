@@ -22,6 +22,8 @@ out/
 mongodb-data/
 *.sqlite
 *.db
+*.tgz
+scratch_*.js
 
 # OS
 .DS_Store

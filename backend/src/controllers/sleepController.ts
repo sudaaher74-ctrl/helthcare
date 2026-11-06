@@ -25,7 +25,8 @@ export const createSleepLog = async (req: Request, res: Response, next: NextFunc
 
     const bed = new Date(bedTime);
     const wake = new Date(wakeTime);
-    const durationMinutes = Math.round((wake.getTime() - bed.getTime()) / 60000);
+    let durationMinutes = Math.round((wake.getTime() - bed.getTime()) / 60000);
+    if (durationMinutes < 0) durationMinutes += 24 * 60; // crossed midnight
 
     const logDate = date ? new Date(date) : wake;
     logDate.setHours(0, 0, 0, 0);
@@ -43,8 +44,15 @@ export const createSleepLog = async (req: Request, res: Response, next: NextFunc
 // PUT /api/sleep/:id
 export const updateSleepLog = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const log = await prisma.sleepLog.updateMany({
+    const existing = await prisma.sleepLog.findFirst({
       where: { id: req.params.id, userId: req.user!.id },
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Sleep log not found' });
+    }
+
+    const log = await prisma.sleepLog.update({
+      where: { id: req.params.id },
       data: req.body,
     });
     res.json({ success: true, data: log });

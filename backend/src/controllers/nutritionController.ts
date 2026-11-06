@@ -7,9 +7,11 @@ export const getMeals = async (req: Request, res: Response, next: NextFunction) 
     const { date } = req.query;
     const targetDate = date ? new Date(date as string) : new Date();
     targetDate.setHours(0, 0, 0, 0);
+    const nextDate = new Date(targetDate);
+    nextDate.setDate(nextDate.getDate() + 1);
 
     const meals = await prisma.meal.findMany({
-      where: { userId: req.user!.id, date: targetDate },
+      where: { userId: req.user!.id, date: { gte: targetDate, lt: nextDate } },
       include: { foodEntries: true },
       orderBy: { mealType: 'asc' },
     });
@@ -29,7 +31,7 @@ export const getMeals = async (req: Request, res: Response, next: NextFunction) 
 
     // Water
     const waterLogs = await prisma.waterLog.findMany({
-      where: { userId: req.user!.id, date: targetDate },
+      where: { userId: req.user!.id, date: { gte: targetDate, lt: nextDate } },
     });
     const totalWaterML = waterLogs.reduce((acc, w) => acc + w.amountML, 0);
 
@@ -96,9 +98,17 @@ export const createMeal = async (req: Request, res: Response, next: NextFunction
 export const updateMeal = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const meal = await prisma.meal.updateMany({
+    const existing = await prisma.meal.findFirst({
       where: { id, userId: req.user!.id },
+    });
+    if (!existing) {
+      return res.status(404).json({ success: false, message: 'Meal not found' });
+    }
+
+    const meal = await prisma.meal.update({
+      where: { id },
       data: req.body,
+      include: { foodEntries: true },
     });
     res.json({ success: true, data: meal });
   } catch (e) { next(e); }

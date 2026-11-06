@@ -87,18 +87,47 @@ export const processVoiceCommand = async (req: Request, res: Response, next: Nex
         }
       }
     } else if (parsed.intent === 'LOG_WATER') {
+      const todayMidnight = new Date();
+      todayMidnight.setHours(0, 0, 0, 0);
       await prisma.waterLog.create({
         data: {
           userId: req.user!.id,
-          date: new Date(),
+          date: todayMidnight,
           amountML: parsed.data.amountML || 250,
+        }
+      });
+    } else if (parsed.intent === 'LOG_EXPENSE') {
+      await prisma.expense.create({
+        data: {
+          userId: req.user!.id,
+          amount: Number(parsed.data.amount) || 0,
+          description: parsed.data.description || text,
+          category: parsed.data.category || 'OTHER',
+          date: new Date(),
+          source: 'MANUAL',
+        }
+      });
+    } else if (parsed.intent === 'LOG_MEAL') {
+      const todayMidnight = new Date();
+      todayMidnight.setHours(0, 0, 0, 0);
+      await prisma.meal.create({
+        data: {
+          userId: req.user!.id,
+          name: parsed.data.name || 'Quick Logged Meal',
+          mealType: parsed.data.mealType || 'SNACKS',
+          date: todayMidnight,
+          analyzedByAI: true,
+          totalCalories: 300,
+          totalProtein: 15,
+          totalCarbs: 35,
+          totalFat: 10,
         }
       });
     } else if (parsed.intent === 'CREATE_TASK') {
       await prisma.task.create({
         data: {
           userId: req.user!.id,
-          title: parsed.data.title,
+          title: parsed.data.title || text,
           status: 'BACKLOG',
           dueDate: new Date(),
         }
